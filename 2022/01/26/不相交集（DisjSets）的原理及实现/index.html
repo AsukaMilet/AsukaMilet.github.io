@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="不相交集（DisjSets）的原理及实现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="不相交集（DisjSets）的原理及实现">
+<meta property="og:url" content="http://example.com/2022/01/26/%E4%B8%8D%E7%9B%B8%E4%BA%A4%E9%9B%86%EF%BC%88DisjSets%EF%BC%89%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="不相交集（DisjSets）的原理及实现">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-01-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-02-01T12:25:58.045Z">
+<meta property="article:author" content="AsukaMilet">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="不相交集">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2022/01/26/%E4%B8%8D%E7%9B%B8%E4%BA%A4%E9%9B%86%EF%BC%88DisjSets%EF%BC%89%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>不相交集（DisjSets）的原理及实现 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/26/%E4%B8%8D%E7%9B%B8%E4%BA%A4%E9%9B%86%EF%BC%88DisjSets%EF%BC%89%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/thumb_inbox_600.png">
+      <meta itemprop="name" content="AsukaMilet">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          不相交集（DisjSets）的原理及实现
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-01-26 00:00:00" itemprop="dateCreated datePublished" datetime="2022-01-26T00:00:00+08:00">2022-01-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-01 20:25:58" itemprop="dateModified" datetime="2022-02-01T20:25:58+08:00">2022-02-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Data-Structrue/" itemprop="url" rel="index"><span itemprop="name">Data Structrue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1
+id="不相交集disjsets的原理及实现">不相交集（DisjSets）的原理及实现</h1>
+<span id="more"></span>
+<h2 id="不相交集基本知识">1.不相交集基本知识</h2>
+<p>不相交集主要涉及两种操作：合并和查找。初始时，不同的集合中元素不相交(<span
+class="math inline">\(S_i \cap
+S_j=\varnothing\)</span>),经过一系列Union操作后,合并为一个大的集合。</p>
+<p>DisjSets是一种动态集合（随着Union操作的增多，动态集合中集合个数减少）
+<span class="math display">\[
+S=\{s_1,s_2,s_3....s_n\}
+\]</span> 判断某个元素是否在集合<span
+class="math inline">\(s_i\)</span>中,只需进行Find操作，返回值为包含给定元素集合的名字。判断两个元素是否在同一个集合中只需要比较Find(X)和Find(Y)是否返回同一个集合名字即可。</p>
+<p>不相交集的应用范围：</p>
+<ol type="1">
+<li><strong><em>判断无向图的连通分量个数</em></strong></li>
+<li><strong><em>判断无向图中任意两个顶点是否连通</em></strong></li>
+<li>......</li>
+</ol>
+<h2 id="不相交集的基本实现c">2.不相交集的基本实现（C++）</h2>
+<h3 id="class实现">（1）Class实现</h3>
+<h4 id="adt接口实现一维数组实现">①ADT接口实现（一维数组实现）</h4>
+<p>不相交集<strong>S</strong>由若干子集合<strong><span
+class="math inline">\(s_i\)</span></strong>构成，不相交集的逻辑结构就是一个森林（树的集合）。<strong><span
+class="math inline">\(s_i\)</span></strong>表示森林中的一颗子树，一般以该子树的根作为子树代表。</p>
+<p>由于需要的唯一信息为<strong>父链（parent
+link）</strong>，集合的名字由根处的节点给出，由于只需要知道父节点的名字，可以假设这棵树被非显式存储在一个数组中：数组的每个成员<strong>s[i]</strong>表示元素<strong>i</strong>的父亲，如果<strong>i</strong>为根，则<strong>s[i]=i</strong>（<em>e.g.</em>
+s[5]=4，表示节点5的父亲为节点4）</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DisjSets</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">DisjSets</span><span class="params">(<span class="keyword">int</span> ElementsNum)</span></span>;   <span class="comment">//构造函数，初始化DisjSets</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">Find</span><span class="params">(<span class="keyword">int</span> num)</span></span>;                    <span class="comment">//Find操作</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">UnionSets</span><span class="params">(<span class="keyword">int</span> num1,<span class="keyword">int</span> num2)</span></span>;    <span class="comment">//Union操作</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; s;</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; rank;					  <span class="comment">//保存每个子树的秩</span></span><br><span class="line">    <span class="keyword">int</span> count;                            <span class="comment">//记录DisjSets中子集合的个数（子树个数）</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>初始化操作如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">DisjSets::<span class="built_in">DisjSets</span>(<span class="keyword">int</span> ElementsNum)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;ElementsNum;i++)      <span class="comment">//若编号从1开始，则ElementsNum应为输入元素个数加1</span></span><br><span class="line">    &#123;</span><br><span class="line">        s.<span class="built_in">push_back</span>(i);</span><br><span class="line">        rank.<span class="built_in">push_back</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    count=ElementsNum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<h4 id="基本操作实现">②基本操作实现</h4>
+<p>Union操作即将两个不相交的子集和合并成一个大集合,只需将一颗子树的父节点指向另一颗子树即可</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DisjSets::UnionSets</span><span class="params">(<span class="keyword">int</span> num1,<span class="keyword">int</span> num2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> root1=<span class="built_in">Find</span>(num1);          <span class="comment">//查找num1元素的祖先</span></span><br><span class="line">    <span class="keyword">int</span> root2=<span class="built_in">Find</span>(num2);          <span class="comment">//查找num2元素的祖先</span></span><br><span class="line">    s[root2]=root1；               <span class="comment">//将num2祖先变为num1祖先的儿子</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Find操作即查找所需元素所在集合，即返回所在元素名字。</p>
+<p><strong><em>e.g</em></strong> 并查集如下：</p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/715283-20160917221621664-276304966.png" /></p>
+<p>此时共有四个子树，第一个子树名字为0，第二个子树名字为1，第三个子树名字为3，第四个子树名字为5。所以Find(2)返回值为1，Find(4)返回值为3，Find(3)返回值为3。Find基本实现如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">DisjSets::Find</span><span class="params">(<span class="keyword">int</span> num)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(s[num]==num)</span><br><span class="line">        <span class="keyword">return</span> num;                </span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Find</span>(s[x]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<h4 id="unionfind操作的改进">③Union/Find操作的改进</h4>
+<h5 id="i.按高度秩rank求并">I.按高度（秩（rank））求并</h5>
+<p>上述Union操作很随意：任选一颗子树，将另一颗子树的根指向它就完成合并。若一直按上述操作合并，可能产生非常不平衡的子树，如：</p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-01-26%20195423.png" /></p>
+<p><strong>树变得越来越高，此时会影响到Find的效率</strong>。</p>
+<p>因此引入按秩合并（启发式合并）：将秩小的子树的根指向秩大的子树的根。</p>
+<p>秩的定义：对每个节点，用秩表示节点高度的上界（路径压缩不完全与秩兼容，路径压缩会改变树的高度，此时不追求树的高度的精确值，而是存储树的高度的估计值，树的高度的估计值为秩）</p>
+<p>若不考虑路径压缩，则为<strong>按高度求并（union by
+height）</strong>：在合并前，判断哪颗子树更高，让更矮的子树的根节点指向高的子树的根。</p>
+<p>实现如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DisjSets::UnionSets</span><span class="params">(<span class="keyword">int</span> num1,<span class="keyword">int</span> num2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> root1=<span class="built_in">Find</span>(num1);</span><br><span class="line">    <span class="keyword">int</span> root2=<span class="built_in">Find</span>(num2);</span><br><span class="line">    <span class="keyword">if</span>(root1!=root2)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(rank[root1]&gt;rank[root2])                    <span class="comment">//num1所在子树更深</span></span><br><span class="line">        s[root2]=root1;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(rank[root1]&lt;rank[root2])               <span class="comment">//num2所在子树更深</span></span><br><span class="line">        s[root1]=root2;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            s[root2]=root1;                            <span class="comment">//将num2所在子树合并至num1所在子树</span></span><br><span class="line">            rank[root1]++;                             <span class="comment">//num1所在子树秩加深</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5
+id="ii.路径压缩核心思路将查找路径上节点直接连接至根上">II.路径压缩（核心思路：将查找路径上节点直接连接至根上）</h5>
+<p>对于上述Find操作，对于连续M个指令（在所有模型下）平均为线性的。但<strong><em>O（M<span
+class="math inline">\(\log{N}\)</span>）</em></strong>的最坏情况仍有可能发生。例如，把所有集合放于一个队列中，并反复让前两个集合出队而使它们的并入队，则最坏情况就会发生。路径压缩操作相对于基础Find操作变化不大，使s[<strong><em>num</em></strong>]等于由Find返回的值。这样，在集合的根被递归地查找到后，<strong><em>num</em></strong>的父节点就设置为它，这对通向根的路径上的每一个节点递归地出现，因而实现路径压缩。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">DisjSets::Find</span><span class="params">(<span class="keyword">int</span> num)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(s[num]==num)</span><br><span class="line">        <span class="keyword">return</span> num;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> s[num]=<span class="built_in">Find</span>(s[num]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5
+id="iii.路径压缩与按高度求并兼容问题">III.路径压缩与按高度求并兼容问题</h5>
+<p>因为路径压缩可以改变树的高度，此时不清楚如何去重新计算树的高度，解决方案则是<strong>不计算树的高度</strong>，此时，对于每棵树所存储高度变为估计值（秩）。</p>
+<p>若不使用按高度合并，只使用路径压缩最坏时间复杂度为<strong><em>O(m<span
+class="math inline">\(\log{N}\)</span>)</em></strong>。</p>
+<p>若只使用按高度求并，不使用路径压缩，时间复杂度为<strong><em>O(m<span
+class="math inline">\(\log{n}\)</span>)</em></strong>，由于由于路径压缩单次合并可能造成大量修改，有时路径压缩并不适合使用。例如，在可持久化不相交集、线段树分治
++ 不相交集中，一般使用只按高度合并的不相交集。</p>
+<p>时间复杂度与空间复杂度分析:</p>
+<p><a target="_blank" rel="noopener" href="https://oi-wiki.org/ds/dsu/">OI Wiki并查集</a></p>
+<hr />
+<h3 id="不相交集的数组实现">（2）不相交集的数组实现</h3>
+<p>代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> DijsSets[MAX];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Initialization</span><span class="params">(<span class="keyword">int</span> size)</span>                 <span class="comment">//初始化DisjSets</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;size;i++)					  <span class="comment">//编号从0开始</span></span><br><span class="line">        DijsSets[i]=i;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Find</span><span class="params">(<span class="keyword">int</span> num,<span class="keyword">int</span>*DisjSets)</span>                <span class="comment">//路径压缩查找</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(DisjSets[num]!=num)					  <span class="comment">//num不是该集合的根</span></span><br><span class="line">        DisjSets[num]=<span class="built_in">Find</span>(DisjSets[num],DisjSets);    <span class="comment">//递归搜索</span></span><br><span class="line">    <span class="keyword">return</span> num;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UnionSets</span><span class="params">(<span class="keyword">int</span> num1,<span class="keyword">int</span> num2,<span class="keyword">int</span>*DisjSets)</span>         <span class="comment">//简单合并</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> root1=<span class="built_in">Find</span>(num1,DisjSets);</span><br><span class="line">    <span class="keyword">int</span> root2=<span class="built_in">Find</span>(num2,DisjSets);</span><br><span class="line">    DisjSets[root2]=root1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="不相交集应用">3.不相交集应用</h2>
+<p>应用本质：初始时为一个个不连通的对象，经过一步步处理，变成连通的。</p>
+<ol type="1">
+<li><p><strong>生成迷宫</strong>：<img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-01-26%20195521.png" /></p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-01-26%20195539.png" /></p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-01-26%20195615.png" /></p></li>
+<li><p><strong>无向图的连通分量个数</strong>：初始时，将无向图中各个顶点视为不连通的子集合，对图中每一条边，相当于union这条边对应的两个顶点分别所在的集合，直至所有的边都处理完后，还剩下的集合的个数即为连通分量的个数。</p></li>
+</ol>
+<hr />
+<h2 id="相关题目">相关题目</h2>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P3367">洛谷P3367</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P1551">洛谷P1551</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P1621">洛谷P1621</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P2024">洛谷P2024</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P1196">洛谷P1196</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/147/">AcwingP145</a></li>
+</ul>
+<hr />
+<p>Author: AsukaMilet</p>
+<p>Date: 2022-1-26</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"><i class="fa fa-tag"></i> 数据结构</a>
+              <a href="/tags/%E4%B8%8D%E7%9B%B8%E4%BA%A4%E9%9B%86/" rel="tag"><i class="fa fa-tag"></i> 不相交集</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2022/01/27/%E5%9B%BE%E8%AE%BA%E5%9F%BA%E7%A1%80/" rel="next" title="图论基础">
+      图论基础 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8D%E7%9B%B8%E4%BA%A4%E9%9B%86disjsets%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.</span> <span class="nav-text">不相交集（DisjSets）的原理及实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E7%9B%B8%E4%BA%A4%E9%9B%86%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86"><span class="nav-number">1.1.</span> <span class="nav-text">1.不相交集基本知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E7%9B%B8%E4%BA%A4%E9%9B%86%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%AE%9E%E7%8E%B0c"><span class="nav-number">1.2.</span> <span class="nav-text">2.不相交集的基本实现（C++）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#class%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.1.</span> <span class="nav-text">（1）Class实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#adt%E6%8E%A5%E5%8F%A3%E5%AE%9E%E7%8E%B0%E4%B8%80%E7%BB%B4%E6%95%B0%E7%BB%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">①ADT接口实现（一维数组实现）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">②基本操作实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#unionfind%E6%93%8D%E4%BD%9C%E7%9A%84%E6%94%B9%E8%BF%9B"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">③Union&#x2F;Find操作的改进</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#i.%E6%8C%89%E9%AB%98%E5%BA%A6%E7%A7%A9rank%E6%B1%82%E5%B9%B6"><span class="nav-number">1.2.1.3.1.</span> <span class="nav-text">I.按高度（秩（rank））求并</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ii.%E8%B7%AF%E5%BE%84%E5%8E%8B%E7%BC%A9%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF%E5%B0%86%E6%9F%A5%E6%89%BE%E8%B7%AF%E5%BE%84%E4%B8%8A%E8%8A%82%E7%82%B9%E7%9B%B4%E6%8E%A5%E8%BF%9E%E6%8E%A5%E8%87%B3%E6%A0%B9%E4%B8%8A"><span class="nav-number">1.2.1.3.2.</span> <span class="nav-text">II.路径压缩（核心思路：将查找路径上节点直接连接至根上）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#iii.%E8%B7%AF%E5%BE%84%E5%8E%8B%E7%BC%A9%E4%B8%8E%E6%8C%89%E9%AB%98%E5%BA%A6%E6%B1%82%E5%B9%B6%E5%85%BC%E5%AE%B9%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.1.3.3.</span> <span class="nav-text">III.路径压缩与按高度求并兼容问题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E7%9B%B8%E4%BA%A4%E9%9B%86%E7%9A%84%E6%95%B0%E7%BB%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.2.</span> <span class="nav-text">（2）不相交集的数组实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E7%9B%B8%E4%BA%A4%E9%9B%86%E5%BA%94%E7%94%A8"><span class="nav-number">1.3.</span> <span class="nav-text">3.不相交集应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE"><span class="nav-number">1.4.</span> <span class="nav-text">相关题目</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AsukaMilet"
+      src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/thumb_inbox_600.png">
+  <p class="site-author-name" itemprop="name">AsukaMilet</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AsukaMilet</span>
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

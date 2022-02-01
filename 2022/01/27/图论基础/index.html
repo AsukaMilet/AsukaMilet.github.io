@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="图论基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图论基础">
+<meta property="og:url" content="http://example.com/2022/01/27/%E5%9B%BE%E8%AE%BA%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="图论基础">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-01-26T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-02-01T12:24:52.175Z">
+<meta property="article:author" content="AsukaMilet">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="图论">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2022/01/27/%E5%9B%BE%E8%AE%BA%E5%9F%BA%E7%A1%80/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>图论基础 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/27/%E5%9B%BE%E8%AE%BA%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/thumb_inbox_600.png">
+      <meta itemprop="name" content="AsukaMilet">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          图论基础
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-01-27 00:00:00" itemprop="dateCreated datePublished" datetime="2022-01-27T00:00:00+08:00">2022-01-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-01 20:24:52" itemprop="dateModified" datetime="2022-02-01T20:24:52+08:00">2022-02-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Data-Structrue/" itemprop="url" rel="index"><span itemprop="name">Data Structrue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="图论基础">图论基础</h1>
+<span id="more"></span>
+<h2 id="图的定义">1.图的定义</h2>
+<ul>
+<li><p>图是用来对对象之间的成对关系建模的数学结构，一个<strong>图(Graph)</strong>
+<em>G=(V,E)</em>由"节点"或"顶点"(Vertex）以及连接这些顶点的"边"（Edge）组成。</p></li>
+<li><p>每一条边就是一个点对<em>(v,w)</em>，其中<em>v,w<span
+class="math inline">\(\in\)</span>V</em>。如果点对是有序的，那么图就叫作<strong>有向(directed)</strong>的。有向的图也被称为<strong>有向图(digraph)</strong>。图中的边在连接顶点时无需区分方向，则图为<strong>无向</strong>的，也称为<strong>无向图</strong>。</p>
+<ul>
+<li>对于有向图<strong><em>G=(V,E)</em></strong>,它的<strong>反图(Transpose
+Graph)</strong>指的是点集不变，每条边反向得到的图，即：若<strong><em>G</em></strong>的反图为<strong><em>G<span
+class="math inline">\(^T\)</span>=(V,E')</em></strong>,则<strong><em>E'=</em></strong>
+<strong>{(w,v)|(v,w)<span class="math inline">\(\in\)</span><em>E</em>
+}</strong></li>
+</ul></li>
+<li><p>有时候边具有第三种成分，即<strong>权</strong>(weight)或<strong>值</strong>(cost)。边的<strong>权值</strong>记为<strong><em>w(v,w)</em></strong>。</p></li>
+<li><p>顶点集合为<strong><em>V</em></strong>，边集合为<strong><em>E</em></strong>的图记为<strong><em>G=（V，E）</em></strong>，其顶点数为<strong><span
+class="math inline">\(|V|\)</span></strong>,边数为<strong><span
+class="math inline">\(|E|\)</span></strong>。</p></li>
+<li><p>相邻顶点构成的顶点序列称为<strong>路径</strong>(path)，即一个顶点序列<span
+class="math inline">\(w_1,w_2,w_3,...w_n\)</span>, 使(<span
+class="math inline">\(w_i,w_{i+1}\)</span>)<span
+class="math inline">\(\in\)</span><strong><em>E</em></strong>,且</p></li>
+<li><p>1<em><span class="math inline">\(\leq\)</span></em> <em>i</em>
+<em><span class="math inline">\(&lt;\)</span></em>
+<em>N</em>。则一条路径的长为该路径上的边数，它等于<em>N-1</em>。起点若与终点相同，则称为<strong>环</strong>。</p></li>
+<li><p>与顶点相连的边数称为<strong>度(Degree)</strong>，有向图的度又分为<strong>入度</strong>(以该顶点为终点)和<strong>出度</strong>(以该顶点为起点)。</p></li>
+<li><p><strong>连通图</strong>：任意两个顶点都是连通的，即都可从第一个顶点到第二个顶点，也可以从第二个顶点到第一个顶点。</p></li>
+<li><p><strong>完全图</strong>：任意两个顶点间都有一条边，无向完全图共有
+<strong><em>n<span
+class="math inline">\(\times\)</span>(n-1)/2</em></strong>条边,有向完全图共有
+<strong><em>n<span
+class="math inline">\(\times\)</span>(n-1)</em></strong>条边。</p></li>
+<li><p><strong>稀疏图</strong>：边数远小于完全图的图。
+<strong>稠密图</strong>：边数接近于完全图的图</p></li>
+</ul>
+<hr />
+<h2 id="图的存储表示c">2.图的存储（表示）(C++)</h2>
+<h3 id="邻接矩阵">2.1邻接矩阵</h3>
+<p>若有<strong><em>n</em></strong>个点，则开一个<strong><em>n<span
+class="math inline">\(\times\)</span>​n</em></strong>的二维数组，其中一维表示起点，另一维表示终点，其存储的值可用于表示边的存在与否或者边的权值大小。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> Edge[MAX][MAX]					<span class="comment">//按边数表示</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Insert</span><span class="params">(<span class="keyword">int</span> v,<span class="keyword">int</span> w,<span class="keyword">int</span> value)</span>  <span class="comment">//将两个点建立关系</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Edge[v][w]=value;			    <span class="comment">//表示有向图</span></span><br><span class="line">    <span class="comment">//无向图表示为Edge[v][w]=Edge[w][v]=value</span></span><br><span class="line">    <span class="comment">//若无权值，可用1表示有边，0表示无边</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>邻接矩阵的空间复杂度为<strong><em>O(N<span
+class="math inline">\(^2\)</span>)</em></strong>，若图中点较多，则大概率超出内存限制。</p>
+<h4 id="复杂度">复杂度</h4>
+<ul>
+<li>查询是否存在某条边<strong><em>O(1)</em></strong></li>
+<li>遍历连接一个点的所有边<strong><em>O(N)</em></strong></li>
+<li>遍历整张图<strong><em>O(N<span
+class="math inline">\(^2\)</span>)</em></strong></li>
+</ul>
+<h4 id="应用">应用</h4>
+<p>邻接矩阵只适用于没有重边(或重边可以忽略)的情况。其最显著的优点是可以查询一条边是否存在。</p>
+<p>由于邻接矩阵在稀疏图上效率很低(尤其是在点数较多的图上，空间无法承受)，所以一般只会在稠密图</p>
+<p>上使用邻接矩阵。</p>
+<hr />
+<h3 id="邻接表">2.2邻接表</h3>
+<p>若有<strong><em>n</em></strong>个点，则开一个大小为<strong><em>n</em></strong>的vector数组，其中数组下标表示起点，vector中存储的值为终点</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="keyword">int</span>&gt;Edge[MAX];						 <span class="comment">//存储vector&lt;int&gt;的数组</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Insert</span><span class="params">(<span class="keyword">int</span> v,<span class="keyword">int</span> w)</span>					 <span class="comment">//无权值情况</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Edge[v].<span class="built_in">push_back</span>(w);                    <span class="comment">//从v出发，到达终点为w</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>若边具有权值，则：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Node</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> end;							      <span class="comment">//存储中终点</span></span><br><span class="line">    <span class="keyword">int</span> value;</span><br><span class="line">&#125;;</span><br><span class="line">vector&lt;Node&gt;Edge[MAX];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Insert</span><span class="params">(<span class="keyword">int</span> v,<span class="keyword">int</span> w,<span class="keyword">int</span> value)</span>			  <span class="comment">//有权值情况</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Node temp;</span><br><span class="line">    temp.end=w;</span><br><span class="line">    temp.value=value;</span><br><span class="line">    Edge[v].<span class="built_in">push_back</span>(temp);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="复杂度-1">复杂度</h4>
+<ul>
+<li>查询是否存在<strong><em>u</em></strong>到<strong><em>v</em></strong>的边<strong><em>O(d(u))</em></strong></li>
+<li>遍历点<strong><em>u</em></strong>的所有出边<strong><em>O(d(u))</em></strong></li>
+<li>遍历整张图<strong><em>O(M+N)</em></strong></li>
+<li>空间复杂度<strong><em>O(M)</em></strong></li>
+</ul>
+<p><strong>P.S </strong>
+<strong><em>d(u)</em></strong>为以<strong><em>u</em></strong>为出发点的所有边数</p>
+<h4 id="应用-1">应用</h4>
+<p>存各种图都很适合，除非有特殊需求（如需要快速查询一条边是否存在，且点数较少，可以使用邻接矩阵）。尤其适用于需要对一个点的所有出边进行排序的场合。</p>
+<hr />
+<h4 id="链式前向星">2.3链式前向星</h4>
+<p>本质是静态的链表式存储</p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/1184092-20180710221842009-1426915822.png" /></p>
+<p>基本结构如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Node</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> end;								<span class="comment">//终点</span></span><br><span class="line">    <span class="keyword">int</span> value;								<span class="comment">//边的权值</span></span><br><span class="line">    <span class="keyword">int</span> next;								</span><br><span class="line">&#125;;</span><br><span class="line">Node Edge[MAX];</span><br></pre></td></tr></table></figure>
+<ol type="1">
+<li><strong>对于next</strong>:</li>
+</ol>
+<p>举个例子，从节点1出发，节点编号最大的是节点5，节点5的next将会是3，而节点3的next将会是结点2，而到了节点2之后节点1的所有出边都已经被处理了，所有节点2的next将会是-1，这样子将可以找到对于节点1的所有直接相接的节点（注意：遍历时节点是由大到小遍历的，即是逆序的）。当检测到next的值为-1时会退出当前遍历。</p>
+<p>如果节点的出度为0或者小于1，则对应的next值为-1。</p>
+<ol start="2" type="1">
+<li><strong>对于end</strong></li>
+</ol>
+<p>简单概括来说就是对于第<strong>i</strong>条边的终点，比如说输入第一组边（1，
+2）的时候，Edge[0].end = 2（数组从0开始存储）。</p>
+<p>如果是有向图，那么只要处理一次就够了。对于一个无向图的话，就需要来回存一次。</p>
+<ol start="3" type="1">
+<li><strong>对于head数组</strong></li>
+</ol>
+<p>对于输入的边，用来存以<strong>i</strong>为起点的边的存储位置。如果以<strong>i</strong>为起点的边出度大于1，此时head[i]会存入在输入中最后输入的以<strong>i</strong>为起点的编号。</p>
+<p><strong><em>e.g</em></strong>
+对于节点1，它的出度为3，由先往后分别输入了（1， 2）（1， 3）（1，
+5），最后存入head的就会是5（2和3其实也有被存储的时候，但是后来会被5覆盖掉），即结果就是head[1]
+= 5。</p>
+<p>建立边方式如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//head[u]和k的初始值均为-1</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Insert</span><span class="params">(<span class="keyword">int</span> v,<span class="keyword">int</span> w,<span class="keyword">int</span> value)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Edge[k].end=w;</span><br><span class="line">    Edge[k].value=value;</span><br><span class="line">    Edge[k].next=head[v];</span><br><span class="line">    head[v]=k++;					<span class="comment">//存储v这个值在第几组输入的边内出现过</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="复杂度-2">复杂度</h4>
+<ul>
+<li>查询是否存在<strong><em>u</em></strong>到<strong><em>v</em></strong>的边<strong><em>O(d(u))</em></strong></li>
+<li>遍历点<strong><em>u</em></strong>的所有出边<strong><em>O(d(u))</em></strong></li>
+<li>遍历整张图<strong><em>O(M+N)</em></strong></li>
+<li>空间复杂度<strong><em>O(M)</em></strong></li>
+</ul>
+<p><strong>P.S </strong>
+<strong><em>d(u)</em></strong>为以<strong><em>u</em></strong>为出发点的所有边数</p>
+<h4 id="应用-2">应用</h4>
+<p>存各种图都很适合，但不能快速查询一条边是否存在，也不能方便地对一个点的出边进行排序。</p>
+<hr />
+<h2 id="图的遍历">3.图的遍历</h2>
+<p>图的遍历与搜索一样，主要分为<strong>DFS(深度优先搜索)</strong>与<strong>BFS(广度优先搜索)</strong></p>
+<h3 id="dfs图论">3.1DFS(图论)</h3>
+<p><strong>DFS的特点是，顺着当前的路径一直往深处遍历，直到无点可访问时，再返回上一级节点。</strong>DFS
+会对其访问过的点打上访问标记，在遍历图时跳过已打过标记的点，以确保
+<strong>每个点仅访问一次</strong>。符合以上两条规则的函数，便是广义上的
+DFS。</p>
+<p><strong><em>e.g</em></strong> <a
+target="_blank" rel="noopener" href="https://blog.csdn.net/saltriver/article/details/54429068">DFS(图论)图解</a></p>
+<p>以邻接表为例:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//假设图的边有权值</span></span><br><span class="line">vector&lt;Node&gt;Edge[MAX];                               <span class="comment">//邻接表</span></span><br><span class="line"><span class="keyword">bool</span> visited[MAX];									 <span class="comment">//存储节点是否被访问过</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Dfs</span><span class="params">(<span class="keyword">int</span> start)</span>								     <span class="comment">//start为开始访问节点</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    visited[start]=<span class="literal">true</span>;							 <span class="comment">//将开始节点设置为已访问</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;Edge[start].<span class="built_in">size</span>();i++)			 <span class="comment">//遍历当前节点可到达的所有终点</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> next=Edge[start][i].end;</span><br><span class="line">        <span class="keyword">if</span>(visited[next]==<span class="literal">false</span>)</span><br><span class="line">            <span class="built_in">Dfs</span>(next);</span><br><span class="line">        <span class="comment">//若next指向的节点尚未访问，则递归下去进行访问</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="复杂度-3">复杂度</h4>
+<p>时间复杂度通常为<strong><em>O(M+N)</em></strong>,空间复杂度为<strong><em>O(N)</em></strong>,N为图的点数，M为图的边数。</p>
+<h3 id="bfs图论">3.2BFS（图论）</h3>
+<p><strong>BFS的特点是，将当前所在节点可访问的所有节点都加入队列，等全都访问过后再前往下一层。</strong>BFS
+算法找到的路径是从起点开始的<strong>最短</strong>合法路径。换言之，这条路径所包含的边数最小。</p>
+<p><strong><em>e.g.</em></strong> <a
+target="_blank" rel="noopener" href="https://blog.csdn.net/saltriver/article/details/54428983">BFS(图论)图解</a></p>
+<p>以邻接表为例：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//假设图的边有权值</span></span><br><span class="line">vector&lt;Node&gt;Edge[MAX];								<span class="comment">//邻接表</span></span><br><span class="line"><span class="keyword">bool</span> visited[MAX];									<span class="comment">//存储节点是否被访问过</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Bfs</span><span class="params">(<span class="keyword">int</span> start)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    queue&lt;<span class="keyword">int</span>&gt; q;									<span class="comment">//访问队列</span></span><br><span class="line">    q.<span class="built_in">push</span>(start);</span><br><span class="line">    visited[start]=<span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">while</span>(!q.<span class="built_in">empty</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> now=q.<span class="built_in">front</span>();</span><br><span class="line">        q.<span class="built_in">pop</span>();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;Edge[now].<span class="built_in">size</span>();i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">int</span> next=Edge[now][i].end;</span><br><span class="line">            <span class="keyword">if</span>(visited[next]==<span class="literal">false</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                q.<span class="built_in">push</span>(next);</span><br><span class="line">                visited[next]=<span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="复杂度-4">复杂度</h4>
+<p>时间复杂度<strong><em>O(M+N)</em></strong>,空间复杂度<strong><em>O(N)</em></strong>。</p>
+<h2 id="相关题目">4.相关题目</h2>
+<ol type="1">
+<li><p><a
+target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P5318">洛谷P5318</a></p></li>
+<li><p><a
+target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P3916">洛谷P3916</a></p></li>
+<li><p><a
+target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P1330">洛谷P1330</a></p></li>
+</ol>
+<hr />
+<p>Author: AsukaMilet</p>
+<p>Date: 2022-1-27</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"><i class="fa fa-tag"></i> 数据结构</a>
+              <a href="/tags/%E5%9B%BE%E8%AE%BA/" rel="tag"><i class="fa fa-tag"></i> 图论</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/26/%E4%B8%8D%E7%9B%B8%E4%BA%A4%E9%9B%86%EF%BC%88DisjSets%EF%BC%89%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/" rel="prev" title="不相交集（DisjSets）的原理及实现">
+      <i class="fa fa-chevron-left"></i> 不相交集（DisjSets）的原理及实现
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/01/28/%E6%A0%88%E5%92%8C%E9%98%9F%E5%88%97/" rel="next" title="栈和队列">
+      栈和队列 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%BE%E8%AE%BA%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">图论基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.</span> <span class="nav-text">1.图的定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E7%9A%84%E5%AD%98%E5%82%A8%E8%A1%A8%E7%A4%BAc"><span class="nav-number">1.2.</span> <span class="nav-text">2.图的存储（表示）(C++)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1邻接矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">复杂度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">应用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%82%BB%E6%8E%A5%E8%A1%A8"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2邻接表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6-1"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">复杂度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%94%E7%94%A8-1"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">应用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%93%BE%E5%BC%8F%E5%89%8D%E5%90%91%E6%98%9F"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">2.3链式前向星</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6-2"><span class="nav-number">1.2.2.4.</span> <span class="nav-text">复杂度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%94%E7%94%A8-2"><span class="nav-number">1.2.2.5.</span> <span class="nav-text">应用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86"><span class="nav-number">1.3.</span> <span class="nav-text">3.图的遍历</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dfs%E5%9B%BE%E8%AE%BA"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1DFS(图论)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6-3"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">复杂度</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bfs%E5%9B%BE%E8%AE%BA"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2BFS（图论）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6-4"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">复杂度</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE"><span class="nav-number">1.4.</span> <span class="nav-text">4.相关题目</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AsukaMilet"
+      src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/thumb_inbox_600.png">
+  <p class="site-author-name" itemprop="name">AsukaMilet</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AsukaMilet</span>
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
