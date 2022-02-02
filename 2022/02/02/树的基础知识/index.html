@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="树的基础知识以及树与图论的相关联系">
+<meta property="og:type" content="article">
+<meta property="og:title" content="树的基础知识">
+<meta property="og:url" content="http://example.com/2022/02/02/%E6%A0%91%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/index.html">
+<meta property="og:site_name" content="AsukaMilet&#39;s Note">
+<meta property="og:description" content="树的基础知识以及树与图论的相关联系">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/perfect-binary-tree_0.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/comparison-1_0.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/comparison-4.png">
+<meta property="article:published_time" content="2022-02-02T07:33:58.000Z">
+<meta property="article:modified_time" content="2022-02-02T11:38:45.045Z">
+<meta property="article:author" content="AsukaMilet">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="树">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/perfect-binary-tree_0.png">
+
+<link rel="canonical" href="http://example.com/2022/02/02/%E6%A0%91%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>树的基础知识 | AsukaMilet's Note</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AsukaMilet's Note</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/02/%E6%A0%91%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/thumb_inbox_600.png">
+      <meta itemprop="name" content="AsukaMilet">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AsukaMilet's Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          树的基础知识
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-02-02 15:33:58 / Modified: 19:38:45" itemprop="dateCreated datePublished" datetime="2022-02-02T15:33:58+08:00">2022-02-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Data-Structrue/" itemprop="url" rel="index"><span itemprop="name">Data Structrue</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">树的基础知识以及树与图论的相关联系</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="树">树</h1>
+<h2 id="树的定义">1.1树的定义</h2>
+<ul>
+<li><p>一棵树是一些<strong>节点(node)</strong>的集合。这个集合可以是空集：若不是空集，则树由称作<strong>根(root)</strong>的节点<strong><em>r</em></strong>以及0个或多个非空的(子)树<strong><em><span
+class="math inline">\(T_1,T_2,...,T_K\)</span></em></strong>组成，这些子树中每一颗的根都被来自根<strong><em>r</em></strong>的一条有向的<strong>边(edge)</strong>所连接。</p></li>
+<li><p>每一颗子树的根叫作根<strong><em>r</em></strong>的<strong>儿子(child)</strong>,而<strong><em>r</em></strong>是每一颗子树的根的<strong>父亲(parent)</strong>。一棵树是<em>N</em>个节点和<em>N-</em>1条边的集合，其中的一个节点叫作根：每条边都将某个节点连接到它的父亲，而除去根节点外每一个节点都有一个父亲。</p>
+<ul>
+<li><p>每一个节点可以有任意多个儿子，也可以是零个儿子。没有儿子的节点称为<strong>树叶(leaf)</strong>。</p></li>
+<li><p>具有相同父亲的节点称为<strong>兄弟(siblings)</strong>，类似方法可以定义<strong>祖父(grandparent)</strong>和<strong>孙子(granchild)</strong>。</p></li>
+</ul></li>
+<li><p>从节点<strong><em><span
+class="math inline">\(n_1\)</span></em></strong>到<strong><em><span
+class="math inline">\(n_k\)</span></em></strong>的路径定义为节点<em><span
+class="math inline">\(n_1,n_2,...,n_k\)</span></em>的一个序列，使得对于<em><span
+class="math inline">\(1\)</span></em><span
+class="math inline">\(\leq\)</span><em><span
+class="math inline">\(i\)</span></em><span
+class="math inline">\(&lt;\)</span><em><span
+class="math inline">\(k\)</span></em>的节点<em><span
+class="math inline">\(n_i\)</span></em>是<em><span
+class="math inline">\(n_{i+1}\)</span></em>的父亲。这条路径的长是该路径上的边的条数，即<em>k</em>-1。从每一个节点到它自己有一条长为0的路径，在一棵树中从根到每个节点恰好存在一条路径。</p></li>
+<li><p>对于任意节点<em><span
+class="math inline">\(n_i\)</span></em>，<em><span
+class="math inline">\(n_i\)</span></em>的<strong>深度(depth)</strong>为根到<em><span
+class="math inline">\(n_i\)</span></em>的唯一路径的长，因此，根的深度为0。</p></li>
+<li><p>节点<em><span
+class="math inline">\(n_i\)</span></em>的<strong>高(height)</strong>是从<em><span
+class="math inline">\(n_i\)</span></em>到一片树叶的最长路径的长。因此所有树叶的高都是0。一颗树的<strong>树高(height
+of a tree)</strong>等于它的根的高。</p>
+<ul>
+<li>一棵树的<strong>树深(depth of a
+tree)</strong>等于其最深的树叶的深度，该深度总是等于这棵树的高。</li>
+</ul></li>
+<li><p>如果存在从<em><span
+class="math inline">\(n_1\)</span></em>到<em><span
+class="math inline">\(n_2\)</span></em>的一条路径，那么<em><span
+class="math inline">\(n_1\)</span></em>是<em><span
+class="math inline">\(n_2\)</span></em>的一位<strong>祖先(ancestor)</strong>，而<em><span
+class="math inline">\(n_2\)</span></em>是<em><span
+class="math inline">\(n_1\)</span></em>的一个<strong>后裔(descendant)</strong>。如果<em><span
+class="math inline">\(n_1 \neq n_2\)</span></em>，那么<em><span
+class="math inline">\(n_1\)</span></em>是<em><span
+class="math inline">\(n_2\)</span></em>的<strong>真祖先(proper
+ancestor)</strong>，而<em><span
+class="math inline">\(n_2\)</span></em>是<em><span
+class="math inline">\(n_1\)</span></em>的<strong>真后裔(proper
+descendant)</strong>。</p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-02%20162632.png" /></p>
+<center>
+<p>
+<p>树的基本关系</p>
+</p>
+<center>
+<hr />
+<p><strong>P.S</strong> 树与图论的相关联系</p></li>
+<li><p>一个没有固定根节点的树称为<strong>无根树(unrooted
+tree)</strong>，在无根树基础上，指定一个节点为<strong>根</strong>，则形成一颗<strong>有根树(rooted
+tree)</strong>，无根树有几种等价形式化定义：</p>
+<ul>
+<li>有<em><span class="math inline">\(n\)</span></em>个节点，<em><span
+class="math inline">\(n-1\)</span></em>条边的连通无向图</li>
+<li>无向无环的连通图</li>
+<li>任意两个节点之间有且仅有一条简单路径的无向图</li>
+<li>任何边均为桥的连通图</li>
+<li>没有圈，且在任意不同两点间添加一条边之后所得图含唯一的一个圈的图</li>
+</ul></li>
+<li><p><strong>森林(forest)</strong>：每个连通分量(连通块)都是树的图，按照定义，一棵树也是森林。</p></li>
+<li><p><strong>生成树(spanning
+tree)</strong>：一个连通无向图的生成子图，同时要求是图。也即在图的边集中选择<em><span
+class="math inline">\(n-1\)</span></em>条，将所有顶点连通。</p></li>
+<li><p><strong>无根树的叶节点(leaf node)</strong>：度数不超过<em><span
+class="math inline">\(1\)</span>​​</em>的节点。</p></li>
+</ul>
+<h2 id="树的实现">1.2树的实现</h2>
+<h3 id="只记录父节点">只记录父节点</h3>
+<p>用一个数组<strong>parent[N]</strong>记录每个节点的父亲节点。</p>
+<p>缺陷：这种方式可以获得的信息较少，不便于进行自顶向下的遍历。常用于自底向上的递推问题中。</p>
+<h3 id="邻接表">邻接表</h3>
+<ul>
+<li><p>对于无根树：为每个节点开辟一个线性列表，记录所有与之相连的节点。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="keyword">int</span>&gt; Tree[N];		<span class="comment">//N为所有节点个数</span></span><br></pre></td></tr></table></figure></li>
+<li><p>对于有根树：</p>
+<ul>
+<li><p>若输入数据可确定节点的关系，则为每个节点开辟一个线性列表，记录所有子节点；若有需要，则在另一个数组中记录父节点。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="keyword">int</span>&gt;child[N];</span><br><span class="line"><span class="keyword">int</span> parent[N];</span><br></pre></td></tr></table></figure></li>
+</ul></li>
+</ul>
+<h3 id="双亲表示法">双亲表示法</h3>
+<p>给每个节点的所有子节点任意确定一个顺序。此后为每个节点记录两个值：其<strong>第一个子节点</strong>和<strong>下一个兄弟节点</strong>。若没有子节点，则子节点为空；若该节点为父节点的最后一个子节点，则下一个兄弟节点为空。</p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-02%20172002.png" /></p>
+<center>
+<p>
+树的双亲表示法
+</p>
+</center>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">TreeNode</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    Object element;			<span class="comment">//存储的数据</span></span><br><span class="line">    TreeNode*firstchild;	<span class="comment">//第一个子节点</span></span><br><span class="line">    TreeNode*nextSibling;	<span class="comment">//下一个兄弟节点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>数组实现:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Node</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> parent;				<span class="comment">//存储父节点</span></span><br><span class="line">    <span class="keyword">int</span> child;				<span class="comment">//存储首个子节点</span></span><br><span class="line">    <span class="keyword">int</span> sibling;			<span class="comment">//存储下一个兄弟节点</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Node</span> <span class="title">Tree</span>[<span class="title">MAX</span>];</span></span><br><span class="line"><span class="comment">//或者</span></span><br><span class="line"><span class="keyword">int</span> parent[MAX];</span><br><span class="line"><span class="keyword">int</span> child[MAX];</span><br><span class="line"><span class="keyword">int</span> sibling[MAX];</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="树的遍历">1.3树的遍历</h2>
+<h3 id="树的dfs">树的DFS</h3>
+<p>在树上 DFS
+是这样的一个过程：先访问根节点，然后分别访问根节点每个儿子的子树。</p>
+<p>可以用来求出每个节点的深度、父亲等信息。</p>
+<h3 id="树的bfs">树的BFS</h3>
+<p>从树根开始，严格按照层次来访问节点。</p>
+<p>BFS 过程中也可以顺便求出各个节点的深度和父亲节点。</p>
+<h3 id="无根树的遍历">无根树的遍历</h3>
+<p>无根树的遍历一般为深度优先遍历，这个过程中最需要注意的是避免重复访问节点。</p>
+<p>由于树是无环图，因此只需记录当前节点是由哪个节点访问而来，此后进入除该节点外的所有相邻节点，即可避免重复访问。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> visited[MAX];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Dfs</span><span class="params">(<span class="keyword">int</span> start)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    visited[start]=<span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;Tree[start].<span class="built_in">size</span>();i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> next=Tree[start][i];</span><br><span class="line">        <span class="keyword">if</span>(visited[next]==<span class="literal">false</span>)</span><br><span class="line">            <span class="built_in">Dfs</span>(next);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="有根树的遍历">有根树的遍历</h3>
+<p>有根树的遍历与无根树的遍历相同，只是注意区分节点的上下关系。</p>
+<h2 id="特殊的树">1.4特殊的树</h2>
+<ul>
+<li><p><strong>链(chain/path
+graph)</strong>：满足与任一节点相连的边不超过<em><span
+class="math inline">\(2\)</span></em>条的树称为链。</p></li>
+<li><p><strong>菊花/星星(star)</strong>：满足存在<em><span
+class="math inline">\(u\)</span></em>使得所有除<em><span
+class="math inline">\(u\)</span></em>以外节点均与<em><span
+class="math inline">\(u\)</span></em>相连的树称为菊花。</p></li>
+<li><p><strong>有根二叉树（rooted binary
+tree）</strong>：每个节点最多只有两个儿子（子节点）的有根树称为二叉树。常常对两个子节点的顺序加以区分，分别称之为左子节点和右子节点。大多数情况下，<strong>二叉树</strong>
+一词均指有根二叉树。</p>
+<ul>
+<li><p><strong>完整二叉树（full/proper binary
+tree）</strong>：除叶子节点外每个节点都有两个孩子。</p></li>
+<li><p><strong>完美二叉树（perfect binary
+tree）</strong>：所有内部节点都有两个子节点，且所有叶子节点位于同一层。</p>
+<p><img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/perfect-binary-tree_0.png" style="zoom: 67%;" /></p>
+<center>
+<p>
+<p>完美二叉树</p>
+</p>
+</center></li>
+<li><p><strong>完全二叉树（complete binary
+tree）</strong>：若设二叉树的深度为<em><span
+class="math inline">\(h\)</span></em>，除第 <em><span
+class="math inline">\(h\)</span></em> 层外，其它各层 (1～<em><span
+class="math inline">\(h-1\)</span></em>) 的节点数都达到最大个数，第
+<em><span class="math inline">\(h\)</span></em>
+层所有的节点都连续集中在最左边，这就是完全二叉树。</p>
+<ul>
+<li>特点：叶子节点只可能在最深两层出现
+<figure class="half">
+<img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/comparison-1_0.png">
+<img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/comparison-4.png">
+</figure>
+<hr /></li>
+</ul></li>
+</ul></li>
+</ul>
+<p>Author: AsukaMilet</p>
+<p>Date: 2022-2-02</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"><i class="fa fa-tag"></i> 数据结构</a>
+              <a href="/tags/%E6%A0%91/" rel="tag"><i class="fa fa-tag"></i> 树</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/28/%E6%A0%88%E5%92%8C%E9%98%9F%E5%88%97/" rel="prev" title="栈和队列">
+      <i class="fa fa-chevron-left"></i> 栈和队列
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%91"><span class="nav-number">1.</span> <span class="nav-text">树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%91%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.</span> <span class="nav-text">1.1树的定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%91%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.</span> <span class="nav-text">1.2树的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AA%E8%AE%B0%E5%BD%95%E7%88%B6%E8%8A%82%E7%82%B9"><span class="nav-number">1.2.1.</span> <span class="nav-text">只记录父节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%82%BB%E6%8E%A5%E8%A1%A8"><span class="nav-number">1.2.2.</span> <span class="nav-text">邻接表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E4%BA%B2%E8%A1%A8%E7%A4%BA%E6%B3%95"><span class="nav-number">1.2.3.</span> <span class="nav-text">双亲表示法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86"><span class="nav-number">1.3.</span> <span class="nav-text">1.3树的遍历</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%91%E7%9A%84dfs"><span class="nav-number">1.3.1.</span> <span class="nav-text">树的DFS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%91%E7%9A%84bfs"><span class="nav-number">1.3.2.</span> <span class="nav-text">树的BFS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E6%A0%B9%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86"><span class="nav-number">1.3.3.</span> <span class="nav-text">无根树的遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%89%E6%A0%B9%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86"><span class="nav-number">1.3.4.</span> <span class="nav-text">有根树的遍历</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E6%AE%8A%E7%9A%84%E6%A0%91"><span class="nav-number">1.4.</span> <span class="nav-text">1.4特殊的树</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AsukaMilet"
+      src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/thumb_inbox_600.png">
+  <p class="site-author-name" itemprop="name">AsukaMilet</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AsukaMilet</span>
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
