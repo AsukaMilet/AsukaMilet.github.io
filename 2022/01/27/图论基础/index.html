@@ -29,7 +29,7 @@
 <meta property="og:description" content="图的基本知识以及存储图的方法和遍历图的两种方式">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-01-26T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-02-02T06:22:12.816Z">
+<meta property="article:modified_time" content="2022-02-02T07:23:24.382Z">
 <meta property="article:author" content="AsukaMilet">
 <meta property="article:tag" content="数据结构">
 <meta property="article:tag" content="图论">
@@ -225,7 +225,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-02-02 14:22:12" itemprop="dateModified" datetime="2022-02-02T14:22:12+08:00">2022-02-02</time>
+                <time title="Modified: 2022-02-02 15:23:24" itemprop="dateModified" datetime="2022-02-02T15:23:24+08:00">2022-02-02</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -252,10 +252,16 @@
         <h1 id="图论基础">图论基础</h1>
 <h2 id="图的定义">1.图的定义</h2>
 <ul>
-<li><p>图是用来对对象之间的成对关系建模的数学结构，一个<strong>图(Graph)</strong>
-<em>G=(V,E)</em>由"节点"或"顶点"(Vertex）以及连接这些顶点的"边"（Edge）组成。</p></li>
-<li><p>每一条边就是一个点对<em>(v,w)</em>，其中<em>v,w<span
-class="math inline">\(\in\)</span>V</em>。如果点对是有序的，那么图就叫作<strong>有向(directed)</strong>的。有向的图也被称为<strong>有向图(digraph)</strong>。图中的边在连接顶点时无需区分方向，则图为<strong>无向</strong>的，也称为<strong>无向图</strong>。</p>
+<li>图是用来对对象之间的成对关系建模的数学结构，一个<strong>图(Graph)</strong>
+<em>G=(V,E)</em>由"节点"或"顶点"(Vertex）以及连接这些顶点的"边"（Edge）组成。
+<ul>
+<li>对于一张图<strong><em>G=(V,E)</em></strong>,若存在另一张图<strong><em>H=(V',E')</em></strong>满足<strong><em>V'<span
+class="math inline">\(\subseteq\)</span>V</em></strong>，且<strong><em>E'<span
+class="math inline">\(\subseteq\)</span>E</em></strong>,则称<strong><em>H</em></strong>为<strong><em>G</em></strong>的<strong>子图(Subgraph)</strong>,记作<strong><em>H<span
+class="math inline">\(\subseteq\)</span>G</em></strong>。</li>
+</ul></li>
+<li>每一条边就是一个点对<strong><em>(v,w)</em></strong>，其中<strong><em>v,w<span
+class="math inline">\(\in\)</span>V</em></strong>。如果点对是有序的，那么图就叫作<strong>有向(directed)</strong>的。有向的图也被称为<strong>有向图(digraph)</strong>。图中的边在连接顶点时无需区分方向，则图为<strong>无向</strong>的，也称为<strong>无向图</strong>。
 <ul>
 <li>对于有向图<strong><em>G=(V,E)</em></strong>,它的<strong>反图(Transpose
 Graph)</strong>指的是点集不变，每条边反向得到的图，即：若<strong><em>G</em></strong>的反图为<strong><em>G<span
@@ -263,26 +269,29 @@ class="math inline">\(^T\)</span>=(V,E')</em></strong>,则<strong><em>E'=</em></
 <strong>{(w,v)|(v,w)<span class="math inline">\(\in\)</span><em>E</em>
 }</strong></li>
 </ul></li>
-<li><p>有时候边具有第三种成分，即<strong>权</strong>(weight)或<strong>值</strong>(cost)。边的<strong>权值</strong>记为<strong><em>w(v,w)</em></strong>。</p></li>
-<li><p>顶点集合为<strong><em>V</em></strong>，边集合为<strong><em>E</em></strong>的图记为<strong><em>G=（V，E）</em></strong>，其顶点数为<strong><span
+<li>有时候边具有第三种成分，即<strong>权</strong>(weight)或<strong>值</strong>(cost)。边的<strong>权值</strong>记为<strong><em>w(v,w)</em></strong>。</li>
+<li>顶点集合为<strong><em>V</em></strong>，边集合为<strong><em>E</em></strong>的图记为<strong><em>G=（V，E）</em></strong>，其顶点数为<strong><span
 class="math inline">\(|V|\)</span></strong>,边数为<strong><span
-class="math inline">\(|E|\)</span></strong>。</p></li>
-<li><p>相邻顶点构成的顶点序列称为<strong>路径</strong>(path)，即一个顶点序列<span
+class="math inline">\(|E|\)</span></strong>。</li>
+<li>相邻顶点构成的顶点序列称为<strong>路径</strong>(path)，即一个顶点序列<span
 class="math inline">\(w_1,w_2,w_3,...w_n\)</span>, 使(<span
 class="math inline">\(w_i,w_{i+1}\)</span>)<span
-class="math inline">\(\in\)</span><strong><em>E</em></strong>,且</p></li>
-<li><p>1<em><span class="math inline">\(\leq\)</span></em> <em>i</em>
-<em><span class="math inline">\(&lt;\)</span></em>
-<em>N</em>。则一条路径的长为该路径上的边数，它等于<em>N-1</em>。起点若与终点相同，则称为<strong>环</strong>。</p></li>
-<li><p>与顶点相连的边数称为<strong>度(Degree)</strong>，有向图的度又分为<strong>入度</strong>(以该顶点为终点)和<strong>出度</strong>(以该顶点为起点)。</p></li>
-<li><p><strong>连通图</strong>：任意两个顶点都是连通的，即都可从第一个顶点到第二个顶点，也可以从第二个顶点到第一个顶点。</p></li>
-<li><p><strong>完全图</strong>：任意两个顶点间都有一条边，无向完全图共有
+class="math inline">\(\in\)</span><strong><em>E</em></strong>,且1<em><span
+class="math inline">\(\leq\)</span></em> <em>i</em> <em><span
+class="math inline">\(&lt;\)</span></em>
+<em>N</em>。则一条路径的长为该路径上的边数，它等于<em>N-1</em>。起点若与终点相同，则称为<strong>环</strong>。</li>
+<li>与顶点相连的边数称为<strong>度(Degree)</strong>，有向图的度又分为<strong>入度</strong>(以该顶点为终点)和<strong>出度</strong>(以该顶点为起点)。</li>
+<li><strong>连通图</strong>：任意两个顶点都是连通的，即都可从第一个顶点到第二个顶点，也可以从第二个顶点到第一个顶点。
+<ul>
+<li>连通分量：无向图<strong><em>G</em></strong>的极大连通子图称为<strong><em>G</em></strong>的连通分量。极大连通子图：该子图为<strong><em>G</em></strong>的连通子图，如果再加入一个顶点，该子图不连通。</li>
+</ul></li>
+<li><strong>完全图</strong>：任意两个顶点间都有一条边，无向完全图共有
 <strong><em>n<span
 class="math inline">\(\times\)</span>(n-1)/2</em></strong>条边,有向完全图共有
 <strong><em>n<span
-class="math inline">\(\times\)</span>(n-1)</em></strong>条边。</p></li>
-<li><p><strong>稀疏图</strong>：边数远小于完全图的图。
-<strong>稠密图</strong>：边数接近于完全图的图</p></li>
+class="math inline">\(\times\)</span>(n-1)</em></strong>条边。</li>
+<li><strong>稀疏图</strong>：边数远小于完全图的图。
+<strong>稠密图</strong>：边数接近于完全图的图</li>
 </ul>
 <hr />
 <h2 id="图的存储表示c">2.图的存储（表示）(C++)</h2>
