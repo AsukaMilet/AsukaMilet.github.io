@@ -538,18 +538,169 @@ class="math inline">\(h\)</span></em> 层外，其它各层 (1～<em><span
 class="math inline">\(h-1\)</span></em>) 的节点数都达到最大个数，第
 <em><span class="math inline">\(h\)</span></em>
 层所有的节点都连续集中在最左边，这就是完全二叉树。</p>
-<ul>
-<li>特点：叶子节点只可能在最深两层出现
+<p>特点：</p>
+<ol type="1">
+<li>所有叶子节点必须向左倾斜</li>
+<li>最后一个叶子节点可能没有右兄弟(<strong>P.S</strong>
+完全二叉树(complete binary tree)不一定是完整二叉树(full binary tree))
 <figure class="half">
 <img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/comparison-1_0.png">
 <img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/comparison-4.png">
-</figure>
-<hr /></li>
-</ul></li>
+</figure></li>
+</ol></li>
 </ul></li>
 </ul>
+<hr />
 <p>Author: AsukaMilet</p>
 <p>Date: 2022-2-02</p>
+]]></content>
+      <categories>
+        <category>Data Structrue</category>
+      </categories>
+      <tags>
+        <tag>数据结构</tag>
+        <tag>图论</tag>
+        <tag>树</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>二叉树</title>
+    <url>/2022/02/02/%E4%BA%8C%E5%8F%89%E6%A0%91/</url>
+    <content><![CDATA[<h1 id="二叉树">二叉树</h1>
+<p><strong>二叉树(binary
+tree)</strong>是一颗树，其中每个节点都不能有多于两个的儿子。一颗二叉树由一个根和两颗子树<em><span
+class="math inline">\(T_L\)</span></em>和<em><span
+class="math inline">\(T_R\)</span></em>组成，<em><span
+class="math inline">\(T_L\)</span></em>和<em><span
+class="math inline">\(T_R\)</span></em>均可能为空。</p>
+<p>二叉树的第<em><span
+class="math inline">\(i\)</span></em>层最多拥有<em><span
+class="math inline">\(2^{i-1}\)</span></em>个节点，深度为<em><span
+class="math inline">\(k\)</span></em>的二叉树最多总共有<em><span
+class="math inline">\(2^{k+1}-1\)</span></em>个节点。</p>
+<p>二叉树可分为：<strong>完整二叉树</strong>、<strong>完全二叉树</strong>、<strong>完美二叉树</strong>。</p>
+<p><a
+href="https://asukamilet.github.io/2022/02/02/%E6%A0%91%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">二叉树的分类</a></p>
+<hr />
+<h2 id="二叉树的构造">1.二叉树的构造</h2>
+<h3 id="数组存储">数组存储</h3>
+<p>二叉树可以用数组或链表来存储，若为满二叉树就可紧凑排列。若某个节点的索引为<em><span
+class="math inline">\(i\)</span></em>(假设根节点的索引为0)则它左子节点的索引为<em><span
+class="math inline">\(2i+1\)</span></em>，右子节点的索引为<em><span
+class="math inline">\(2i+2\)</span></em>，父节点(若有)的索引为<em><span
+class="math inline">\(\lfloor {i-1}/2 \rfloor\)</span></em></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> parent;</span><br><span class="line">    <span class="keyword">int</span> left;</span><br><span class="line">    <span class="keyword">int</span> right;</span><br><span class="line">&#125;Node;</span><br><span class="line">Node BinaryTree[MAX];</span><br></pre></td></tr></table></figure>
+<h3 id="链表存储">链表存储</h3>
+<p>如果一个节点的子节点个数小于2，一些子节点指针可能为空值。使用链表能避免顺序存储浪费空间的问题，算法与结构相对简单，但使用链表，由于缺乏父链的指引，在找回父节点时需要重新扫描树得知父节点的节点地址。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">BinaryNode</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    Object element;			<span class="comment">//节点上的数据</span></span><br><span class="line">    BinaryNode *left;		<span class="comment">//左儿子</span></span><br><span class="line">    BinaryNode *right;		<span class="comment">//右儿子</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">BinaryNode</span> *<span class="title">BinaryTree</span>;</span></span><br></pre></td></tr></table></figure>
+<h2 id="二叉树的遍历">2.二叉树的遍历</h2>
+<h3 id="深度优先搜索dfs">2.1深度优先搜索(DFS)</h3>
+<p>在深度优先搜索中，我们希望从根节点访问最远的节点。和图的深度优先搜索不同的是，不需记住访问过的每一个节点，因为树中不会有环。前序，中序和后序遍历都是深度优先遍搜索的特例。</p>
+<h4 id="前序遍历">2.1.1前序遍历</h4>
+<p>按照<strong>根、左、右</strong>的顺序遍历二叉树</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PreTrav</span><span class="params">(BinaryTree*root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//相关操作</span></span><br><span class="line">        <span class="built_in">PreTrav</span>(root-&gt;left);</span><br><span class="line">        <span class="built_in">PreTrav</span>(root-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="中序遍历">2.1.2中序遍历</h4>
+<p>按照<strong>左、根、右</strong>的顺序遍历二叉树</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MidTrav</span><span class="params">(BinaryTree*root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">MidTrav</span>(root-&gt;left);</span><br><span class="line">        <span class="comment">//相关操作</span></span><br><span class="line">        <span class="built_in">MidTrav</span>(root-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="后序遍历">2.1.2后序遍历</h4>
+<p>按照<strong>左、右、根</strong>的顺序遍历二叉树</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LastTrav</span><span class="params">(BinaryTree*root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">LastTrav</span>(root-&gt;left);</span><br><span class="line">        <span class="built_in">LastTrav</span>(root-&gt;right);</span><br><span class="line">        <span class="comment">//相关操作</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="广度优先搜索bfs">2.2广度优先搜索(BFS)</h3>
+<p>从树根开始，严格按照层次来访问节点，BFS过程中也可顺便求出各个节点的深度以及父亲节点。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//本质还是BFS</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LevelTrav</span><span class="params">(BinaryTree*root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    queue&lt;BinaryNode*&gt; q;	<span class="comment">//树节点指针的队列</span></span><br><span class="line">    q.<span class="built_in">push</span>(root);</span><br><span class="line">    <span class="keyword">while</span>(！q.<span class="built_in">empty</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        BinaryNode*now=q.<span class="built_in">front</span>();</span><br><span class="line">        <span class="comment">//相关操作，如输出存储数据</span></span><br><span class="line">        q.<span class="built_in">pop</span>();</span><br><span class="line">        <span class="keyword">if</span>(now-&gt;left!=<span class="literal">nullptr</span>)	<span class="comment">//q.front()得到左儿子</span></span><br><span class="line">            q.<span class="built_in">push</span>(now-&gt;left);</span><br><span class="line">        <span class="keyword">if</span>(now-&gt;right!=<span class="literal">nullptr</span>)	<span class="comment">//q.front()得到右儿子</span></span><br><span class="line">            q.<span class="built_in">push</span>(now-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>二叉树遍历会对树的每个节点进行一次访问，算法复杂度为<strong><em>O(N)</em></strong>，使用递归实现遍历时，一旦树的节点数量庞大且分布不均，可能导致递归深度过深。</p>
+<h2 id="二叉树的应用">3.二叉树的应用</h2>
+<p>二叉树的一个重要应用即它在搜索中的使用，赋予二叉树相关性质即可使二叉树成为二叉查找树</p>
+<p>使二叉树成为二叉查找树的性质是，对于树中每个节点<strong><em>X</em></strong>，它的左子树中所有项的值均小于<strong><em>X</em></strong>中的项，而它右子树中所有项的值均大于<strong><em>X</em></strong>中的项。这意味着该树所有的元素可以用某种一致的方式排序。</p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-03%20155815.png" /></p>
+<center>
+<p>
+两颗二叉树(只有左边的树为查找树)
+</p>
+</center>
+<h3 id="二叉查找树的相关操作">3.1二叉查找树的相关操作</h3>
+<h4 id="数组实现">3.1.1数组实现</h4>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">TreeNode</span>					//构建<span class="title">BST</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> value;</span><br><span class="line">    <span class="keyword">int</span> left;					<span class="comment">//当left与right的值为-1时，表示无子节点</span></span><br><span class="line">    <span class="keyword">int</span> right;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">TreeNode</span> <span class="title">TreeNode</span>;</span></span><br><span class="line">TreeNode BStree[MAX];</span><br><span class="line"><span class="comment">//BStree[0]即为根节点</span></span><br></pre></td></tr></table></figure>
+<h5 id="遍历二叉搜索树">遍历二叉搜索树</h5>
+<p>BST的中序遍历是其所有节点值从小到大排列，时间复杂度为<strong><em>O(N)</em></strong></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Traverse</span><span class="params">(<span class="keyword">int</span> root)</span>			<span class="comment">//遍历以root为根节点的BST</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(BStree[root].left!=<span class="number">-1</span>)	<span class="comment">//当左子树不为空时，遍历左子树</span></span><br><span class="line">        <span class="built_in">Traverse</span>(BStree[root].left);</span><br><span class="line">    cout&lt;&lt;BStree[root].value;	<span class="comment">//输出根节点的值</span></span><br><span class="line">    <span class="keyword">if</span>(BStree[root].right!=<span class="number">-1</span>)	<span class="comment">//当右子树不为空时，遍历右子树</span></span><br><span class="line">        <span class="built_in">Traverse</span>(BStree[root].right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="查找最小最大值">查找最小/最大值</h5>
+<p>由BST的性质可知，BST上最小值位于BST最左端顶点，最大值位于BST最右端顶点。时间复杂度为<strong><em>O(<span
+class="math inline">\(h\)</span>)</em></strong></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">FindMin</span><span class="params">(<span class="keyword">int</span> root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(BStree[root].left!=<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">FindMin</span>(BStree[root].left);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> BStree[root].value;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">FindMax</span><span class="params">(<span class="keyword">int</span> root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(BStree[root].right!=<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">FindMax</span>(BStree[root].right);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> BStree[root].value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="指针实现">3.1.2 指针实现</h4>
+<p>由于BST的平均深度为<strong><em>O(<span
+class="math inline">\(\log{N}\)</span>)</em></strong>，所以一般不必担心栈空间会被用尽</p>
+<h5 id="bst接口">BST接口</h5>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BinarySearchTree</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">BinarySearchTree</span>();</span><br><span class="line">    <span class="built_in">BinarySearchTree</span>(<span class="keyword">const</span> BinarySearchTree&amp;rhs);</span><br><span class="line">    <span class="built_in">BinarySearchTree</span>(BinarySearchTree&amp;&amp;rhs);</span><br><span class="line">    ~<span class="built_in">BinarySearchTree</span>();</span><br><span class="line">    <span class="comment">//构造函数</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">const</span> T&amp;<span class="title">findMin</span><span class="params">()</span> <span class="keyword">const</span></span>;		 <span class="comment">//查找最小值</span></span><br><span class="line">    <span class="function"><span class="keyword">const</span> T&amp;<span class="title">findMax</span><span class="params">()</span> <span class="keyword">const</span></span>;		 <span class="comment">//查找最大值</span></span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">contains</span><span class="params">(<span class="keyword">const</span> T&amp;x)</span> <span class="keyword">const</span></span>;  <span class="comment">//判断是否含有项X的节点</span></span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">empty</span><span class="params">()</span> <span class="keyword">const</span></span>;						 <span class="comment">//判断是否为空树</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">printTree</span><span class="params">(ostream&amp;out=cout)</span> <span class="keyword">const</span></span>;	 <span class="comment">//输出树</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">makeEmpty</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(<span class="keyword">const</span> T&amp;x)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(T&amp;&amp;x)</span></span>;</span><br><span class="line">    <span class="comment">//插入元素</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">(<span class="keyword">const</span> T&amp;x)</span></span>;			 <span class="comment">//删除元素，delete为关键字，用remove</span></span><br><span class="line">    </span><br><span class="line">    BinarySearchTree&amp;<span class="keyword">operator</span>=(<span class="keyword">const</span> BinarySearchTree&amp;rhs);</span><br><span class="line">    BinarySearchTree&amp;<span class="keyword">operator</span>=(BinarySearchTree&amp;&amp;rhs);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">BinaryNode</span></span></span><br><span class="line"><span class="class">    &#123;</span></span><br><span class="line">        T element;</span><br><span class="line">        BinaryNode*left;</span><br><span class="line">        BinaryNode*right;</span><br><span class="line">        <span class="comment">//BinaryNode*parent;		 父节点可加可不加</span></span><br><span class="line">        </span><br><span class="line">        <span class="built_in">BinaryNode</span>(<span class="keyword">const</span> T&amp;value,BinaryNode*lc,BinaryNode*rc)</span><br><span class="line">            :element&#123;value&#125;,left&#123;lc&#125;,right&#123;rc&#125; &#123;&#125;</span><br><span class="line">        <span class="built_in">BinaryNode</span>(T&amp;&amp;value,BinaryNode*lc,BinaryNode*rc)</span><br><span class="line">            :element&#123;std::<span class="built_in">move</span>(value)&#125;,left&#123;lc&#125;,right&#123;rc&#125; &#123;&#125;</span><br><span class="line">        <span class="comment">//节点的构造函数</span></span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    BinaryNode*root;				 <span class="comment">//定义根节点</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">//内部重载函数</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(BinaryNode*&amp;t,<span class="keyword">const</span> T&amp;x)</span></span>;	</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(BinaryNode*&amp;t,T&amp;&amp;x)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">(BinaryNode*&amp;t,<span class="keyword">const</span> T&amp;x)</span></span>;</span><br><span class="line">    <span class="function">BinaryNode*<span class="title">findMax</span><span class="params">(BinaryNode*t)</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function">BinaryNode*<span class="title">findMin</span><span class="params">(BinaryNode*t)</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">contains</span><span class="params">(BinaryNode*t,<span class="keyword">const</span> T&amp;x)</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">makeEmpty</span><span class="params">(BinaryNode*&amp;t)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">printTree</span><span class="params">(BinaryNode*t,ostream&amp;out)</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function">BinaryNode*<span class="title">clone</span><span class="params">(BinaryNode*t)</span> <span class="keyword">const</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<center>
+<p>
+二叉查找树接口
+</p>
+</center>
+<p><em>private</em>成员函数通过<strong>传引用调用</strong>的使用传递指针变量，使得public型成员函数能够把指向根节点的指针传递给<em>private</em>型的递归成员函数，这些递归函数此时可以改变根的值，使<em>root</em>指向另外的节点。</p>
+<h5 id="private与public关系">private与public关系</h5>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">bool</span> BinarySearchTree&lt;T&gt;::<span class="built_in">contains</span>(<span class="keyword">const</span> T&amp;x) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">contains</span>(x,root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> BinarySearchTree&lt;T&gt;::<span class="built_in">insert</span>(<span class="keyword">const</span> T&amp;x)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">insert</span>(x,root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> BinarySearchTree&lt;T&gt;::<span class="built_in">remove</span>(<span class="keyword">const</span> T&amp;x)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">remove</span>(x,root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> T&amp;BinarySearchTree&lt;T&gt;::<span class="built_in">findMin</span>() <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">findMin</span>(root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> T&amp;BinarySearchTree&lt;T&gt;::<span class="built_in">findMax</span>() <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">findMax</span>(root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> BinarySearchTree&lt;T&gt;::<span class="built_in">makeEmpty</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">makeEmpty</span>(root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> BinarySearchTree&lt;T&gt;::<span class="built_in">printTree</span>(ostream&amp;out=cout) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printTree</span>(root,cout);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="contains">contains</h5>
+<p>如果在树<span class="math inline">\(T\)</span>中含有项<span
+class="math inline">\(X\)</span>的节点，则该此操作返回<em>true</em>，若该节点不存在，则返回<em>false</em>。若<span
+class="math inline">\(T\)</span>为空集，则直接返回<em>false</em>，否则，若存储在<span
+class="math inline">\(T\)</span>的项为<span
+class="math inline">\(X\)</span>，则返回<em>true</em>；不然对树<span
+class="math inline">\(T\)</span>的左子树和右子树进行递归调用。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*判断某项是否在子树上方法</span></span><br><span class="line"><span class="comment">*x为待查找项</span></span><br><span class="line"><span class="comment">*t为作为该子树的根节点</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">contains</span><span class="params">(<span class="keyword">const</span> T&amp;x,BinaryNode*t)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t==<span class="literal">nullptr</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(x&lt;t-&gt;element)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">contains</span>(x,t-&gt;left);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(x&gt;t-&gt;element)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">contains</span>(x,t-&gt;right);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<center>
+<p>
+二叉查找树的contains操作
+</p>
+</center>
+<h5 id="findmax和findmin">findMax和findMin</h5>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">BinaryNode*<span class="title">findMin</span><span class="params">(BinaryNode*t)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span>(t-&gt;left!=<span class="literal">nullptr</span>)</span><br><span class="line">            t=t-&gt;left;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//private成员函数</span></span><br><span class="line"><span class="function">BinaryNode*<span class="title">findMax</span><span class="params">(BinaryNode*t)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span>(t-&gt;right!=<span class="literal">nullptr</span>)</span><br><span class="line">            t=t-right;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="insert">insert</h5>
+<p>为了将<span class="math inline">\(X\)</span>插入到树<span
+class="math inline">\(T\)</span>中，可以沿着树进行查找，如果找到<span
+class="math inline">\(X\)</span>,则什么也不用做。否则将<span
+class="math inline">\(X\)</span>插入至所遍历路径的最后一点上。</p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-09%20230457.png" /></p>
+<center>
+<p>
+插入5之前和之后的BST
+</p>
+</center>
+<p>重复元的插入可以通过在节点中保留一个<code>count</code>计数器来记录该值在树中出现的次数。也可把具有相同关键字的所有结构保留在一个辅助数据结构中，例如表或者另一颗BST。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//x为待插入的项，t为该子树根节点</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(<span class="keyword">const</span> T&amp;x,BinaryNode*&amp;t)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t==<span class="literal">nullptr</span>)</span><br><span class="line">        t=<span class="keyword">new</span> BinaryNode&#123;x,<span class="literal">nullptr</span>,<span class="literal">nullptr</span>&#125;;	<span class="comment">//列表初始化</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(x&lt;t-&gt;element)</span><br><span class="line">        <span class="built_in">insert</span>(x,t-&gt;left);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(x&gt;t-&gt;element)</span><br><span class="line">        <span class="built_in">insert</span>(x,t-&gt;right);</span><br><span class="line">    <span class="keyword">else</span> </span><br><span class="line">        (t-&gt;count)++;							<span class="comment">//重复元，计数器+1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="remove">remove</h5>
+<ul>
+<li>若待删除节点为树叶，则立即被删除</li>
+<li>若待删除节点有一个儿子，则该节点在其父节点调整其链绕过该节点后被删除<img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-10%20145457.png" /></li>
+</ul>
+<center>
+<p>
+有一个儿子的节点被删除情况
+</p>
+</center>
+<ul>
+<li>若待删除节点有两个儿子，一般用其右子树的最小数据代替该节点数据并递归删除那个节点<img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-10%20145733.png" /></li>
+</ul>
+<center>
+<p>
+有两个儿子节点前后情况
+</p>
+</center>
+<ul>
+<li>若预计删除次数不多，则可以使用<strong>懒惰删除(lazy
+deletion)</strong>：当一个元素要被删除时，它仍留在树中，只是做了一个被删除的标记。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">(BinaryNode*&amp;t,<span class="keyword">const</span> T&amp;x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t==<span class="literal">nullptr</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">if</span>(x&lt;t-&gt;element)</span><br><span class="line">        <span class="built_in">remove</span>(t-&gt;left,x);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(x&gt;t-&gt;element)</span><br><span class="line">        <span class="built_in">remove</span>(t-&gt;right,x);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(t-&gt;left!=<span class="literal">nullptr</span>&amp;&amp;t-&gt;right!=<span class="literal">nullptr</span>)	<span class="comment">//待删除节点有两个儿子</span></span><br><span class="line">    &#123;</span><br><span class="line">        t-&gt;element=<span class="built_in">findMin</span>(t-&gt;right)-&gt;element;		<span class="comment">//右子树最小值</span></span><br><span class="line">        <span class="built_in">remove</span>(t-&gt;element,t-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>		<span class="comment">//待删除节点只有一个儿子</span></span><br><span class="line">    &#123;</span><br><span class="line">        BinaryNode*oldNode=t;</span><br><span class="line">        <span class="keyword">if</span>(t-&gt;left!=<span class="literal">nullptr</span>)</span><br><span class="line">            t=t-&gt;left;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            t=t-&gt;right;		<span class="comment">//待删除节点被其儿子代替</span></span><br><span class="line">        <span class="keyword">delete</span> oldNode;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="析构函数与构造拷贝函数">析构函数与构造拷贝函数</h5>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="comment">//析构函数与makeEmpty</span></span><br><span class="line">BinarySearchTree&lt;T&gt;::~<span class="built_in">BinarySearchTree</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">makeEmpty</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">void</span> BinarySearchTree&lt;T&gt;::<span class="built_in">makeEmpty</span>(BinaryNode*&amp;t)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(t!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">makeEmpty</span>(t-&gt;left);</span><br><span class="line">        <span class="built_in">makeEmpty</span>(t-&gt;right);</span><br><span class="line">        <span class="keyword">delete</span> t;</span><br><span class="line">    &#125;</span><br><span class="line">    t=<span class="literal">nullptr</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//构造函数</span></span><br><span class="line">BinarySearchTree&lt;T&gt;::<span class="built_in">BinarySearchTree</span>(<span class="keyword">const</span> BinarySearchTree&amp;rhs): root&#123;<span class="literal">nullptr</span>&#125;</span><br><span class="line">&#123;</span><br><span class="line">    root=<span class="built_in">clone</span>(rhs.root);</span><br><span class="line">&#125;</span><br><span class="line">BinaryNode*BinarySearchTree&lt;T&gt;::<span class="built_in">clone</span>(BinaryNode*t) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(t==<span class="literal">nullptr</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> BinaryNode&#123;t-&gt;element,<span class="built_in">clone</span>(t-&gt;left),<span class="built_in">clone</span>(t-&gt;right)&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<p>Author: AsukaMilet</p>
+<p>Date: F2022-2-02 L2022-2-10</p>
 ]]></content>
       <categories>
         <category>Data Structrue</category>

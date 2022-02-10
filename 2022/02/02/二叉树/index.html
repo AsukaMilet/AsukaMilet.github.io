@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="二叉树的介绍以及二叉查找树的相关知识">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二叉树">
+<meta property="og:url" content="http://example.com/2022/02/02/%E4%BA%8C%E5%8F%89%E6%A0%91/index.html">
+<meta property="og:site_name" content="AsukaMilet&#39;s Note">
+<meta property="og:description" content="二叉树的介绍以及二叉查找树的相关知识">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-02-01T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-02-10T07:58:12.254Z">
+<meta property="article:author" content="AsukaMilet">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="树">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2022/02/02/%E4%BA%8C%E5%8F%89%E6%A0%91/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>二叉树 | AsukaMilet's Note</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AsukaMilet's Note</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/02/%E4%BA%8C%E5%8F%89%E6%A0%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/thumb_inbox_600.png">
+      <meta itemprop="name" content="AsukaMilet">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AsukaMilet's Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          二叉树
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-02 00:00:00" itemprop="dateCreated datePublished" datetime="2022-02-02T00:00:00+08:00">2022-02-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-10 15:58:12" itemprop="dateModified" datetime="2022-02-10T15:58:12+08:00">2022-02-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Data-Structrue/" itemprop="url" rel="index"><span itemprop="name">Data Structrue</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">二叉树的介绍以及二叉查找树的相关知识</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="二叉树">二叉树</h1>
+<p><strong>二叉树(binary
+tree)</strong>是一颗树，其中每个节点都不能有多于两个的儿子。一颗二叉树由一个根和两颗子树<em><span
+class="math inline">\(T_L\)</span></em>和<em><span
+class="math inline">\(T_R\)</span></em>组成，<em><span
+class="math inline">\(T_L\)</span></em>和<em><span
+class="math inline">\(T_R\)</span></em>均可能为空。</p>
+<p>二叉树的第<em><span
+class="math inline">\(i\)</span></em>层最多拥有<em><span
+class="math inline">\(2^{i-1}\)</span></em>个节点，深度为<em><span
+class="math inline">\(k\)</span></em>的二叉树最多总共有<em><span
+class="math inline">\(2^{k+1}-1\)</span></em>个节点。</p>
+<p>二叉树可分为：<strong>完整二叉树</strong>、<strong>完全二叉树</strong>、<strong>完美二叉树</strong>。</p>
+<p><a
+target="_blank" rel="noopener" href="https://asukamilet.github.io/2022/02/02/%E6%A0%91%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">二叉树的分类</a></p>
+<hr />
+<h2 id="二叉树的构造">1.二叉树的构造</h2>
+<h3 id="数组存储">数组存储</h3>
+<p>二叉树可以用数组或链表来存储，若为满二叉树就可紧凑排列。若某个节点的索引为<em><span
+class="math inline">\(i\)</span></em>(假设根节点的索引为0)则它左子节点的索引为<em><span
+class="math inline">\(2i+1\)</span></em>，右子节点的索引为<em><span
+class="math inline">\(2i+2\)</span></em>，父节点(若有)的索引为<em><span
+class="math inline">\(\lfloor {i-1}/2 \rfloor\)</span></em></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> parent;</span><br><span class="line">    <span class="keyword">int</span> left;</span><br><span class="line">    <span class="keyword">int</span> right;</span><br><span class="line">&#125;Node;</span><br><span class="line">Node BinaryTree[MAX];</span><br></pre></td></tr></table></figure>
+<h3 id="链表存储">链表存储</h3>
+<p>如果一个节点的子节点个数小于2，一些子节点指针可能为空值。使用链表能避免顺序存储浪费空间的问题，算法与结构相对简单，但使用链表，由于缺乏父链的指引，在找回父节点时需要重新扫描树得知父节点的节点地址。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">BinaryNode</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    Object element;			<span class="comment">//节点上的数据</span></span><br><span class="line">    BinaryNode *left;		<span class="comment">//左儿子</span></span><br><span class="line">    BinaryNode *right;		<span class="comment">//右儿子</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">BinaryNode</span> *<span class="title">BinaryTree</span>;</span></span><br></pre></td></tr></table></figure>
+<h2 id="二叉树的遍历">2.二叉树的遍历</h2>
+<h3 id="深度优先搜索dfs">2.1深度优先搜索(DFS)</h3>
+<p>在深度优先搜索中，我们希望从根节点访问最远的节点。和图的深度优先搜索不同的是，不需记住访问过的每一个节点，因为树中不会有环。前序，中序和后序遍历都是深度优先遍搜索的特例。</p>
+<h4 id="前序遍历">2.1.1前序遍历</h4>
+<p>按照<strong>根、左、右</strong>的顺序遍历二叉树</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PreTrav</span><span class="params">(BinaryTree*root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//相关操作</span></span><br><span class="line">        <span class="built_in">PreTrav</span>(root-&gt;left);</span><br><span class="line">        <span class="built_in">PreTrav</span>(root-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="中序遍历">2.1.2中序遍历</h4>
+<p>按照<strong>左、根、右</strong>的顺序遍历二叉树</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MidTrav</span><span class="params">(BinaryTree*root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">MidTrav</span>(root-&gt;left);</span><br><span class="line">        <span class="comment">//相关操作</span></span><br><span class="line">        <span class="built_in">MidTrav</span>(root-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="后序遍历">2.1.2后序遍历</h4>
+<p>按照<strong>左、右、根</strong>的顺序遍历二叉树</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LastTrav</span><span class="params">(BinaryTree*root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">LastTrav</span>(root-&gt;left);</span><br><span class="line">        <span class="built_in">LastTrav</span>(root-&gt;right);</span><br><span class="line">        <span class="comment">//相关操作</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="广度优先搜索bfs">2.2广度优先搜索(BFS)</h3>
+<p>从树根开始，严格按照层次来访问节点，BFS过程中也可顺便求出各个节点的深度以及父亲节点。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//本质还是BFS</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LevelTrav</span><span class="params">(BinaryTree*root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    queue&lt;BinaryNode*&gt; q;	<span class="comment">//树节点指针的队列</span></span><br><span class="line">    q.<span class="built_in">push</span>(root);</span><br><span class="line">    <span class="keyword">while</span>(！q.<span class="built_in">empty</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        BinaryNode*now=q.<span class="built_in">front</span>();</span><br><span class="line">        <span class="comment">//相关操作，如输出存储数据</span></span><br><span class="line">        q.<span class="built_in">pop</span>();</span><br><span class="line">        <span class="keyword">if</span>(now-&gt;left!=<span class="literal">nullptr</span>)	<span class="comment">//q.front()得到左儿子</span></span><br><span class="line">            q.<span class="built_in">push</span>(now-&gt;left);</span><br><span class="line">        <span class="keyword">if</span>(now-&gt;right!=<span class="literal">nullptr</span>)	<span class="comment">//q.front()得到右儿子</span></span><br><span class="line">            q.<span class="built_in">push</span>(now-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>二叉树遍历会对树的每个节点进行一次访问，算法复杂度为<strong><em>O(N)</em></strong>，使用递归实现遍历时，一旦树的节点数量庞大且分布不均，可能导致递归深度过深。</p>
+<h2 id="二叉树的应用">3.二叉树的应用</h2>
+<p>二叉树的一个重要应用即它在搜索中的使用，赋予二叉树相关性质即可使二叉树成为二叉查找树</p>
+<p>使二叉树成为二叉查找树的性质是，对于树中每个节点<strong><em>X</em></strong>，它的左子树中所有项的值均小于<strong><em>X</em></strong>中的项，而它右子树中所有项的值均大于<strong><em>X</em></strong>中的项。这意味着该树所有的元素可以用某种一致的方式排序。</p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-03%20155815.png" /></p>
+<center>
+<p>
+两颗二叉树(只有左边的树为查找树)
+</p>
+</center>
+<h3 id="二叉查找树的相关操作">3.1二叉查找树的相关操作</h3>
+<h4 id="数组实现">3.1.1数组实现</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">TreeNode</span>					//构建<span class="title">BST</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> value;</span><br><span class="line">    <span class="keyword">int</span> left;					<span class="comment">//当left与right的值为-1时，表示无子节点</span></span><br><span class="line">    <span class="keyword">int</span> right;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">TreeNode</span> <span class="title">TreeNode</span>;</span></span><br><span class="line">TreeNode BStree[MAX];</span><br><span class="line"><span class="comment">//BStree[0]即为根节点</span></span><br></pre></td></tr></table></figure>
+<h5 id="遍历二叉搜索树">遍历二叉搜索树</h5>
+<p>BST的中序遍历是其所有节点值从小到大排列，时间复杂度为<strong><em>O(N)</em></strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Traverse</span><span class="params">(<span class="keyword">int</span> root)</span>			<span class="comment">//遍历以root为根节点的BST</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(BStree[root].left!=<span class="number">-1</span>)	<span class="comment">//当左子树不为空时，遍历左子树</span></span><br><span class="line">        <span class="built_in">Traverse</span>(BStree[root].left);</span><br><span class="line">    cout&lt;&lt;BStree[root].value;	<span class="comment">//输出根节点的值</span></span><br><span class="line">    <span class="keyword">if</span>(BStree[root].right!=<span class="number">-1</span>)	<span class="comment">//当右子树不为空时，遍历右子树</span></span><br><span class="line">        <span class="built_in">Traverse</span>(BStree[root].right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="查找最小最大值">查找最小/最大值</h5>
+<p>由BST的性质可知，BST上最小值位于BST最左端顶点，最大值位于BST最右端顶点。时间复杂度为<strong><em>O(<span
+class="math inline">\(h\)</span>)</em></strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">FindMin</span><span class="params">(<span class="keyword">int</span> root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(BStree[root].left!=<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">FindMin</span>(BStree[root].left);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> BStree[root].value;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">FindMax</span><span class="params">(<span class="keyword">int</span> root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(BStree[root].right!=<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">FindMax</span>(BStree[root].right);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> BStree[root].value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="指针实现">3.1.2 指针实现</h4>
+<p>由于BST的平均深度为<strong><em>O(<span
+class="math inline">\(\log{N}\)</span>)</em></strong>，所以一般不必担心栈空间会被用尽</p>
+<h5 id="bst接口">BST接口</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BinarySearchTree</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">BinarySearchTree</span>();</span><br><span class="line">    <span class="built_in">BinarySearchTree</span>(<span class="keyword">const</span> BinarySearchTree&amp;rhs);</span><br><span class="line">    <span class="built_in">BinarySearchTree</span>(BinarySearchTree&amp;&amp;rhs);</span><br><span class="line">    ~<span class="built_in">BinarySearchTree</span>();</span><br><span class="line">    <span class="comment">//构造函数</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">const</span> T&amp;<span class="title">findMin</span><span class="params">()</span> <span class="keyword">const</span></span>;		 <span class="comment">//查找最小值</span></span><br><span class="line">    <span class="function"><span class="keyword">const</span> T&amp;<span class="title">findMax</span><span class="params">()</span> <span class="keyword">const</span></span>;		 <span class="comment">//查找最大值</span></span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">contains</span><span class="params">(<span class="keyword">const</span> T&amp;x)</span> <span class="keyword">const</span></span>;  <span class="comment">//判断是否含有项X的节点</span></span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">empty</span><span class="params">()</span> <span class="keyword">const</span></span>;						 <span class="comment">//判断是否为空树</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">printTree</span><span class="params">(ostream&amp;out=cout)</span> <span class="keyword">const</span></span>;	 <span class="comment">//输出树</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">makeEmpty</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(<span class="keyword">const</span> T&amp;x)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(T&amp;&amp;x)</span></span>;</span><br><span class="line">    <span class="comment">//插入元素</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">(<span class="keyword">const</span> T&amp;x)</span></span>;			 <span class="comment">//删除元素，delete为关键字，用remove</span></span><br><span class="line">    </span><br><span class="line">    BinarySearchTree&amp;<span class="keyword">operator</span>=(<span class="keyword">const</span> BinarySearchTree&amp;rhs);</span><br><span class="line">    BinarySearchTree&amp;<span class="keyword">operator</span>=(BinarySearchTree&amp;&amp;rhs);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">BinaryNode</span></span></span><br><span class="line"><span class="class">    &#123;</span></span><br><span class="line">        T element;</span><br><span class="line">        BinaryNode*left;</span><br><span class="line">        BinaryNode*right;</span><br><span class="line">        <span class="comment">//BinaryNode*parent;		 父节点可加可不加</span></span><br><span class="line">        </span><br><span class="line">        <span class="built_in">BinaryNode</span>(<span class="keyword">const</span> T&amp;value,BinaryNode*lc,BinaryNode*rc)</span><br><span class="line">            :element&#123;value&#125;,left&#123;lc&#125;,right&#123;rc&#125; &#123;&#125;</span><br><span class="line">        <span class="built_in">BinaryNode</span>(T&amp;&amp;value,BinaryNode*lc,BinaryNode*rc)</span><br><span class="line">            :element&#123;std::<span class="built_in">move</span>(value)&#125;,left&#123;lc&#125;,right&#123;rc&#125; &#123;&#125;</span><br><span class="line">        <span class="comment">//节点的构造函数</span></span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    BinaryNode*root;				 <span class="comment">//定义根节点</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">//内部重载函数</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(BinaryNode*&amp;t,<span class="keyword">const</span> T&amp;x)</span></span>;	</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(BinaryNode*&amp;t,T&amp;&amp;x)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">(BinaryNode*&amp;t,<span class="keyword">const</span> T&amp;x)</span></span>;</span><br><span class="line">    <span class="function">BinaryNode*<span class="title">findMax</span><span class="params">(BinaryNode*t)</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function">BinaryNode*<span class="title">findMin</span><span class="params">(BinaryNode*t)</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">contains</span><span class="params">(BinaryNode*t,<span class="keyword">const</span> T&amp;x)</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">makeEmpty</span><span class="params">(BinaryNode*&amp;t)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">printTree</span><span class="params">(BinaryNode*t,ostream&amp;out)</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function">BinaryNode*<span class="title">clone</span><span class="params">(BinaryNode*t)</span> <span class="keyword">const</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<center>
+<p>
+二叉查找树接口
+</p>
+</center>
+<p><em>private</em>成员函数通过<strong>传引用调用</strong>的使用传递指针变量，使得public型成员函数能够把指向根节点的指针传递给<em>private</em>型的递归成员函数，这些递归函数此时可以改变根的值，使<em>root</em>指向另外的节点。</p>
+<h5 id="private与public关系">private与public关系</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">bool</span> BinarySearchTree&lt;T&gt;::<span class="built_in">contains</span>(<span class="keyword">const</span> T&amp;x) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">contains</span>(x,root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> BinarySearchTree&lt;T&gt;::<span class="built_in">insert</span>(<span class="keyword">const</span> T&amp;x)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">insert</span>(x,root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> BinarySearchTree&lt;T&gt;::<span class="built_in">remove</span>(<span class="keyword">const</span> T&amp;x)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">remove</span>(x,root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> T&amp;BinarySearchTree&lt;T&gt;::<span class="built_in">findMin</span>() <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">findMin</span>(root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> T&amp;BinarySearchTree&lt;T&gt;::<span class="built_in">findMax</span>() <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">findMax</span>(root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> BinarySearchTree&lt;T&gt;::<span class="built_in">makeEmpty</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">makeEmpty</span>(root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> BinarySearchTree&lt;T&gt;::<span class="built_in">printTree</span>(ostream&amp;out=cout) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printTree</span>(root,cout);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="contains">contains</h5>
+<p>如果在树<span class="math inline">\(T\)</span>中含有项<span
+class="math inline">\(X\)</span>的节点，则该此操作返回<em>true</em>，若该节点不存在，则返回<em>false</em>。若<span
+class="math inline">\(T\)</span>为空集，则直接返回<em>false</em>，否则，若存储在<span
+class="math inline">\(T\)</span>的项为<span
+class="math inline">\(X\)</span>，则返回<em>true</em>；不然对树<span
+class="math inline">\(T\)</span>的左子树和右子树进行递归调用。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*判断某项是否在子树上方法</span></span><br><span class="line"><span class="comment">*x为待查找项</span></span><br><span class="line"><span class="comment">*t为作为该子树的根节点</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">contains</span><span class="params">(<span class="keyword">const</span> T&amp;x,BinaryNode*t)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t==<span class="literal">nullptr</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(x&lt;t-&gt;element)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">contains</span>(x,t-&gt;left);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(x&gt;t-&gt;element)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">contains</span>(x,t-&gt;right);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<center>
+<p>
+二叉查找树的contains操作
+</p>
+</center>
+<h5 id="findmax和findmin">findMax和findMin</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BinaryNode*<span class="title">findMin</span><span class="params">(BinaryNode*t)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span>(t-&gt;left!=<span class="literal">nullptr</span>)</span><br><span class="line">            t=t-&gt;left;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//private成员函数</span></span><br><span class="line"><span class="function">BinaryNode*<span class="title">findMax</span><span class="params">(BinaryNode*t)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span>(t-&gt;right!=<span class="literal">nullptr</span>)</span><br><span class="line">            t=t-right;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="insert">insert</h5>
+<p>为了将<span class="math inline">\(X\)</span>插入到树<span
+class="math inline">\(T\)</span>中，可以沿着树进行查找，如果找到<span
+class="math inline">\(X\)</span>,则什么也不用做。否则将<span
+class="math inline">\(X\)</span>插入至所遍历路径的最后一点上。</p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-09%20230457.png" /></p>
+<center>
+<p>
+插入5之前和之后的BST
+</p>
+</center>
+<p>重复元的插入可以通过在节点中保留一个<code>count</code>计数器来记录该值在树中出现的次数。也可把具有相同关键字的所有结构保留在一个辅助数据结构中，例如表或者另一颗BST。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//x为待插入的项，t为该子树根节点</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(<span class="keyword">const</span> T&amp;x,BinaryNode*&amp;t)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t==<span class="literal">nullptr</span>)</span><br><span class="line">        t=<span class="keyword">new</span> BinaryNode&#123;x,<span class="literal">nullptr</span>,<span class="literal">nullptr</span>&#125;;	<span class="comment">//列表初始化</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(x&lt;t-&gt;element)</span><br><span class="line">        <span class="built_in">insert</span>(x,t-&gt;left);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(x&gt;t-&gt;element)</span><br><span class="line">        <span class="built_in">insert</span>(x,t-&gt;right);</span><br><span class="line">    <span class="keyword">else</span> </span><br><span class="line">        (t-&gt;count)++;							<span class="comment">//重复元，计数器+1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="remove">remove</h5>
+<ul>
+<li>若待删除节点为树叶，则立即被删除</li>
+<li>若待删除节点有一个儿子，则该节点在其父节点调整其链绕过该节点后被删除<img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-10%20145457.png" /></li>
+</ul>
+<center>
+<p>
+有一个儿子的节点被删除情况
+</p>
+</center>
+<ul>
+<li>若待删除节点有两个儿子，一般用其右子树的最小数据代替该节点数据并递归删除那个节点<img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-10%20145733.png" /></li>
+</ul>
+<center>
+<p>
+有两个儿子节点前后情况
+</p>
+</center>
+<ul>
+<li>若预计删除次数不多，则可以使用<strong>懒惰删除(lazy
+deletion)</strong>：当一个元素要被删除时，它仍留在树中，只是做了一个被删除的标记。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">(BinaryNode*&amp;t,<span class="keyword">const</span> T&amp;x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t==<span class="literal">nullptr</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">if</span>(x&lt;t-&gt;element)</span><br><span class="line">        <span class="built_in">remove</span>(t-&gt;left,x);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(x&gt;t-&gt;element)</span><br><span class="line">        <span class="built_in">remove</span>(t-&gt;right,x);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(t-&gt;left!=<span class="literal">nullptr</span>&amp;&amp;t-&gt;right!=<span class="literal">nullptr</span>)	<span class="comment">//待删除节点有两个儿子</span></span><br><span class="line">    &#123;</span><br><span class="line">        t-&gt;element=<span class="built_in">findMin</span>(t-&gt;right)-&gt;element;		<span class="comment">//右子树最小值</span></span><br><span class="line">        <span class="built_in">remove</span>(t-&gt;element,t-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>		<span class="comment">//待删除节点只有一个儿子</span></span><br><span class="line">    &#123;</span><br><span class="line">        BinaryNode*oldNode=t;</span><br><span class="line">        <span class="keyword">if</span>(t-&gt;left!=<span class="literal">nullptr</span>)</span><br><span class="line">            t=t-&gt;left;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            t=t-&gt;right;		<span class="comment">//待删除节点被其儿子代替</span></span><br><span class="line">        <span class="keyword">delete</span> oldNode;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="析构函数与构造拷贝函数">析构函数与构造拷贝函数</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="comment">//析构函数与makeEmpty</span></span><br><span class="line">BinarySearchTree&lt;T&gt;::~<span class="built_in">BinarySearchTree</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">makeEmpty</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">void</span> BinarySearchTree&lt;T&gt;::<span class="built_in">makeEmpty</span>(BinaryNode*&amp;t)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(t!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">makeEmpty</span>(t-&gt;left);</span><br><span class="line">        <span class="built_in">makeEmpty</span>(t-&gt;right);</span><br><span class="line">        <span class="keyword">delete</span> t;</span><br><span class="line">    &#125;</span><br><span class="line">    t=<span class="literal">nullptr</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//构造函数</span></span><br><span class="line">BinarySearchTree&lt;T&gt;::<span class="built_in">BinarySearchTree</span>(<span class="keyword">const</span> BinarySearchTree&amp;rhs): root&#123;<span class="literal">nullptr</span>&#125;</span><br><span class="line">&#123;</span><br><span class="line">    root=<span class="built_in">clone</span>(rhs.root);</span><br><span class="line">&#125;</span><br><span class="line">BinaryNode*BinarySearchTree&lt;T&gt;::<span class="built_in">clone</span>(BinaryNode*t) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(t==<span class="literal">nullptr</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> BinaryNode&#123;t-&gt;element,<span class="built_in">clone</span>(t-&gt;left),<span class="built_in">clone</span>(t-&gt;right)&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<p>Author: AsukaMilet</p>
+<p>Date: F2022-2-02 L2022-2-10</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"><i class="fa fa-tag"></i> 数据结构</a>
+              <a href="/tags/%E6%A0%91/" rel="tag"><i class="fa fa-tag"></i> 树</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/28/%E6%A0%88%E5%92%8C%E9%98%9F%E5%88%97/" rel="prev" title="栈和队列">
+      <i class="fa fa-chevron-left"></i> 栈和队列
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/02/02/%E6%A0%91%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" rel="next" title="树的基础知识">
+      树的基础知识 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">1.</span> <span class="nav-text">二叉树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9E%84%E9%80%A0"><span class="nav-number">1.1.</span> <span class="nav-text">1.二叉树的构造</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E5%AD%98%E5%82%A8"><span class="nav-number">1.1.1.</span> <span class="nav-text">数组存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E8%A1%A8%E5%AD%98%E5%82%A8"><span class="nav-number">1.1.2.</span> <span class="nav-text">链表存储</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86"><span class="nav-number">1.2.</span> <span class="nav-text">2.二叉树的遍历</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2dfs"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1深度优先搜索(DFS)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E5%BA%8F%E9%81%8D%E5%8E%86"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">2.1.1前序遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">2.1.2中序遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">2.1.2后序遍历</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2bfs"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2广度优先搜索(BFS)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">1.3.</span> <span class="nav-text">3.二叉树的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91%E7%9A%84%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1二叉查找树的相关操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">3.1.1数组实现</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91"><span class="nav-number">1.3.1.1.1.</span> <span class="nav-text">遍历二叉搜索树</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E6%9C%80%E5%B0%8F%E6%9C%80%E5%A4%A7%E5%80%BC"><span class="nav-number">1.3.1.1.2.</span> <span class="nav-text">查找最小&#x2F;最大值</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%87%E9%92%88%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">3.1.2 指针实现</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#bst%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.3.1.2.1.</span> <span class="nav-text">BST接口</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#private%E4%B8%8Epublic%E5%85%B3%E7%B3%BB"><span class="nav-number">1.3.1.2.2.</span> <span class="nav-text">private与public关系</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#contains"><span class="nav-number">1.3.1.2.3.</span> <span class="nav-text">contains</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#findmax%E5%92%8Cfindmin"><span class="nav-number">1.3.1.2.4.</span> <span class="nav-text">findMax和findMin</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#insert"><span class="nav-number">1.3.1.2.5.</span> <span class="nav-text">insert</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#remove"><span class="nav-number">1.3.1.2.6.</span> <span class="nav-text">remove</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0%E4%B8%8E%E6%9E%84%E9%80%A0%E6%8B%B7%E8%B4%9D%E5%87%BD%E6%95%B0"><span class="nav-number">1.3.1.2.7.</span> <span class="nav-text">析构函数与构造拷贝函数</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AsukaMilet"
+      src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/thumb_inbox_600.png">
+  <p class="site-author-name" itemprop="name">AsukaMilet</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AsukaMilet</span>
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

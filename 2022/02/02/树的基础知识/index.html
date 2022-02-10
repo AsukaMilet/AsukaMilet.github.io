@@ -32,9 +32,10 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/comparison-1_0.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/comparison-4.png">
 <meta property="article:published_time" content="2022-02-02T07:33:58.000Z">
-<meta property="article:modified_time" content="2022-02-02T11:38:45.045Z">
+<meta property="article:modified_time" content="2022-02-03T08:00:28.928Z">
 <meta property="article:author" content="AsukaMilet">
 <meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="图论">
 <meta property="article:tag" content="树">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/perfect-binary-tree_0.png">
@@ -221,10 +222,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2022-02-02 15:33:58 / Modified: 19:38:45" itemprop="dateCreated datePublished" datetime="2022-02-02T15:33:58+08:00">2022-02-02</time>
+              <time title="Created: 2022-02-02 15:33:58" itemprop="dateCreated datePublished" datetime="2022-02-02T15:33:58+08:00">2022-02-02</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-03 16:00:28" itemprop="dateModified" datetime="2022-02-03T16:00:28+08:00">2022-02-03</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -392,16 +399,19 @@ class="math inline">\(h\)</span></em> 层外，其它各层 (1～<em><span
 class="math inline">\(h-1\)</span></em>) 的节点数都达到最大个数，第
 <em><span class="math inline">\(h\)</span></em>
 层所有的节点都连续集中在最左边，这就是完全二叉树。</p>
-<ul>
-<li>特点：叶子节点只可能在最深两层出现
+<p>特点：</p>
+<ol type="1">
+<li>所有叶子节点必须向左倾斜</li>
+<li>最后一个叶子节点可能没有右兄弟(<strong>P.S</strong>
+完全二叉树(complete binary tree)不一定是完整二叉树(full binary tree))
 <figure class="half">
 <img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/comparison-1_0.png">
 <img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/comparison-4.png">
-</figure>
-<hr /></li>
-</ul></li>
+</figure></li>
+</ol></li>
 </ul></li>
 </ul>
+<hr />
 <p>Author: AsukaMilet</p>
 <p>Date: 2022-2-02</p>
 
@@ -414,6 +424,7 @@ class="math inline">\(h-1\)</span></em>) 的节点数都达到最大个数，第
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"><i class="fa fa-tag"></i> 数据结构</a>
+              <a href="/tags/%E5%9B%BE%E8%AE%BA/" rel="tag"><i class="fa fa-tag"></i> 图论</a>
               <a href="/tags/%E6%A0%91/" rel="tag"><i class="fa fa-tag"></i> 树</a>
           </div>
 
@@ -423,8 +434,8 @@ class="math inline">\(h-1\)</span></em>) 的节点数都达到最大个数，第
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/01/28/%E6%A0%88%E5%92%8C%E9%98%9F%E5%88%97/" rel="prev" title="栈和队列">
-      <i class="fa fa-chevron-left"></i> 栈和队列
+    <a href="/2022/02/02/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="prev" title="二叉树">
+      <i class="fa fa-chevron-left"></i> 二叉树
     </a></div>
       <div class="post-nav-item"></div>
     </div>
@@ -501,7 +512,7 @@ class="math inline">\(h-1\)</span></em>) 的节点数都达到最大个数，第
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
