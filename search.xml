@@ -1,227 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>栈和队列</title>
-    <url>/2022/01/28/%E6%A0%88%E5%92%8C%E9%98%9F%E5%88%97/</url>
-    <content><![CDATA[<h1 id="栈和队列">栈和队列</h1>
-<h2 id="栈">1.栈</h2>
-<p><strong>栈</strong>(stack)是一个带有限制的表，它的插入和删除只能在一个位置上进行，即只能在表的末端进行，表的末端称为<strong>栈顶</strong>(top)</p>
+    <title>C++初始化方法</title>
+    <url>/2022/02/28/C++%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<h1 id="c的初始化方法">C++的初始化方法</h1>
+<p>C++的初始化方式实在太复杂，<em>C++
+11</em>又引入了列表初始化，只能花点时间总结一下。</p>
 <hr />
-<h3 id="栈模型">1.1栈模型</h3>
-<p>对栈的基本操作就是push(进栈)和pop(出栈)，前者等价于一次插入，后者则是删除最新插入的元素。最近插入的元素在执行pop之前可以通过使用top操作进行使用。在栈ADT中，对空栈执行top或pop一般均被认为是一个错误。另一方面，执行push时空间用尽是一个实现限制，但不是ADT错误。</p>
+<h2 id="初始化基础知识">初始化基础知识</h2>
+<p><strong>初始化概念</strong>:创建变量时赋予它一个值(<strong><em>P.S</em></strong>
+初始化不等于赋值，初始化是在创建变量时赋予其一个初始值，赋值是将变量的当前值抹去，并用一个新值替代它)</p>
+<p><strong>初始化时机</strong>:初始值可以由<strong>声明符</strong>或<strong>new表达式</strong>的初始化器部分提供，在函数调用时也会发生:函数形参以及函数返回值也会被初始化。</p>
+<p><strong>初始化器</strong>:对于每个声明符，初始化器必须是下列之一:</p>
+<ol type="1">
+<li>(<em>expression-list</em>)</li>
+<li>= <em>expression</em></li>
+<li>{<em>initializer-list</em>}</li>
+</ol>
 <hr />
-<p>栈有时又叫作<strong>LIFO(后进先出)表</strong>，普通的清空栈操作和判断是否空栈的测试都是栈的操作指令系统的一部分，但是对栈所能够做的基本就是push和pop操作。</p>
-<p><img
-src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-01-28%20203951.png" /></p>
-<center>
-<p>
-栈模型:通过push输入，通过pop和top输出
-</p>
-</center>
-<p><img
-src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-01-28%20205109.png" /></p>
-<center>
-<p>
-栈模型：只有栈顶元素可访问
-</p>
-</center>
+<p>1)括号中以逗号分隔的含有任意表达式或花括号初始化器列表的列表</p>
+<p>2)等号后面跟着一个表达式</p>
+<p>3)花括号初始化器列表：以逗号分隔且可以为空的含有表达式和其他花括号初始化器列表的列表</p>
 <hr />
-<h3 id="栈的实现">1.2栈的实现</h3>
-<h4 id="栈的stl实现">栈的STL实现</h4>
-<p><a
-href="https://www.cplusplus.com/reference/stack/stack/">STL中的Stack</a></p>
-<h4 id="栈的数组实现">栈的数组实现</h4>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//C++ Version</span></span><br><span class="line"><span class="keyword">int</span> Stack[MAX];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Initialization</span><span class="params">(<span class="keyword">int</span> top)</span>		<span class="comment">//清空栈</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    top=<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">IsEmpty</span><span class="params">(<span class="keyword">int</span> top)</span>				<span class="comment">//判断是否为空栈</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(top==<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">IsFull</span><span class="params">(<span class="keyword">int</span> top)</span>				<span class="comment">//判断是否满栈</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(top==MAX<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Push</span><span class="params">(<span class="keyword">int</span> num,<span class="keyword">int</span>*Stack)</span>		<span class="comment">//入栈</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">IsFull</span>(top))</span><br><span class="line">        <span class="comment">//报错</span></span><br><span class="line">    top++;</span><br><span class="line">    Stack[top]=num;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Pop</span><span class="params">(<span class="keyword">int</span> top)</span>					<span class="comment">//弹栈</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">IsEmpty</span>(top))</span><br><span class="line">        <span class="comment">//报错</span></span><br><span class="line">    top--;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Top</span><span class="params">(<span class="keyword">int</span>*Stack)</span>					<span class="comment">//返回栈顶元素</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Stack[top];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr />
-<h3 id="栈的应用">1.3栈的应用</h3>
+<h2 id="c初始化种类">C++初始化种类</h2>
 <ul>
-<li><p>平衡符号<strong>(联机算法)</strong>：做一个空栈。读入字符直到文件尾。如果字符是一个开放符号('['、'{'等)，则将其推入栈中。如果一个字符是一个封闭符号，则当栈空时报错。否则，将栈元素弹出。如果弹出的符号不是对应的开放符号，则报错。在文件尾，如果栈非空则报错。</p>
-<p><a
-href="https://www.luogu.com.cn/problem/P1739">洛谷P1739</a></p></li>
-<li><p>后缀表达式</p>
-<p><a
-href="https://www.luogu.com.cn/problem/P1449">洛谷P1449</a></p></li>
-<li><p>中缀到后缀的转换</p></li>
+<li><p>默认初始化</p></li>
+<li><p>值初始化</p></li>
+<li><p>直接初始化</p></li>
+<li><p>拷贝初始化</p></li>
+<li><p>列表初始化</p></li>
 </ul>
 <hr />
-<h3 id="单调栈">1.4单调栈</h3>
-<p>单调栈即满足单调性的一种特殊栈结构</p>
-<h4 id="插入">插入</h4>
-<p>将一个元素插入单调栈时，为了维护栈的单调性，需要在保证将该元素插入到栈顶后整个栈满足单调性的前提下弹出最少的元素。</p>
-<p>实现如下:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//插入X</span></span><br><span class="line"><span class="keyword">while</span>(!sta.<span class="built_in">empty</span>()&amp;&amp;sta.<span class="built_in">top</span>()&lt;X)</span><br><span class="line">    sta.<span class="built_in">pop</span>();</span><br><span class="line">sta.<span class="built_in">push</span>(X);</span><br></pre></td></tr></table></figure>
-<h4 id="使用">使用</h4>
-<p>从栈顶读取元素，读取元素为栈中最大值或最小值</p>
-<h4 id="应用">应用</h4>
+<h3 id="默认初始化">默认初始化</h3>
+<p>默认初始化是指声明变量时没有指定初值时进行的初始化操作。例如<code>int num</code>,<code>Sales_data myData</code>等。</p>
+<p>当采用动态内存分配时(如<em>new、malloc</em>等)创建的变量,不添加括号时(<strong><em>e.g</em></strong>
+<code>int *p=new int</code>)也为默认初始化,添加括号(<strong><em>e.g</em></strong>
+<code>int*p=new int()</code>)为值初始化。</p>
+<p>变量的值与变量类型以及定义位置有关</p>
 <ul>
-<li><p><a
-href="https://www.luogu.com.cn/problem/P5788">洛谷P5788</a></p></li>
-<li><p><a
-href="https://www.luogu.com.cn/problem/P6198">洛谷P6198</a></p></li>
-<li><p><a
-href="https://www.luogu.com.cn/problem/P6510">洛谷P6510</a></p></li>
+<li>对于内置类型变量(<code>int</code>、<code>float</code>、<code>bool</code>等),如果未被显示初始化，它们的值由定义的位置决定
+<ul>
+<li>定义于任何函数体之外的变量(包括<strong>主调函数</strong>)将被初始化为0</li>
+<li>定义在函数体内部的内置类型将不被初始化(uninitialized),未被初始化的内置类型变量的值是未定义的,如果尝试<em>copy</em>或以其他形式访问此类值将会引发错误</li>
+</ul></li>
 </ul>
-<hr />
-<h2 id="队列">2.队列</h2>
-<p><strong>队列</strong>(queue)也是一种表。使用队列时插入在一端进行而删除则在另一端进行。</p>
-<h3 id="队列模型">2.1队列模型</h3>
-<p>队列的基本操作是enqueue(入队)，它是在表的末端(称为<strong>队尾</strong>(rear))插入一个元素，一个dequeue(出队)，它是删除(并返回)在表的开头(叫作<strong>队头</strong>(front))的元素。队列也被称为<strong>FIFO(先进先出)表</strong>。</p>
-<p><img
-src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-01-28%20215110.png" /></p>
-<center>
-<p>
-队列模型
-</p>
-</center>
-<hr />
-<h3 id="队列的实现">2.2队列的实现</h3>
-<h4 id="队列的stl实现">队列的STL实现</h4>
-<p><a
-href="https://www.cplusplus.com/reference/queue/queue/">STL中的队列</a></p>
-<h4 id="队列的数组实现">队列的数组实现</h4>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// C++ Version</span></span><br><span class="line"><span class="keyword">int</span> Queue[MAX];</span><br><span class="line"><span class="keyword">int</span> head,tail;						<span class="comment">//head表示队首，tail表示队尾</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Initialization</span><span class="params">(<span class="keyword">int</span> head,<span class="keyword">int</span> tail)</span>	<span class="comment">//清空队列</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    head=tail=<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">IsEmpty</span><span class="params">(<span class="keyword">int</span> head,<span class="keyword">int</span> tail)</span>			<span class="comment">//判断是否为空队列</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(head==tail)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">IsFull</span><span class="params">(<span class="keyword">int</span> head,<span class="keyword">int</span> tail)</span>			<span class="comment">//判断队列是否已满</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(head==(tail+<span class="number">1</span>)%MAX)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Enqueue</span><span class="params">(<span class="keyword">int</span> num,<span class="keyword">int</span>*Queue)</span>			<span class="comment">//入队</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">IsFull</span>(head,tail))</span><br><span class="line">        <span class="comment">//报错</span></span><br><span class="line">    Queue[tail]=num;</span><br><span class="line">    <span class="keyword">if</span>(tail+<span class="number">1</span>==MAX)</span><br><span class="line">        tail=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        tail++;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Dequeue</span><span class="params">(<span class="keyword">int</span> num,<span class="keyword">int</span>*Queue)</span>			<span class="comment">//出队</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">IsEmpty</span>(<span class="keyword">int</span> head,<span class="keyword">int</span> tail))</span><br><span class="line">        <span class="comment">//报错</span></span><br><span class="line">    <span class="keyword">if</span>(head+<span class="number">1</span>==MAX)</span><br><span class="line">        head=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        head++;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Front</span><span class="params">(<span class="keyword">int</span> head,<span class="keyword">int</span>*Queue)</span>			<span class="comment">//取得队首元素</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Queue[head];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//若要实现双端队列操作，只需传入tail即可</span></span><br></pre></td></tr></table></figure>
-<hr />
-<h3 id="队列的应用">2.3队列的应用</h3>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">int</span> global_var;		<span class="comment">//默认初始化为0</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> local_var;		<span class="comment">//不被初始化</span></span><br><span class="line">    <span class="keyword">int</span>*new_var=<span class="keyword">new</span> <span class="keyword">int</span>;</span><br><span class="line">    std::cout&lt;&lt;*new_var&lt;&lt;std::endl; 	<span class="comment">//未定义</span></span><br><span class="line">    std::cout&lt;&lt;local_var&lt;&lt;std::endl;	<span class="comment">//未定义且报错</span></span><br><span class="line">    std::cout&lt;&lt;global_var&lt;&lt;std::endl;	<span class="comment">//输出0</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
-<li><p><a
-href="https://www.acwing.com/problem/content/134/">AcwingP132</a></p></li>
-<li><p><a
-href="https://www.acwing.com/problem/content/831/">AcwingP829</a></p></li>
-<li><p><a
-href="https://www.acwing.com/problem/content/3551/">AcwingP3548</a></p></li>
+<li>对于类类型变量(如<code>string</code>或其他自定义类型如<code>Sales_Data</code>),<strong>定义一个类但没有指定初始值时,会使用默认构造函数来进行初始化,如果该类没有默认构造函数，则会引发错误</strong>。建议在自定义类类型中定义一个默认构造函数(<code>=default</code>)。
+<ul>
+<li>定义于任何函数体之外的类类型变量会先进行零初始化再执行默认初始化，定义在函数体内部的类变量会直接执行默认初始化</li>
+<li>如果类数据成员存在类内初始值，则用该值初始化相应成员</li>
+<li>从本质上来说，类的初始化<strong>取决于构造函数中对数据成员的初始化，如果没有在构造函数的初始值列表中显式地初始化数据成员，那么成员将在构造函数之前执行默认初始化</strong></li>
+</ul></li>
 </ul>
-<h3 id="单调队列">2.4单调队列</h3>
-<p>单调队列中的元素应满足单调性<strong>递增</strong>或<strong>递减</strong>，且元素只能从队头与队尾进行操作。</p>
-<h4 id="插入-1">插入</h4>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//插入X</span></span><br><span class="line"><span class="keyword">while</span>(!que.<span class="built_in">empty</span>()&amp;&amp;que.<span class="built_in">back</span>()&gt;X)			<span class="comment">//若队尾元素比待插入值大，循环弹出</span></span><br><span class="line">    que.<span class="built_in">pop_back</span>();</span><br><span class="line">que.<span class="built_in">push_back</span>(X);							</span><br></pre></td></tr></table></figure>
-<h4 id="使用-1">使用</h4>
-<p>队首元素为最大值或最小值</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//使用合成的默认构造函数</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cat</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用自定义的默认构造函数</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    <span class="built_in">Dog</span>()&#123;&#125;		<span class="comment">//默认构造函数，不会初始化age</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Cat global_cat;	<span class="comment">//先执行零初始化，再执行默认初始化，默认构造函数虽然不会初始化age，但age仍为0</span></span><br><span class="line">Dog global_dog;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Cat local_cat;</span><br><span class="line">    Dog local_dog;</span><br><span class="line">    std::cout&lt;&lt;local_cat.age&lt;&lt;std::endl;		<span class="comment">//随机值</span></span><br><span class="line">    std::cout&lt;&lt;local_dog.age&lt;&lt;std::endl;		<span class="comment">//随机值</span></span><br><span class="line">    std::cout&lt;&lt;global_cat.age&lt;&lt;std::endl;		<span class="comment">//输出值为0</span></span><br><span class="line">    std::cout&lt;&lt;global_dog.age&lt;&lt;std::endl;		<span class="comment">//输出值为0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<h3 id="值初始化">值初始化</h3>
+<p>使用初始化器(即使用圆括号或花括号)但未提供初始值的情况。(<strong><em>e.g</em></strong>
+<code>int*p=new int()</code>，<code>vector&lt;string&gt; vec(10)</code>)</p>
+<p>如果T是一个类，则类的对象进行默认初始化<strong>(如果T类型的默认构造函数不是用户自定义的，默认初始化之前先进行零初始化)</strong>,如果为一个数组，每个元素值初始化，否则进行零初始化。</p>
+<p><strong>当不采用动态内存分配(即不采用<em>new、malloc</em>运算符)时,形如</strong><code>int a()</code>；<strong>是错误的值初始化方式,因为这种方式声明了一个函数而不是进行值初始化</strong>。</p>
+<p>如果一定要进行值初始化，必须结合拷贝初始化使用，即写成
+<code>int a=int()</code>;
+<strong>值初始化和默认初始化一样,对于内置类型初始化为
+0，对于类类型则调用其默认构造函数，如果没有默认构造函数，则不能进行初始化。</strong></p>
+<hr />
+<h3 id="直接初始化与拷贝初始化">直接初始化与拷贝初始化</h3>
+<p><strong>直接初始化</strong>与<strong>拷贝初始化</strong>对应，其内部实现机理不同。</p>
+<p><strong>直接初始化</strong>是指采用<strong>小括号</strong>的方式进行变量初始化（小括号里一定要有初始值，如果没提供初始值，那就是值初始化了！）。</p>
+<p><strong><em>e.g</em></strong>:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">string <span class="title">s1</span><span class="params">(<span class="string">&quot;test&quot;</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">a</span><span class="params">(<span class="number">12</span>)</span></span>;</span><br><span class="line"><span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">ivec</span><span class="params">(ivec2)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><strong>拷贝初始化</strong>主要是使用等号<code>=</code>进行初始化的方式</p>
+<p>基本语法如下：</p>
+<hr />
+<p>1)<em>Type object = other</em>;</p>
+<hr />
+<p>2)<em>function(other)</em>;</p>
+<hr />
+<p>3)<strong>return</strong> <em>other</em>;</p>
+<hr />
+<p>4)<strong>throw</strong> <em>object</em>;</p>
+<p>​ <strong>catch</strong> (<em>T object</em>)</p>
+<hr />
+<p>5)<em>T array</em>[<em>N</em>] = {<em>other-sequence</em>};</p>
+<hr />
+<p>拷贝初始化看起来像是给变量赋值，实际上是执行了初始化操作，与先定义再赋值本质不同。</p>
+<ol type="1">
+<li>对于内置类型变量（如
+<code>int</code>，<code>double</code>，<code>bool</code>
+等），直接初始化与拷贝初始化差别可以忽略不计。</li>
+<li>对于类类型的变量（如<code>string</code>或其他自定义类型），直接初始化调用类的<strong>构造函数</strong>（调用参数类型最佳匹配的那个），拷贝初始化调用类的拷贝构造函数。</li>
+</ol>
+<p>特别的，当对类类型变量进行初始化时，如果类的构造函数采用了
+<code>explicit</code>
+修饰而且需要隐式类型转换时，则只能通过直接初始化而不能通过拷贝初始化进行操作。</p>
+<h4 id="拷贝构造函数与赋值运算符">拷贝构造函数与赋值运算符</h4>
+<p>在默认情况下（用户没有定义，但是也没有显式的删除），编译器会自动的隐式生成一个拷贝构造函数和赋值运算符。但用户可以使用
+<code>delete</code>
+来指定不生成拷贝构造函数和赋值运算符，这样的对象就不能通过值传递，也不能进行赋值运算。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Person</span>(<span class="keyword">const</span> Person&amp;p)=<span class="keyword">delete</span>;</span><br><span class="line">    Person&amp;<span class="keyword">operator</span>=(<span class="keyword">const</span> Person&amp;p)=<span class="keyword">delete</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    string name;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>上面的定义的类Person显式的删除了拷贝构造函数和赋值运算符，在需要调用拷贝构造函数或者赋值运算符的地方，会提示<em>无法调用该函数，它是已删除的函数</em>。
+还有一点需要注意的是，拷贝构造函数必须以引用的方式传递参数。这是因为，在值传递的方式传递给一个函数的时候，会调用拷贝构造函数生成函数的实参。如果拷贝构造函数的参数仍然是以值的方式，就会无限循环的调用下去，直到函数的栈溢出。</p>
+<ul>
+<li><strong><em>何时调用</em></strong></li>
+</ul>
+<p>拷贝构造函数和赋值运算符的行为比较相似，都是将一个对象的值复制给另一个对象；但是其结果却有些不同:
+<strong>拷贝构造函数使用传入对象的值生成一个新的对象的实例</strong>，<strong>而赋值运算符是将对象的值复制给一个已经存在的实例</strong>。</p>
+<p>这种区别从两者的名字也可以很轻易的分辨出来，拷贝构造函数也是一种构造函数，那么它的功能就是创建一个新的对象实例；赋值运算符是执行某种运算，将一个对象的值复制给另一个对象（已经存在的）。</p>
+<p>调用的是拷贝构造函数还是赋值运算符，主要是看是否有新的对象实例产生。如果产生了新的对象实例，那调用的就是拷贝构造函数；如果没有，那就是对已有的对象赋值，调用的是赋值运算符。</p>
+<p>调用拷贝构造函数主要有以下场景：</p>
+<ul>
+<li>对象作为函数的参数，以值传递的方式传给函数。　</li>
+<li>对象作为函数的返回值，以值的方式从函数返回</li>
+<li>使用一个对象给另一个对象初始化</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Person</span>()&#123;&#125;</span><br><span class="line">    <span class="built_in">Person</span>(<span class="keyword">const</span> Person&amp; p)</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Copy Constructor&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Person&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Person&amp; p)</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Assign&quot;</span> &lt;&lt; endl;</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    string name;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(Person p)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">Person <span class="title">f1</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Person p;</span><br><span class="line">    <span class="keyword">return</span> p;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Person p;</span><br><span class="line">    Person p1 = p;    <span class="comment">// 1</span></span><br><span class="line">    Person p2;</span><br><span class="line">    p2 = p;           <span class="comment">// 2</span></span><br><span class="line">    <span class="built_in">f</span>(p2);            <span class="comment">// 3</span></span><br><span class="line"></span><br><span class="line">    p2 = <span class="built_in">f1</span>();        <span class="comment">// 4</span></span><br><span class="line"></span><br><span class="line">    Person p3 = <span class="built_in">f1</span>(); <span class="comment">// 5</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">getchar</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Analysis</em></strong>:</p>
+<ol type="1">
+<li>这是虽然使用了<code>=</code>，但是实际上使用对象p来创建一个新的对象p1。也就是产生了新的对象，所以调用的是拷贝构造函数。</li>
+<li>首先声明一个对象p2，然后使用赋值运算符<code>=</code>，将p的值复制给p2，显然是调用赋值运算符，为一个已经存在的对象赋值
+。</li>
+<li>以值传递的方式将对象p2传入函数f内，调用拷贝构造函数构建一个函数f可用的实参。</li>
+<li>这条语句拷贝构造函数和赋值运算符都调用了。函数f1以值的方式返回一个Person对象，在返回时会调用拷贝构造函数创建一个临时对象<strong>temp</strong>作为返回值；返回后调用赋值运算符将临时对象<strong>temp</strong>赋值给p2。</li>
+<li>按照4的解释，应该是首先调用拷贝构造函数创建临时对象；然后再调用拷贝构造函数使用刚才创建的临时对象创建新的对象p3，也就是会调用两次拷贝构造函数。不过，编译器也没有那么傻，应该是直接调用拷贝构造函数使用返回值创建了对象p3。</li>
+</ol>
+<hr />
+<h3 id="列表初始化">列表初始化</h3>
+<p>列表初始化为<strong>C++
+11</strong>引入的初始化方式，它采用一对花括号<code>&#123;&#125;</code>进行初始化操作。基本能使用<strong>直接初始化</strong>和<strong>拷贝初始化</strong>的地方都能用列表初始化，而且列表初始化能对容器进行方便的初始化。</p>
+<p>尽管<strong>C++11</strong>将列表初始化应用于所有对象的初始化，但是内置类型习惯于用等号初始化，类类型习惯用构造函数圆括号显式初始化，<code>vector</code>、<code>map</code>和<code>set</code>等容器类习惯用列表初始化。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    vector&lt;string&gt; v1&#123;<span class="string">&quot;tomo&quot;</span>,<span class="string">&quot;cat&quot;</span>,<span class="string">&quot;tomocat&quot;</span>&#125;;		<span class="comment">//列表初始化</span></span><br><span class="line">    <span class="function">vector&lt;string&gt; <span class="title">v2</span><span class="params">(<span class="string">&quot;a&quot;</span>,<span class="string">&quot;b&quot;</span>,<span class="string">&quot;c&quot;</span>)</span></span>;			<span class="comment">//错误，找不到合适的构造函数</span></span><br><span class="line">    </span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">v3</span><span class="params">(<span class="number">10</span>)</span></span>;		<span class="comment">//10个int元素，每个均初始化为0</span></span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; v4&#123;<span class="number">10</span>&#125;;		<span class="comment">//1个int元素，该元素值为0</span></span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">v5</span><span class="params">(<span class="number">10</span>,<span class="number">1</span>)</span></span>;	<span class="comment">//10个int元素，每个均初始化为1</span></span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; v6&#123;<span class="number">10</span>,<span class="number">1</span>&#125;;	<span class="comment">//2个int元素，值分别为10和1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong><em>列表初始化返回值</em></strong></li>
+</ul>
+<p><strong>C++
+11</strong>规定，函数可以通过列表初始化来对函数返回的临时量进行初始化</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line">vector&lt;string&gt;<span class="built_in">foo</span>(<span class="keyword">int</span> i)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">        <span class="keyword">return</span> &#123;&#125;;				<span class="comment">//返回一个空vector对象</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> &#123;<span class="string">&quot;tomo&quot;</span>,<span class="string">&quot;cat&quot;</span>,<span class="string">&quot;tomocat&quot;</span>&#125;;	<span class="comment">//返回列表初始化的vector对象</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong><em>initializer_list形参</em></strong></li>
+</ul>
+<p><strong>C++
+11</strong>支持所有类型的初始化，对于类类型而言，虽然我们使用列表初始化它会自动调用匹配的构造函数，但是我们也能显式指定接受初始化列表的构造函数。C++11引入了<code>std::initializer_list</code>，允许构造函数或其他函数像参数一样使用初始化列表</p>
+<p>Tips:</p>
+<ul>
+<li>类对象在被列表初始化时会优先调用列表初始化构造函数，如果没有列表初始化构造函数则会根据提供的花括号值调用匹配的构造函数</li>
+<li>C++11新标准提供了两种方法用于处理可变数量形参，
+第一种是我们这里提到的<code>initializer_list</code>形参（所有的形参类型必须相同），另一种是可变参数模板（可以处理不同类型的形参）</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;initializer_list&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cat</span> &#123;</span></span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">    std::vector&lt;<span class="keyword">int</span>&gt; data;</span><br><span class="line">    <span class="built_in">Cat</span>() = <span class="keyword">default</span>;</span><br><span class="line">    <span class="comment">// 接受初始化列表的构造函数</span></span><br><span class="line">    <span class="built_in">Cat</span>(std::initializer_list&lt;<span class="keyword">int</span>&gt; list) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> it = list.<span class="built_in">begin</span>(); it != list.<span class="built_in">end</span>(); ++it) </span><br><span class="line">        &#123;</span><br><span class="line">            data.<span class="built_in">push_back</span>(*it);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Cat cat1 = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</span><br><span class="line">    Cat cat2&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>初始化列表除了用于对象构造函数上，还可以作为普通参数形参：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;initializer_list&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">(std::initializer_list&lt;std::string&gt; list)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> it = list.<span class="built_in">begin</span>(); it != list.<span class="built_in">end</span>(); ++it) </span><br><span class="line">    &#123;</span><br><span class="line">        std::cout &lt;&lt; *it &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">print</span>(&#123;<span class="string">&quot;tomo&quot;</span>, <span class="string">&quot;cat&quot;</span>, <span class="string">&quot;tomocat&quot;</span>&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="reference">Reference</h2>
 <ul>
 <li><p><a
-href="https://www.acwing.com/problem/content/156/">AcwingP154</a></p></li>
+href="https://segmentfault.com/a/1190000039844285">五花八门的C++初始化规则</a></p></li>
 <li><p><a
-href="https://www.luogu.com.cn/problem/P2032">洛谷P2032</a></p></li>
+href="https://aiden-dong.gitee.io/2020/01/08/cpp%E7%B1%BB%E5%88%9D%E5%A7%8B%E5%8C%96/">C++初始化过程那些事</a></p></li>
 <li><p><a
-href="https://www.luogu.com.cn/problem/P1638">洛谷P1638</a></p></li>
+href="https://www.cnblogs.com/pluse/p/7088880.html">C++的各种初始化方式</a></p></li>
+<li><p><a
+href="https://zh.cppreference.com/w/cpp/language/initialization">C++的初始化</a></p></li>
+<li><p><a
+href="https://en.cppreference.com/w/cpp/language/list_initialization">List-initialization</a></p></li>
 </ul>
 <hr />
 <p>Author: AsukaMilet</p>
-<p>Date: 2022-1-28</p>
+<p>Data: 2022-03-02</p>
 ]]></content>
       <categories>
-        <category>Data Structrue</category>
+        <category>C++</category>
       </categories>
       <tags>
-        <tag>数据结构</tag>
-        <tag>线性表</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>不相交集（DisjSets）的原理及实现</title>
-    <url>/2022/01/26/%E4%B8%8D%E7%9B%B8%E4%BA%A4%E9%9B%86%EF%BC%88DisjSets%EF%BC%89%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/</url>
-    <content><![CDATA[<h1
-id="不相交集disjsets的原理及实现">不相交集（DisjSets）的原理及实现</h1>
-<h2 id="不相交集基本知识">1.不相交集基本知识</h2>
-<p>不相交集主要涉及两种操作：合并和查找。初始时，不同的集合中元素不相交(<span
-class="math inline">\(S_i \cap
-S_j=\varnothing\)</span>),经过一系列Union操作后,合并为一个大的集合。</p>
-<p>DisjSets是一种动态集合（随着Union操作的增多，动态集合中集合个数减少）
-<span class="math display">\[
-S=\{s_1,s_2,s_3....s_n\}
-\]</span> 判断某个元素是否在集合<span
-class="math inline">\(s_i\)</span>中,只需进行Find操作，返回值为包含给定元素集合的名字。判断两个元素是否在同一个集合中只需要比较Find(X)和Find(Y)是否返回同一个集合名字即可。</p>
-<p>不相交集的应用范围：</p>
-<ol type="1">
-<li><strong><em>判断无向图的连通分量个数</em></strong></li>
-<li><strong><em>判断无向图中任意两个顶点是否连通</em></strong></li>
-<li>......</li>
-</ol>
-<h2 id="不相交集的基本实现c">2.不相交集的基本实现（C++）</h2>
-<h3 id="class实现">（1）Class实现</h3>
-<h4 id="adt接口实现一维数组实现">①ADT接口实现（一维数组实现）</h4>
-<p>不相交集<strong>S</strong>由若干子集合<strong><span
-class="math inline">\(s_i\)</span></strong>构成，不相交集的逻辑结构就是一个森林（树的集合）。<strong><span
-class="math inline">\(s_i\)</span></strong>表示森林中的一颗子树，一般以该子树的根作为子树代表。</p>
-<p>由于需要的唯一信息为<strong>父链（parent
-link）</strong>，集合的名字由根处的节点给出，由于只需要知道父节点的名字，可以假设这棵树被非显式存储在一个数组中：数组的每个成员<strong>s[i]</strong>表示元素<strong>i</strong>的父亲，如果<strong>i</strong>为根，则<strong>s[i]=i</strong>（<em>e.g.</em>
-s[5]=4，表示节点5的父亲为节点4）</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DisjSets</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">DisjSets</span><span class="params">(<span class="keyword">int</span> ElementsNum)</span></span>;   <span class="comment">//构造函数，初始化DisjSets</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">Find</span><span class="params">(<span class="keyword">int</span> num)</span></span>;                    <span class="comment">//Find操作</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">UnionSets</span><span class="params">(<span class="keyword">int</span> num1,<span class="keyword">int</span> num2)</span></span>;    <span class="comment">//Union操作</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; s;</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; rank;					  <span class="comment">//保存每个子树的秩</span></span><br><span class="line">    <span class="keyword">int</span> count;                            <span class="comment">//记录DisjSets中子集合的个数（子树个数）</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>初始化操作如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">DisjSets::<span class="built_in">DisjSets</span>(<span class="keyword">int</span> ElementsNum)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;ElementsNum;i++)      <span class="comment">//若编号从1开始，则ElementsNum应为输入元素个数加1</span></span><br><span class="line">    &#123;</span><br><span class="line">        s.<span class="built_in">push_back</span>(i);</span><br><span class="line">        rank.<span class="built_in">push_back</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    count=ElementsNum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr />
-<h4 id="基本操作实现">②基本操作实现</h4>
-<p>Union操作即将两个不相交的子集和合并成一个大集合,只需将一颗子树的父节点指向另一颗子树即可</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DisjSets::UnionSets</span><span class="params">(<span class="keyword">int</span> num1,<span class="keyword">int</span> num2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> root1=<span class="built_in">Find</span>(num1);          <span class="comment">//查找num1元素的祖先</span></span><br><span class="line">    <span class="keyword">int</span> root2=<span class="built_in">Find</span>(num2);          <span class="comment">//查找num2元素的祖先</span></span><br><span class="line">    s[root2]=root1；               <span class="comment">//将num2祖先变为num1祖先的儿子</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Find操作即查找所需元素所在集合，即返回所在元素名字。</p>
-<p><strong><em>e.g</em></strong> 并查集如下：</p>
-<p><img
-src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/715283-20160917221621664-276304966.png" /></p>
-<p>此时共有四个子树，第一个子树名字为0，第二个子树名字为1，第三个子树名字为3，第四个子树名字为5。所以Find(2)返回值为1，Find(4)返回值为3，Find(3)返回值为3。Find基本实现如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">DisjSets::Find</span><span class="params">(<span class="keyword">int</span> num)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(s[num]==num)</span><br><span class="line">        <span class="keyword">return</span> num;                </span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Find</span>(s[x]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr />
-<h4 id="unionfind操作的改进">③Union/Find操作的改进</h4>
-<h5 id="i.按高度秩rank求并">I.按高度（秩（rank））求并</h5>
-<p>上述Union操作很随意：任选一颗子树，将另一颗子树的根指向它就完成合并。若一直按上述操作合并，可能产生非常不平衡的子树，如：</p>
-<p><img
-src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-01-26%20195423.png" /></p>
-<p><strong>树变得越来越高，此时会影响到Find的效率</strong>。</p>
-<p>因此引入按秩合并（启发式合并）：将秩小的子树的根指向秩大的子树的根。</p>
-<p>秩的定义：对每个节点，用秩表示节点高度的上界（路径压缩不完全与秩兼容，路径压缩会改变树的高度，此时不追求树的高度的精确值，而是存储树的高度的估计值，树的高度的估计值为秩）</p>
-<p>若不考虑路径压缩，则为<strong>按高度求并（union by
-height）</strong>：在合并前，判断哪颗子树更高，让更矮的子树的根节点指向高的子树的根。</p>
-<p>实现如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DisjSets::UnionSets</span><span class="params">(<span class="keyword">int</span> num1,<span class="keyword">int</span> num2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> root1=<span class="built_in">Find</span>(num1);</span><br><span class="line">    <span class="keyword">int</span> root2=<span class="built_in">Find</span>(num2);</span><br><span class="line">    <span class="keyword">if</span>(root1!=root2)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(rank[root1]&gt;rank[root2])                 <span class="comment">//num1所在子树更深</span></span><br><span class="line">        s[root2]=root1;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(rank[root1]&lt;rank[root2])            <span class="comment">//num2所在子树更深</span></span><br><span class="line">        s[root1]=root2;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            s[root2]=root1;                         <span class="comment">//将num2所在子树合并至num1所在子树</span></span><br><span class="line">            rank[root1]++;                          <span class="comment">//num1所在子树秩加深</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5
-id="ii.路径压缩核心思路将查找路径上节点直接连接至根上">II.路径压缩（核心思路：将查找路径上节点直接连接至根上）</h5>
-<p>对于上述Find操作，对于连续M个指令（在所有模型下）平均为线性的。但<strong><em>O（M<span
-class="math inline">\(\log{N}\)</span>）</em></strong>的最坏情况仍有可能发生。例如，把所有集合放于一个队列中，并反复让前两个集合出队而使它们的并入队，则最坏情况就会发生。路径压缩操作相对于基础Find操作变化不大，使s[<strong><em>num</em></strong>]等于由Find返回的值。这样，在集合的根被递归地查找到后，<strong><em>num</em></strong>的父节点就设置为它，这对通向根的路径上的每一个节点递归地出现，因而实现路径压缩。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">DisjSets::Find</span><span class="params">(<span class="keyword">int</span> num)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(s[num]==num)</span><br><span class="line">        <span class="keyword">return</span> num;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> s[num]=<span class="built_in">Find</span>(s[num]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5
-id="iii.路径压缩与按高度求并兼容问题">III.路径压缩与按高度求并兼容问题</h5>
-<p>因为路径压缩可以改变树的高度，此时不清楚如何去重新计算树的高度，解决方案则是<strong>不计算树的高度</strong>，此时，对于每棵树所存储高度变为估计值（秩）。</p>
-<p>若不使用按高度合并，只使用路径压缩最坏时间复杂度为<strong><em>O(m<span
-class="math inline">\(\log{N}\)</span>)</em></strong>。</p>
-<p>若只使用按高度求并，不使用路径压缩，时间复杂度为<strong><em>O(m<span
-class="math inline">\(\log{n}\)</span>)</em></strong>，由于由于路径压缩单次合并可能造成大量修改，有时路径压缩并不适合使用。例如，在可持久化不相交集、线段树分治
-+ 不相交集中，一般使用只按高度合并的不相交集。</p>
-<p>时间复杂度与空间复杂度分析:</p>
-<p><a href="https://oi-wiki.org/ds/dsu/">OI Wiki并查集</a></p>
-<hr />
-<h3 id="不相交集的数组实现">（2）不相交集的数组实现</h3>
-<p>代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> DijsSets[MAX];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Initialization</span><span class="params">(<span class="keyword">int</span> size)</span>                 <span class="comment">//初始化DisjSets</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;size;i++)					  <span class="comment">//编号从0开始</span></span><br><span class="line">        DijsSets[i]=i;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Find</span><span class="params">(<span class="keyword">int</span> num,<span class="keyword">int</span>*DisjSets)</span>                <span class="comment">//路径压缩查找</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(DisjSets[num]!=num)					  <span class="comment">//num不是该集合的根</span></span><br><span class="line">        DisjSets[num]=<span class="built_in">Find</span>(DisjSets[num],DisjSets);    <span class="comment">//递归搜索</span></span><br><span class="line">    <span class="keyword">return</span> num;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UnionSets</span><span class="params">(<span class="keyword">int</span> num1,<span class="keyword">int</span> num2,<span class="keyword">int</span>*DisjSets)</span>         <span class="comment">//简单合并</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> root1=<span class="built_in">Find</span>(num1,DisjSets);</span><br><span class="line">    <span class="keyword">int</span> root2=<span class="built_in">Find</span>(num2,DisjSets);</span><br><span class="line">    DisjSets[root2]=root1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="不相交集应用">3.不相交集应用</h2>
-<p>应用本质：初始时为一个个不连通的对象，经过一步步处理，变成连通的。</p>
-<ol type="1">
-<li><p><strong>生成迷宫</strong>：<img
-src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-01-26%20195521.png" /></p>
-<p><img
-src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-01-26%20195539.png" /></p>
-<p><img
-src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-01-26%20195615.png" /></p></li>
-<li><p><strong>无向图的连通分量个数</strong>：初始时，将无向图中各个顶点视为不连通的子集合，对图中每一条边，相当于union这条边对应的两个顶点分别所在的集合，直至所有的边都处理完后，还剩下的集合的个数即为连通分量的个数。</p></li>
-</ol>
-<hr />
-<h2 id="相关题目">相关题目</h2>
-<ul>
-<li><a href="https://www.luogu.com.cn/problem/P3367">洛谷P3367</a></li>
-<li><a href="https://www.luogu.com.cn/problem/P1551">洛谷P1551</a></li>
-<li><a href="https://www.luogu.com.cn/problem/P1621">洛谷P1621</a></li>
-<li><a href="https://www.luogu.com.cn/problem/P2024">洛谷P2024</a></li>
-<li><a href="https://www.luogu.com.cn/problem/P1196">洛谷P1196</a></li>
-<li><a
-href="https://www.acwing.com/problem/content/147/">AcwingP145</a></li>
-</ul>
-<hr />
-<p>Author: AsukaMilet</p>
-<p>Date: 2022-1-26</p>
-]]></content>
-      <categories>
-        <category>Data Structrue</category>
-      </categories>
-      <tags>
-        <tag>数据结构</tag>
-        <tag>不相交集</tag>
+        <tag>C++</tag>
+        <tag>语法知识</tag>
       </tags>
   </entry>
   <entry>
@@ -388,326 +340,6 @@ href="https://www.luogu.com.cn/problem/P1330">洛谷P1330</a></p></li>
       <tags>
         <tag>数据结构</tag>
         <tag>图论</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>树的基础知识</title>
-    <url>/2022/02/02/%E6%A0%91%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/</url>
-    <content><![CDATA[<h1 id="树">树</h1>
-<h2 id="树的定义">1.1树的定义</h2>
-<ul>
-<li><p>一棵树是一些<strong>节点(node)</strong>的集合。这个集合可以是空集：若不是空集，则树由称作<strong>根(root)</strong>的节点<strong><em>r</em></strong>以及0个或多个非空的(子)树<strong><em><span
-class="math inline">\(T_1,T_2,...,T_K\)</span></em></strong>组成，这些子树中每一颗的根都被来自根<strong><em>r</em></strong>的一条有向的<strong>边(edge)</strong>所连接。</p></li>
-<li><p>每一颗子树的根叫作根<strong><em>r</em></strong>的<strong>儿子(child)</strong>,而<strong><em>r</em></strong>是每一颗子树的根的<strong>父亲(parent)</strong>。一棵树是<em>N</em>个节点和<em>N-</em>1条边的集合，其中的一个节点叫作根：每条边都将某个节点连接到它的父亲，而除去根节点外每一个节点都有一个父亲。</p>
-<ul>
-<li><p>每一个节点可以有任意多个儿子，也可以是零个儿子。没有儿子的节点称为<strong>树叶(leaf)</strong>。</p></li>
-<li><p>具有相同父亲的节点称为<strong>兄弟(siblings)</strong>，类似方法可以定义<strong>祖父(grandparent)</strong>和<strong>孙子(granchild)</strong>。</p></li>
-</ul></li>
-<li><p>从节点<strong><em><span
-class="math inline">\(n_1\)</span></em></strong>到<strong><em><span
-class="math inline">\(n_k\)</span></em></strong>的路径定义为节点<em><span
-class="math inline">\(n_1,n_2,...,n_k\)</span></em>的一个序列，使得对于<em><span
-class="math inline">\(1\)</span></em><span
-class="math inline">\(\leq\)</span><em><span
-class="math inline">\(i\)</span></em><span
-class="math inline">\(&lt;\)</span><em><span
-class="math inline">\(k\)</span></em>的节点<em><span
-class="math inline">\(n_i\)</span></em>是<em><span
-class="math inline">\(n_{i+1}\)</span></em>的父亲。这条路径的长是该路径上的边的条数，即<em>k</em>-1。从每一个节点到它自己有一条长为0的路径，在一棵树中从根到每个节点恰好存在一条路径。</p></li>
-<li><p>对于任意节点<em><span
-class="math inline">\(n_i\)</span></em>，<em><span
-class="math inline">\(n_i\)</span></em>的<strong>深度(depth)</strong>为根到<em><span
-class="math inline">\(n_i\)</span></em>的唯一路径的长，因此，根的深度为0。</p></li>
-<li><p>节点<em><span
-class="math inline">\(n_i\)</span></em>的<strong>高(height)</strong>是从<em><span
-class="math inline">\(n_i\)</span></em>到一片树叶的最长路径的长。因此所有树叶的高都是0。一颗树的<strong>树高(height
-of a tree)</strong>等于它的根的高。</p>
-<ul>
-<li>一棵树的<strong>树深(depth of a
-tree)</strong>等于其最深的树叶的深度，该深度总是等于这棵树的高。</li>
-</ul></li>
-<li><p>如果存在从<em><span
-class="math inline">\(n_1\)</span></em>到<em><span
-class="math inline">\(n_2\)</span></em>的一条路径，那么<em><span
-class="math inline">\(n_1\)</span></em>是<em><span
-class="math inline">\(n_2\)</span></em>的一位<strong>祖先(ancestor)</strong>，而<em><span
-class="math inline">\(n_2\)</span></em>是<em><span
-class="math inline">\(n_1\)</span></em>的一个<strong>后裔(descendant)</strong>。如果<em><span
-class="math inline">\(n_1 \neq n_2\)</span></em>，那么<em><span
-class="math inline">\(n_1\)</span></em>是<em><span
-class="math inline">\(n_2\)</span></em>的<strong>真祖先(proper
-ancestor)</strong>，而<em><span
-class="math inline">\(n_2\)</span></em>是<em><span
-class="math inline">\(n_1\)</span></em>的<strong>真后裔(proper
-descendant)</strong>。</p>
-<p><img
-src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-02%20162632.png" /></p>
-<center>
-<p>
-<p>树的基本关系</p>
-</p>
-<center>
-<hr />
-<p><strong>P.S</strong> 树与图论的相关联系</p></li>
-<li><p>一个没有固定根节点的树称为<strong>无根树(unrooted
-tree)</strong>，在无根树基础上，指定一个节点为<strong>根</strong>，则形成一颗<strong>有根树(rooted
-tree)</strong>，无根树有几种等价形式化定义：</p>
-<ul>
-<li>有<em><span class="math inline">\(n\)</span></em>个节点，<em><span
-class="math inline">\(n-1\)</span></em>条边的连通无向图</li>
-<li>无向无环的连通图</li>
-<li>任意两个节点之间有且仅有一条简单路径的无向图</li>
-<li>任何边均为桥的连通图</li>
-<li>没有圈，且在任意不同两点间添加一条边之后所得图含唯一的一个圈的图</li>
-</ul></li>
-<li><p><strong>森林(forest)</strong>：每个连通分量(连通块)都是树的图，按照定义，一棵树也是森林。</p></li>
-<li><p><strong>生成树(spanning
-tree)</strong>：一个连通无向图的生成子图，同时要求是图。也即在图的边集中选择<em><span
-class="math inline">\(n-1\)</span></em>条，将所有顶点连通。</p></li>
-<li><p><strong>无根树的叶节点(leaf node)</strong>：度数不超过<em><span
-class="math inline">\(1\)</span>​​</em>的节点。</p></li>
-</ul>
-<h2 id="树的实现">1.2树的实现</h2>
-<h3 id="只记录父节点">只记录父节点</h3>
-<p>用一个数组<strong>parent[N]</strong>记录每个节点的父亲节点。</p>
-<p>缺陷：这种方式可以获得的信息较少，不便于进行自顶向下的遍历。常用于自底向上的递推问题中。</p>
-<h3 id="邻接表">邻接表</h3>
-<ul>
-<li><p>对于无根树：为每个节点开辟一个线性列表，记录所有与之相连的节点。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">vector&lt;<span class="keyword">int</span>&gt; Tree[N];		<span class="comment">//N为所有节点个数</span></span><br></pre></td></tr></table></figure></li>
-<li><p>对于有根树：</p>
-<ul>
-<li><p>若输入数据可确定节点的关系，则为每个节点开辟一个线性列表，记录所有子节点；若有需要，则在另一个数组中记录父节点。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">vector&lt;<span class="keyword">int</span>&gt;child[N];</span><br><span class="line"><span class="keyword">int</span> parent[N];</span><br></pre></td></tr></table></figure></li>
-</ul></li>
-</ul>
-<h3 id="双亲表示法">双亲表示法</h3>
-<p>给每个节点的所有子节点任意确定一个顺序。此后为每个节点记录两个值：其<strong>第一个子节点</strong>和<strong>下一个兄弟节点</strong>。若没有子节点，则子节点为空；若该节点为父节点的最后一个子节点，则下一个兄弟节点为空。</p>
-<p><img
-src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-02%20172002.png" /></p>
-<center>
-<p>
-树的双亲表示法
-</p>
-</center>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">TreeNode</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    Object element;			<span class="comment">//存储的数据</span></span><br><span class="line">    TreeNode*firstchild;	<span class="comment">//第一个子节点</span></span><br><span class="line">    TreeNode*nextSibling;	<span class="comment">//下一个兄弟节点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>数组实现:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Node</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> parent;				<span class="comment">//存储父节点</span></span><br><span class="line">    <span class="keyword">int</span> child;				<span class="comment">//存储首个子节点</span></span><br><span class="line">    <span class="keyword">int</span> sibling;			<span class="comment">//存储下一个兄弟节点</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Node</span> <span class="title">Tree</span>[<span class="title">MAX</span>];</span></span><br><span class="line"><span class="comment">//或者</span></span><br><span class="line"><span class="keyword">int</span> parent[MAX];</span><br><span class="line"><span class="keyword">int</span> child[MAX];</span><br><span class="line"><span class="keyword">int</span> sibling[MAX];</span><br></pre></td></tr></table></figure>
-<hr />
-<h2 id="树的遍历">1.3树的遍历</h2>
-<h3 id="树的dfs">树的DFS</h3>
-<p>在树上 DFS
-是这样的一个过程：先访问根节点，然后分别访问根节点每个儿子的子树。</p>
-<p>可以用来求出每个节点的深度、父亲等信息。</p>
-<h3 id="树的bfs">树的BFS</h3>
-<p>从树根开始，严格按照层次来访问节点。</p>
-<p>BFS 过程中也可以顺便求出各个节点的深度和父亲节点。</p>
-<h3 id="无根树的遍历">无根树的遍历</h3>
-<p>无根树的遍历一般为深度优先遍历，这个过程中最需要注意的是避免重复访问节点。</p>
-<p>由于树是无环图，因此只需记录当前节点是由哪个节点访问而来，此后进入除该节点外的所有相邻节点，即可避免重复访问。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">bool</span> visited[MAX];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Dfs</span><span class="params">(<span class="keyword">int</span> start)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    visited[start]=<span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;Tree[start].<span class="built_in">size</span>();i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> next=Tree[start][i];</span><br><span class="line">        <span class="keyword">if</span>(visited[next]==<span class="literal">false</span>)</span><br><span class="line">            <span class="built_in">Dfs</span>(next);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="有根树的遍历">有根树的遍历</h3>
-<p>有根树的遍历与无根树的遍历相同，只是注意区分节点的上下关系。</p>
-<h2 id="特殊的树">1.4特殊的树</h2>
-<ul>
-<li><p><strong>链(chain/path
-graph)</strong>：满足与任一节点相连的边不超过<em><span
-class="math inline">\(2\)</span></em>条的树称为链。</p></li>
-<li><p><strong>菊花/星星(star)</strong>：满足存在<em><span
-class="math inline">\(u\)</span></em>使得所有除<em><span
-class="math inline">\(u\)</span></em>以外节点均与<em><span
-class="math inline">\(u\)</span></em>相连的树称为菊花。</p></li>
-<li><p><strong>有根二叉树（rooted binary
-tree）</strong>：每个节点最多只有两个儿子（子节点）的有根树称为二叉树。常常对两个子节点的顺序加以区分，分别称之为左子节点和右子节点。大多数情况下，<strong>二叉树</strong>
-一词均指有根二叉树。</p>
-<ul>
-<li><p><strong>完整二叉树（full/proper binary
-tree）</strong>：除叶子节点外每个节点都有两个孩子。</p></li>
-<li><p><strong>完美二叉树（perfect binary
-tree）</strong>：所有内部节点都有两个子节点，且所有叶子节点位于同一层。</p>
-<p><img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/perfect-binary-tree_0.png" style="zoom: 67%;" /></p>
-<center>
-<p>
-<p>完美二叉树</p>
-</p>
-</center></li>
-<li><p><strong>完全二叉树（complete binary
-tree）</strong>：若设二叉树的深度为<em><span
-class="math inline">\(h\)</span></em>，除第 <em><span
-class="math inline">\(h\)</span></em> 层外，其它各层 (1～<em><span
-class="math inline">\(h-1\)</span></em>) 的节点数都达到最大个数，第
-<em><span class="math inline">\(h\)</span></em>
-层所有的节点都连续集中在最左边，这就是完全二叉树。</p>
-<p>特点：</p>
-<ol type="1">
-<li>所有叶子节点必须向左倾斜</li>
-<li>最后一个叶子节点可能没有右兄弟(<strong>P.S</strong>
-完全二叉树(complete binary tree)不一定是完整二叉树(full binary tree))
-<figure class="half">
-<img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/comparison-1_0.png">
-<img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/comparison-4.png">
-</figure></li>
-</ol></li>
-</ul></li>
-</ul>
-<hr />
-<p>Author: AsukaMilet</p>
-<p>Date: 2022-2-02</p>
-]]></content>
-      <categories>
-        <category>Data Structrue</category>
-      </categories>
-      <tags>
-        <tag>数据结构</tag>
-        <tag>图论</tag>
-        <tag>树</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>二叉树</title>
-    <url>/2022/02/02/%E4%BA%8C%E5%8F%89%E6%A0%91/</url>
-    <content><![CDATA[<h1 id="二叉树">二叉树</h1>
-<p><strong>二叉树(binary
-tree)</strong>是一颗树，其中每个节点都不能有多于两个的儿子。一颗二叉树由一个根和两颗子树<em><span
-class="math inline">\(T_L\)</span></em>和<em><span
-class="math inline">\(T_R\)</span></em>组成，<em><span
-class="math inline">\(T_L\)</span></em>和<em><span
-class="math inline">\(T_R\)</span></em>均可能为空。</p>
-<p>二叉树的第<em><span
-class="math inline">\(i\)</span></em>层最多拥有<em><span
-class="math inline">\(2^{i-1}\)</span></em>个节点，深度为<em><span
-class="math inline">\(k\)</span></em>的二叉树最多总共有<em><span
-class="math inline">\(2^{k+1}-1\)</span></em>个节点。</p>
-<p>二叉树可分为：<strong>完整二叉树</strong>、<strong>完全二叉树</strong>、<strong>完美二叉树</strong>。</p>
-<p><a
-href="https://asukamilet.github.io/2022/02/02/%E6%A0%91%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">二叉树的分类</a></p>
-<hr />
-<h2 id="二叉树的构造">1.二叉树的构造</h2>
-<h3 id="数组存储">数组存储</h3>
-<p>二叉树可以用数组或链表来存储，若为满二叉树就可紧凑排列。若某个节点的索引为<em><span
-class="math inline">\(i\)</span></em>(假设根节点的索引为0)则它左子节点的索引为<em><span
-class="math inline">\(2i+1\)</span></em>，右子节点的索引为<em><span
-class="math inline">\(2i+2\)</span></em>，父节点(若有)的索引为<em><span
-class="math inline">\(\lfloor {i-1}/2 \rfloor\)</span></em></p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> parent;</span><br><span class="line">    <span class="keyword">int</span> left;</span><br><span class="line">    <span class="keyword">int</span> right;</span><br><span class="line">&#125;Node;</span><br><span class="line">Node BinaryTree[MAX];</span><br></pre></td></tr></table></figure>
-<h3 id="链表存储">链表存储</h3>
-<p>如果一个节点的子节点个数小于2，一些子节点指针可能为空值。使用链表能避免顺序存储浪费空间的问题，算法与结构相对简单，但使用链表，由于缺乏父链的指引，在找回父节点时需要重新扫描树得知父节点的节点地址。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">BinaryNode</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    Object element;			<span class="comment">//节点上的数据</span></span><br><span class="line">    BinaryNode *left;		<span class="comment">//左儿子</span></span><br><span class="line">    BinaryNode *right;		<span class="comment">//右儿子</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">BinaryNode</span> *<span class="title">BinaryTree</span>;</span></span><br></pre></td></tr></table></figure>
-<h2 id="二叉树的遍历">2.二叉树的遍历</h2>
-<h3 id="深度优先搜索dfs">2.1深度优先搜索(DFS)</h3>
-<p>在深度优先搜索中，我们希望从根节点访问最远的节点。和图的深度优先搜索不同的是，不需记住访问过的每一个节点，因为树中不会有环。前序，中序和后序遍历都是深度优先遍搜索的特例。</p>
-<h4 id="前序遍历">2.1.1前序遍历</h4>
-<p>按照<strong>根、左、右</strong>的顺序遍历二叉树</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PreTrav</span><span class="params">(BinaryTree*root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//相关操作</span></span><br><span class="line">        <span class="built_in">PreTrav</span>(root-&gt;left);</span><br><span class="line">        <span class="built_in">PreTrav</span>(root-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="中序遍历">2.1.2中序遍历</h4>
-<p>按照<strong>左、根、右</strong>的顺序遍历二叉树</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MidTrav</span><span class="params">(BinaryTree*root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">MidTrav</span>(root-&gt;left);</span><br><span class="line">        <span class="comment">//相关操作</span></span><br><span class="line">        <span class="built_in">MidTrav</span>(root-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="后序遍历">2.1.2后序遍历</h4>
-<p>按照<strong>左、右、根</strong>的顺序遍历二叉树</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LastTrav</span><span class="params">(BinaryTree*root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">LastTrav</span>(root-&gt;left);</span><br><span class="line">        <span class="built_in">LastTrav</span>(root-&gt;right);</span><br><span class="line">        <span class="comment">//相关操作</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="广度优先搜索bfs">2.2广度优先搜索(BFS)</h3>
-<p>从树根开始，严格按照层次来访问节点，BFS过程中也可顺便求出各个节点的深度以及父亲节点。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//本质还是BFS</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LevelTrav</span><span class="params">(BinaryTree*root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    queue&lt;BinaryNode*&gt; q;	<span class="comment">//树节点指针的队列</span></span><br><span class="line">    q.<span class="built_in">push</span>(root);</span><br><span class="line">    <span class="keyword">while</span>(！q.<span class="built_in">empty</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        BinaryNode*now=q.<span class="built_in">front</span>();</span><br><span class="line">        <span class="comment">//相关操作，如输出存储数据</span></span><br><span class="line">        q.<span class="built_in">pop</span>();</span><br><span class="line">        <span class="keyword">if</span>(now-&gt;left!=<span class="literal">nullptr</span>)	<span class="comment">//q.front()得到左儿子</span></span><br><span class="line">            q.<span class="built_in">push</span>(now-&gt;left);</span><br><span class="line">        <span class="keyword">if</span>(now-&gt;right!=<span class="literal">nullptr</span>)	<span class="comment">//q.front()得到右儿子</span></span><br><span class="line">            q.<span class="built_in">push</span>(now-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>二叉树遍历会对树的每个节点进行一次访问，算法复杂度为<strong><em>O(N)</em></strong>，使用递归实现遍历时，一旦树的节点数量庞大且分布不均，可能导致递归深度过深。</p>
-<h2 id="二叉树的应用">3.二叉树的应用</h2>
-<p>二叉树的一个重要应用即它在搜索中的使用，赋予二叉树相关性质即可使二叉树成为二叉查找树</p>
-<p>使二叉树成为二叉查找树的性质是，对于树中每个节点<strong><em>X</em></strong>，它的左子树中所有项的值均小于<strong><em>X</em></strong>中的项，而它右子树中所有项的值均大于<strong><em>X</em></strong>中的项。这意味着该树所有的元素可以用某种一致的方式排序。</p>
-<p><img
-src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-03%20155815.png" /></p>
-<center>
-<p>
-两颗二叉树(只有左边的树为查找树)
-</p>
-</center>
-<h3 id="二叉查找树的相关操作">3.1二叉查找树的相关操作</h3>
-<h4 id="数组实现">3.1.1数组实现</h4>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">TreeNode</span>					//构建<span class="title">BST</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> value;</span><br><span class="line">    <span class="keyword">int</span> left;					<span class="comment">//当left与right的值为-1时，表示无子节点</span></span><br><span class="line">    <span class="keyword">int</span> right;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">TreeNode</span> <span class="title">TreeNode</span>;</span></span><br><span class="line">TreeNode BStree[MAX];</span><br><span class="line"><span class="comment">//BStree[0]即为根节点</span></span><br></pre></td></tr></table></figure>
-<h5 id="遍历二叉搜索树">遍历二叉搜索树</h5>
-<p>BST的中序遍历是其所有节点值从小到大排列，时间复杂度为<strong><em>O(N)</em></strong></p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Traverse</span><span class="params">(<span class="keyword">int</span> root)</span>			<span class="comment">//遍历以root为根节点的BST</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(BStree[root].left!=<span class="number">-1</span>)	<span class="comment">//当左子树不为空时，遍历左子树</span></span><br><span class="line">        <span class="built_in">Traverse</span>(BStree[root].left);</span><br><span class="line">    cout&lt;&lt;BStree[root].value;	<span class="comment">//输出根节点的值</span></span><br><span class="line">    <span class="keyword">if</span>(BStree[root].right!=<span class="number">-1</span>)	<span class="comment">//当右子树不为空时，遍历右子树</span></span><br><span class="line">        <span class="built_in">Traverse</span>(BStree[root].right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="查找最小最大值">查找最小/最大值</h5>
-<p>由BST的性质可知，BST上最小值位于BST最左端顶点，最大值位于BST最右端顶点。时间复杂度为<strong><em>O(<span
-class="math inline">\(h\)</span>)</em></strong></p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">FindMin</span><span class="params">(<span class="keyword">int</span> root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(BStree[root].left!=<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">FindMin</span>(BStree[root].left);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> BStree[root].value;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">FindMax</span><span class="params">(<span class="keyword">int</span> root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(BStree[root].right!=<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">FindMax</span>(BStree[root].right);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> BStree[root].value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="指针实现">3.1.2 指针实现</h4>
-<p>由于BST的平均深度为<strong><em>O(<span
-class="math inline">\(\log{N}\)</span>)</em></strong>，所以一般不必担心栈空间会被用尽</p>
-<h5 id="bst接口">BST接口</h5>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BinarySearchTree</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">BinarySearchTree</span>();</span><br><span class="line">    <span class="built_in">BinarySearchTree</span>(<span class="keyword">const</span> BinarySearchTree&amp;rhs);</span><br><span class="line">    <span class="built_in">BinarySearchTree</span>(BinarySearchTree&amp;&amp;rhs);</span><br><span class="line">    ~<span class="built_in">BinarySearchTree</span>();</span><br><span class="line">    <span class="comment">//构造函数</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">const</span> T&amp;<span class="title">findMin</span><span class="params">()</span> <span class="keyword">const</span></span>;		 <span class="comment">//查找最小值</span></span><br><span class="line">    <span class="function"><span class="keyword">const</span> T&amp;<span class="title">findMax</span><span class="params">()</span> <span class="keyword">const</span></span>;		 <span class="comment">//查找最大值</span></span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">contains</span><span class="params">(<span class="keyword">const</span> T&amp;x)</span> <span class="keyword">const</span></span>;  <span class="comment">//判断是否含有项X的节点</span></span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">empty</span><span class="params">()</span> <span class="keyword">const</span></span>;						 <span class="comment">//判断是否为空树</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">printTree</span><span class="params">(ostream&amp;out=cout)</span> <span class="keyword">const</span></span>;	 <span class="comment">//输出树</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">makeEmpty</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(<span class="keyword">const</span> T&amp;x)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(T&amp;&amp;x)</span></span>;</span><br><span class="line">    <span class="comment">//插入元素</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">(<span class="keyword">const</span> T&amp;x)</span></span>;			 <span class="comment">//删除元素，delete为关键字，用remove</span></span><br><span class="line">    </span><br><span class="line">    BinarySearchTree&amp;<span class="keyword">operator</span>=(<span class="keyword">const</span> BinarySearchTree&amp;rhs);</span><br><span class="line">    BinarySearchTree&amp;<span class="keyword">operator</span>=(BinarySearchTree&amp;&amp;rhs);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">BinaryNode</span></span></span><br><span class="line"><span class="class">    &#123;</span></span><br><span class="line">        T element;</span><br><span class="line">        BinaryNode*left;</span><br><span class="line">        BinaryNode*right;</span><br><span class="line">        <span class="comment">//BinaryNode*parent;		 父节点可加可不加</span></span><br><span class="line">        </span><br><span class="line">        <span class="built_in">BinaryNode</span>(<span class="keyword">const</span> T&amp;value,BinaryNode*lc,BinaryNode*rc)</span><br><span class="line">            :element&#123;value&#125;,left&#123;lc&#125;,right&#123;rc&#125; &#123;&#125;</span><br><span class="line">        <span class="built_in">BinaryNode</span>(T&amp;&amp;value,BinaryNode*lc,BinaryNode*rc)</span><br><span class="line">            :element&#123;std::<span class="built_in">move</span>(value)&#125;,left&#123;lc&#125;,right&#123;rc&#125; &#123;&#125;</span><br><span class="line">        <span class="comment">//节点的构造函数</span></span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    BinaryNode*root;				 <span class="comment">//定义根节点</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">//内部重载函数</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(BinaryNode*&amp;t,<span class="keyword">const</span> T&amp;x)</span></span>;	</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(BinaryNode*&amp;t,T&amp;&amp;x)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">(BinaryNode*&amp;t,<span class="keyword">const</span> T&amp;x)</span></span>;</span><br><span class="line">    <span class="function">BinaryNode*<span class="title">findMax</span><span class="params">(BinaryNode*t)</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function">BinaryNode*<span class="title">findMin</span><span class="params">(BinaryNode*t)</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">contains</span><span class="params">(BinaryNode*t,<span class="keyword">const</span> T&amp;x)</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">makeEmpty</span><span class="params">(BinaryNode*&amp;t)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">printTree</span><span class="params">(BinaryNode*t,ostream&amp;out)</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function">BinaryNode*<span class="title">clone</span><span class="params">(BinaryNode*t)</span> <span class="keyword">const</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<center>
-<p>
-二叉查找树接口
-</p>
-</center>
-<p><em>private</em>成员函数通过<strong>传引用调用</strong>的使用传递指针变量，使得public型成员函数能够把指向根节点的指针传递给<em>private</em>型的递归成员函数，这些递归函数此时可以改变根的值，使<em>root</em>指向另外的节点。</p>
-<h5 id="private与public关系">private与public关系</h5>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">bool</span> BinarySearchTree&lt;T&gt;::<span class="built_in">contains</span>(<span class="keyword">const</span> T&amp;x) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">contains</span>(x,root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> BinarySearchTree&lt;T&gt;::<span class="built_in">insert</span>(<span class="keyword">const</span> T&amp;x)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">insert</span>(x,root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> BinarySearchTree&lt;T&gt;::<span class="built_in">remove</span>(<span class="keyword">const</span> T&amp;x)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">remove</span>(x,root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> T&amp;BinarySearchTree&lt;T&gt;::<span class="built_in">findMin</span>() <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">findMin</span>(root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> T&amp;BinarySearchTree&lt;T&gt;::<span class="built_in">findMax</span>() <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">findMax</span>(root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> BinarySearchTree&lt;T&gt;::<span class="built_in">makeEmpty</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">makeEmpty</span>(root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> BinarySearchTree&lt;T&gt;::<span class="built_in">printTree</span>(ostream&amp;out=cout) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printTree</span>(root,cout);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="contains">contains</h5>
-<p>如果在树<span class="math inline">\(T\)</span>中含有项<span
-class="math inline">\(X\)</span>的节点，则该此操作返回<em>true</em>，若该节点不存在，则返回<em>false</em>。若<span
-class="math inline">\(T\)</span>为空集，则直接返回<em>false</em>，否则，若存储在<span
-class="math inline">\(T\)</span>的项为<span
-class="math inline">\(X\)</span>，则返回<em>true</em>；不然对树<span
-class="math inline">\(T\)</span>的左子树和右子树进行递归调用。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*判断某项是否在子树上方法</span></span><br><span class="line"><span class="comment">*x为待查找项</span></span><br><span class="line"><span class="comment">*t为作为该子树的根节点</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">contains</span><span class="params">(<span class="keyword">const</span> T&amp;x,BinaryNode*t)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t==<span class="literal">nullptr</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(x&lt;t-&gt;element)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">contains</span>(x,t-&gt;left);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(x&gt;t-&gt;element)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">contains</span>(x,t-&gt;right);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<center>
-<p>
-二叉查找树的contains操作
-</p>
-</center>
-<h5 id="findmax和findmin">findMax和findMin</h5>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">BinaryNode*<span class="title">findMin</span><span class="params">(BinaryNode*t)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span>(t-&gt;left!=<span class="literal">nullptr</span>)</span><br><span class="line">            t=t-&gt;left;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//private成员函数</span></span><br><span class="line"><span class="function">BinaryNode*<span class="title">findMax</span><span class="params">(BinaryNode*t)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span>(t-&gt;right!=<span class="literal">nullptr</span>)</span><br><span class="line">            t=t-right;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="insert">insert</h5>
-<p>为了将<span class="math inline">\(X\)</span>插入到树<span
-class="math inline">\(T\)</span>中，可以沿着树进行查找，如果找到<span
-class="math inline">\(X\)</span>,则什么也不用做。否则将<span
-class="math inline">\(X\)</span>插入至所遍历路径的最后一点上。</p>
-<p><img
-src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-09%20230457.png" /></p>
-<center>
-<p>
-插入5之前和之后的BST
-</p>
-</center>
-<p>重复元的插入可以通过在节点中保留一个<code>count</code>计数器来记录该值在树中出现的次数。也可把具有相同关键字的所有结构保留在一个辅助数据结构中，例如表或者另一颗BST。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//x为待插入的项，t为该子树根节点</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(<span class="keyword">const</span> T&amp;x,BinaryNode*&amp;t)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t==<span class="literal">nullptr</span>)</span><br><span class="line">        t=<span class="keyword">new</span> BinaryNode&#123;x,<span class="literal">nullptr</span>,<span class="literal">nullptr</span>&#125;;	<span class="comment">//列表初始化</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(x&lt;t-&gt;element)</span><br><span class="line">        <span class="built_in">insert</span>(x,t-&gt;left);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(x&gt;t-&gt;element)</span><br><span class="line">        <span class="built_in">insert</span>(x,t-&gt;right);</span><br><span class="line">    <span class="keyword">else</span> </span><br><span class="line">        (t-&gt;count)++;							<span class="comment">//重复元，计数器+1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="remove">remove</h5>
-<ul>
-<li>若待删除节点为树叶，则立即被删除</li>
-<li>若待删除节点有一个儿子，则该节点在其父节点调整其链绕过该节点后被删除<img
-src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-10%20145457.png" /></li>
-</ul>
-<center>
-<p>
-有一个儿子的节点被删除情况
-</p>
-</center>
-<ul>
-<li>若待删除节点有两个儿子，一般用其右子树的最小数据代替该节点数据并递归删除那个节点<img
-src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-10%20145733.png" /></li>
-</ul>
-<center>
-<p>
-有两个儿子节点前后情况
-</p>
-</center>
-<ul>
-<li>若预计删除次数不多，则可以使用<strong>懒惰删除(lazy
-deletion)</strong>：当一个元素要被删除时，它仍留在树中，只是做了一个被删除的标记。</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">(BinaryNode*&amp;t,<span class="keyword">const</span> T&amp;x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t==<span class="literal">nullptr</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">if</span>(x&lt;t-&gt;element)</span><br><span class="line">        <span class="built_in">remove</span>(t-&gt;left,x);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(x&gt;t-&gt;element)</span><br><span class="line">        <span class="built_in">remove</span>(t-&gt;right,x);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(t-&gt;left!=<span class="literal">nullptr</span>&amp;&amp;t-&gt;right!=<span class="literal">nullptr</span>)	<span class="comment">//待删除节点有两个儿子</span></span><br><span class="line">    &#123;</span><br><span class="line">        t-&gt;element=<span class="built_in">findMin</span>(t-&gt;right)-&gt;element;		<span class="comment">//右子树最小值</span></span><br><span class="line">        <span class="built_in">remove</span>(t-&gt;element,t-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>		<span class="comment">//待删除节点只有一个儿子</span></span><br><span class="line">    &#123;</span><br><span class="line">        BinaryNode*oldNode=t;</span><br><span class="line">        <span class="keyword">if</span>(t-&gt;left!=<span class="literal">nullptr</span>)</span><br><span class="line">            t=t-&gt;left;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            t=t-&gt;right;		<span class="comment">//待删除节点被其儿子代替</span></span><br><span class="line">        <span class="keyword">delete</span> oldNode;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="析构函数与构造拷贝函数">析构函数与构造拷贝函数</h5>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="comment">//析构函数与makeEmpty</span></span><br><span class="line">BinarySearchTree&lt;T&gt;::~<span class="built_in">BinarySearchTree</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">makeEmpty</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">void</span> BinarySearchTree&lt;T&gt;::<span class="built_in">makeEmpty</span>(BinaryNode*&amp;t)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(t!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">makeEmpty</span>(t-&gt;left);</span><br><span class="line">        <span class="built_in">makeEmpty</span>(t-&gt;right);</span><br><span class="line">        <span class="keyword">delete</span> t;</span><br><span class="line">    &#125;</span><br><span class="line">    t=<span class="literal">nullptr</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//构造函数</span></span><br><span class="line">BinarySearchTree&lt;T&gt;::<span class="built_in">BinarySearchTree</span>(<span class="keyword">const</span> BinarySearchTree&amp;rhs): root&#123;<span class="literal">nullptr</span>&#125;</span><br><span class="line">&#123;</span><br><span class="line">    root=<span class="built_in">clone</span>(rhs.root);</span><br><span class="line">&#125;</span><br><span class="line">BinaryNode*BinarySearchTree&lt;T&gt;::<span class="built_in">clone</span>(BinaryNode*t) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(t==<span class="literal">nullptr</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> BinaryNode&#123;t-&gt;element,<span class="built_in">clone</span>(t-&gt;left),<span class="built_in">clone</span>(t-&gt;right)&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr />
-<p>Author: AsukaMilet</p>
-<p>Date: F2022-2-02 L2022-2-10</p>
-]]></content>
-      <categories>
-        <category>Data Structrue</category>
-      </categories>
-      <tags>
-        <tag>数据结构</tag>
-        <tag>树</tag>
       </tags>
   </entry>
   <entry>
@@ -948,179 +580,547 @@ href="https://www.acwing.com/problem/content/346/">Acwing344</a></p></li>
       </tags>
   </entry>
   <entry>
-    <title>C++初始化方法</title>
-    <url>/2022/02/28/C-%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<h1 id="c的初始化方法">C++的初始化方法</h1>
-<p>C++的初始化方式实在太复杂，<em>C++
-11</em>又引入了列表初始化，只能花点时间总结一下。</p>
-<hr />
-<h2 id="初始化基础知识">初始化基础知识</h2>
-<p><strong>初始化概念</strong>:创建变量时赋予它一个值(<strong><em>P.S</em></strong>
-初始化不等于赋值，初始化是在创建变量时赋予其一个初始值，赋值是将变量的当前值抹去，并用一个新值替代它)</p>
-<p><strong>初始化时机</strong>:初始值可以由<strong>声明符</strong>或<strong>new表达式</strong>的初始化器部分提供，在函数调用时也会发生:函数形参以及函数返回值也会被初始化。</p>
-<p><strong>初始化器</strong>:对于每个声明符，初始化器必须是下列之一:</p>
+    <title>不相交集（DisjSets）的原理及实现</title>
+    <url>/2022/01/26/%E4%B8%8D%E7%9B%B8%E4%BA%A4%E9%9B%86%EF%BC%88DisjSets%EF%BC%89%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/</url>
+    <content><![CDATA[<h1
+id="不相交集disjsets的原理及实现">不相交集（DisjSets）的原理及实现</h1>
+<h2 id="不相交集基本知识">1.不相交集基本知识</h2>
+<p>不相交集主要涉及两种操作：合并和查找。初始时，不同的集合中元素不相交(<span
+class="math inline">\(S_i \cap
+S_j=\varnothing\)</span>),经过一系列Union操作后,合并为一个大的集合。</p>
+<p>DisjSets是一种动态集合（随着Union操作的增多，动态集合中集合个数减少）
+<span class="math display">\[
+S=\{s_1,s_2,s_3....s_n\}
+\]</span> 判断某个元素是否在集合<span
+class="math inline">\(s_i\)</span>中,只需进行Find操作，返回值为包含给定元素集合的名字。判断两个元素是否在同一个集合中只需要比较Find(X)和Find(Y)是否返回同一个集合名字即可。</p>
+<p>不相交集的应用范围：</p>
 <ol type="1">
-<li>(<em>expression-list</em>)</li>
-<li>= <em>expression</em></li>
-<li>{<em>initializer-list</em>}</li>
+<li><strong><em>判断无向图的连通分量个数</em></strong></li>
+<li><strong><em>判断无向图中任意两个顶点是否连通</em></strong></li>
+<li>......</li>
+</ol>
+<h2 id="不相交集的基本实现c">2.不相交集的基本实现（C++）</h2>
+<h3 id="class实现">（1）Class实现</h3>
+<h4 id="adt接口实现一维数组实现">①ADT接口实现（一维数组实现）</h4>
+<p>不相交集<strong>S</strong>由若干子集合<strong><span
+class="math inline">\(s_i\)</span></strong>构成，不相交集的逻辑结构就是一个森林（树的集合）。<strong><span
+class="math inline">\(s_i\)</span></strong>表示森林中的一颗子树，一般以该子树的根作为子树代表。</p>
+<p>由于需要的唯一信息为<strong>父链（parent
+link）</strong>，集合的名字由根处的节点给出，由于只需要知道父节点的名字，可以假设这棵树被非显式存储在一个数组中：数组的每个成员<strong>s[i]</strong>表示元素<strong>i</strong>的父亲，如果<strong>i</strong>为根，则<strong>s[i]=i</strong>（<em>e.g.</em>
+s[5]=4，表示节点5的父亲为节点4）</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DisjSets</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">DisjSets</span><span class="params">(<span class="keyword">int</span> ElementsNum)</span></span>;   <span class="comment">//构造函数，初始化DisjSets</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">Find</span><span class="params">(<span class="keyword">int</span> num)</span></span>;                    <span class="comment">//Find操作</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">UnionSets</span><span class="params">(<span class="keyword">int</span> num1,<span class="keyword">int</span> num2)</span></span>;    <span class="comment">//Union操作</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; s;</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; rank;					  <span class="comment">//保存每个子树的秩</span></span><br><span class="line">    <span class="keyword">int</span> count;                            <span class="comment">//记录DisjSets中子集合的个数（子树个数）</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>初始化操作如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">DisjSets::<span class="built_in">DisjSets</span>(<span class="keyword">int</span> ElementsNum)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;ElementsNum;i++)      <span class="comment">//若编号从1开始，则ElementsNum应为输入元素个数加1</span></span><br><span class="line">    &#123;</span><br><span class="line">        s.<span class="built_in">push_back</span>(i);</span><br><span class="line">        rank.<span class="built_in">push_back</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    count=ElementsNum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<h4 id="基本操作实现">②基本操作实现</h4>
+<p>Union操作即将两个不相交的子集和合并成一个大集合,只需将一颗子树的父节点指向另一颗子树即可</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DisjSets::UnionSets</span><span class="params">(<span class="keyword">int</span> num1,<span class="keyword">int</span> num2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> root1=<span class="built_in">Find</span>(num1);          <span class="comment">//查找num1元素的祖先</span></span><br><span class="line">    <span class="keyword">int</span> root2=<span class="built_in">Find</span>(num2);          <span class="comment">//查找num2元素的祖先</span></span><br><span class="line">    s[root2]=root1；               <span class="comment">//将num2祖先变为num1祖先的儿子</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Find操作即查找所需元素所在集合，即返回所在元素名字。</p>
+<p><strong><em>e.g</em></strong> 并查集如下：</p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/715283-20160917221621664-276304966.png" /></p>
+<p>此时共有四个子树，第一个子树名字为0，第二个子树名字为1，第三个子树名字为3，第四个子树名字为5。所以Find(2)返回值为1，Find(4)返回值为3，Find(3)返回值为3。Find基本实现如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">DisjSets::Find</span><span class="params">(<span class="keyword">int</span> num)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(s[num]==num)</span><br><span class="line">        <span class="keyword">return</span> num;                </span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Find</span>(s[x]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<h4 id="unionfind操作的改进">③Union/Find操作的改进</h4>
+<h5 id="i.按高度秩rank求并">I.按高度（秩（rank））求并</h5>
+<p>上述Union操作很随意：任选一颗子树，将另一颗子树的根指向它就完成合并。若一直按上述操作合并，可能产生非常不平衡的子树，如：</p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-01-26%20195423.png" /></p>
+<p><strong>树变得越来越高，此时会影响到Find的效率</strong>。</p>
+<p>因此引入按秩合并（启发式合并）：将秩小的子树的根指向秩大的子树的根。</p>
+<p>秩的定义：对每个节点，用秩表示节点高度的上界（路径压缩不完全与秩兼容，路径压缩会改变树的高度，此时不追求树的高度的精确值，而是存储树的高度的估计值，树的高度的估计值为秩）</p>
+<p>若不考虑路径压缩，则为<strong>按高度求并（union by
+height）</strong>：在合并前，判断哪颗子树更高，让更矮的子树的根节点指向高的子树的根。</p>
+<p>实现如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DisjSets::UnionSets</span><span class="params">(<span class="keyword">int</span> num1,<span class="keyword">int</span> num2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> root1=<span class="built_in">Find</span>(num1);</span><br><span class="line">    <span class="keyword">int</span> root2=<span class="built_in">Find</span>(num2);</span><br><span class="line">    <span class="keyword">if</span>(root1!=root2)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(rank[root1]&gt;rank[root2])                 <span class="comment">//num1所在子树更深</span></span><br><span class="line">        s[root2]=root1;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(rank[root1]&lt;rank[root2])            <span class="comment">//num2所在子树更深</span></span><br><span class="line">        s[root1]=root2;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            s[root2]=root1;                         <span class="comment">//将num2所在子树合并至num1所在子树</span></span><br><span class="line">            rank[root1]++;                          <span class="comment">//num1所在子树秩加深</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5
+id="ii.路径压缩核心思路将查找路径上节点直接连接至根上">II.路径压缩（核心思路：将查找路径上节点直接连接至根上）</h5>
+<p>对于上述Find操作，对于连续M个指令（在所有模型下）平均为线性的。但<strong><em>O（M<span
+class="math inline">\(\log{N}\)</span>）</em></strong>的最坏情况仍有可能发生。例如，把所有集合放于一个队列中，并反复让前两个集合出队而使它们的并入队，则最坏情况就会发生。路径压缩操作相对于基础Find操作变化不大，使s[<strong><em>num</em></strong>]等于由Find返回的值。这样，在集合的根被递归地查找到后，<strong><em>num</em></strong>的父节点就设置为它，这对通向根的路径上的每一个节点递归地出现，因而实现路径压缩。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">DisjSets::Find</span><span class="params">(<span class="keyword">int</span> num)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(s[num]==num)</span><br><span class="line">        <span class="keyword">return</span> num;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> s[num]=<span class="built_in">Find</span>(s[num]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5
+id="iii.路径压缩与按高度求并兼容问题">III.路径压缩与按高度求并兼容问题</h5>
+<p>因为路径压缩可以改变树的高度，此时不清楚如何去重新计算树的高度，解决方案则是<strong>不计算树的高度</strong>，此时，对于每棵树所存储高度变为估计值（秩）。</p>
+<p>若不使用按高度合并，只使用路径压缩最坏时间复杂度为<strong><em>O(m<span
+class="math inline">\(\log{N}\)</span>)</em></strong>。</p>
+<p>若只使用按高度求并，不使用路径压缩，时间复杂度为<strong><em>O(m<span
+class="math inline">\(\log{n}\)</span>)</em></strong>，由于由于路径压缩单次合并可能造成大量修改，有时路径压缩并不适合使用。例如，在可持久化不相交集、线段树分治
++ 不相交集中，一般使用只按高度合并的不相交集。</p>
+<p>时间复杂度与空间复杂度分析:</p>
+<p><a href="https://oi-wiki.org/ds/dsu/">OI Wiki并查集</a></p>
+<hr />
+<h3 id="不相交集的数组实现">（2）不相交集的数组实现</h3>
+<p>代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> DijsSets[MAX];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Initialization</span><span class="params">(<span class="keyword">int</span> size)</span>                 <span class="comment">//初始化DisjSets</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;size;i++)					  <span class="comment">//编号从0开始</span></span><br><span class="line">        DijsSets[i]=i;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Find</span><span class="params">(<span class="keyword">int</span> num,<span class="keyword">int</span>*DisjSets)</span>                <span class="comment">//路径压缩查找</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(DisjSets[num]!=num)					  <span class="comment">//num不是该集合的根</span></span><br><span class="line">        DisjSets[num]=<span class="built_in">Find</span>(DisjSets[num],DisjSets);    <span class="comment">//递归搜索</span></span><br><span class="line">    <span class="keyword">return</span> num;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UnionSets</span><span class="params">(<span class="keyword">int</span> num1,<span class="keyword">int</span> num2,<span class="keyword">int</span>*DisjSets)</span>         <span class="comment">//简单合并</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> root1=<span class="built_in">Find</span>(num1,DisjSets);</span><br><span class="line">    <span class="keyword">int</span> root2=<span class="built_in">Find</span>(num2,DisjSets);</span><br><span class="line">    DisjSets[root2]=root1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="不相交集应用">3.不相交集应用</h2>
+<p>应用本质：初始时为一个个不连通的对象，经过一步步处理，变成连通的。</p>
+<ol type="1">
+<li><p><strong>生成迷宫</strong>：<img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-01-26%20195521.png" /></p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-01-26%20195539.png" /></p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-01-26%20195615.png" /></p></li>
+<li><p><strong>无向图的连通分量个数</strong>：初始时，将无向图中各个顶点视为不连通的子集合，对图中每一条边，相当于union这条边对应的两个顶点分别所在的集合，直至所有的边都处理完后，还剩下的集合的个数即为连通分量的个数。</p></li>
 </ol>
 <hr />
-<p>1)括号中以逗号分隔的含有任意表达式或花括号初始化器列表的列表</p>
-<p>2)等号后面跟着一个表达式</p>
-<p>3)花括号初始化器列表：以逗号分隔且可以为空的含有表达式和其他花括号初始化器列表的列表</p>
-<hr />
-<h2 id="c初始化种类">C++初始化种类</h2>
+<h2 id="相关题目">相关题目</h2>
 <ul>
-<li><p>默认初始化</p></li>
-<li><p>值初始化</p></li>
-<li><p>直接初始化</p></li>
-<li><p>拷贝初始化</p></li>
-<li><p>列表初始化</p></li>
-</ul>
-<hr />
-<h3 id="默认初始化">默认初始化</h3>
-<p>默认初始化是指声明变量时没有指定初值时进行的初始化操作。例如<code>int num</code>,<code>Sales_data myData</code>等。</p>
-<p>当采用动态内存分配时(如<em>new、malloc</em>等)创建的变量,不添加括号时(<strong><em>e.g</em></strong>
-<code>int *p=new int</code>)也为默认初始化,添加括号(<strong><em>e.g</em></strong>
-<code>int*p=new int()</code>)为值初始化。</p>
-<p>变量的值与变量类型以及定义位置有关</p>
-<ul>
-<li>对于内置类型变量(<code>int</code>、<code>float</code>、<code>bool</code>等),如果未被显示初始化，它们的值由定义的位置决定
-<ul>
-<li>定义于任何函数体之外的变量(包括<strong>主调函数</strong>)将被初始化为0</li>
-<li>定义在函数体内部的内置类型将不被初始化(uninitialized),未被初始化的内置类型变量的值是未定义的,如果尝试<em>copy</em>或以其他形式访问此类值将会引发错误</li>
-</ul></li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">int</span> global_var;		<span class="comment">//默认初始化为0</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> local_var;		<span class="comment">//不被初始化</span></span><br><span class="line">    <span class="keyword">int</span>*new_var=<span class="keyword">new</span> <span class="keyword">int</span>;</span><br><span class="line">    std::cout&lt;&lt;*new_var&lt;&lt;std::endl; 	<span class="comment">//未定义</span></span><br><span class="line">    std::cout&lt;&lt;local_var&lt;&lt;std::endl;	<span class="comment">//未定义且报错</span></span><br><span class="line">    std::cout&lt;&lt;global_var&lt;&lt;std::endl;	<span class="comment">//输出0</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>对于类类型变量(如<code>string</code>或其他自定义类型如<code>Sales_Data</code>),<strong>定义一个类但没有指定初始值时,会使用默认构造函数来进行初始化,如果该类没有默认构造函数，则会引发错误</strong>。建议在自定义类类型中定义一个默认构造函数(<code>=default</code>)。
-<ul>
-<li>定义于任何函数体之外的类类型变量会先进行零初始化再执行默认初始化，定义在函数体内部的类变量会直接执行默认初始化</li>
-<li>如果类数据成员存在类内初始值，则用该值初始化相应成员</li>
-<li>从本质上来说，类的初始化<strong>取决于构造函数中对数据成员的初始化，如果没有在构造函数的初始值列表中显式地初始化数据成员，那么成员将在构造函数之前执行默认初始化</strong></li>
-</ul></li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//使用合成的默认构造函数</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cat</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用自定义的默认构造函数</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    <span class="built_in">Dog</span>()&#123;&#125;		<span class="comment">//默认构造函数，不会初始化age</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Cat global_cat;	<span class="comment">//先执行零初始化，再执行默认初始化，默认构造函数虽然不会初始化age，但age仍为0</span></span><br><span class="line">Dog global_dog;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Cat local_cat;</span><br><span class="line">    Dog local_dog;</span><br><span class="line">    std::cout&lt;&lt;local_cat.age&lt;&lt;std::endl;		<span class="comment">//随机值</span></span><br><span class="line">    std::cout&lt;&lt;local_dog.age&lt;&lt;std::endl;		<span class="comment">//随机值</span></span><br><span class="line">    std::cout&lt;&lt;global_cat.age&lt;&lt;std::endl;		<span class="comment">//输出值为0</span></span><br><span class="line">    std::cout&lt;&lt;global_dog.age&lt;&lt;std::endl;		<span class="comment">//输出值为0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr />
-<h3 id="值初始化">值初始化</h3>
-<p>使用初始化器(即使用圆括号或花括号)但未提供初始值的情况。(<strong><em>e.g</em></strong>
-<code>int*p=new int()</code>，<code>vector&lt;string&gt; vec(10)</code>)</p>
-<p>如果T是一个类，则类的对象进行默认初始化<strong>(如果T类型的默认构造函数不是用户自定义的，默认初始化之前先进行零初始化)</strong>,如果为一个数组，每个元素值初始化，否则进行零初始化。</p>
-<p><strong>当不采用动态内存分配(即不采用<em>new、malloc</em>运算符)时,形如</strong><code>int a()</code>；<strong>是错误的值初始化方式,因为这种方式声明了一个函数而不是进行值初始化</strong>。</p>
-<p>如果一定要进行值初始化，必须结合拷贝初始化使用，即写成
-<code>int a=int()</code>;
-<strong>值初始化和默认初始化一样,对于内置类型初始化为
-0，对于类类型则调用其默认构造函数，如果没有默认构造函数，则不能进行初始化。</strong></p>
-<hr />
-<h3 id="直接初始化与拷贝初始化">直接初始化与拷贝初始化</h3>
-<p><strong>直接初始化</strong>与<strong>拷贝初始化</strong>对应，其内部实现机理不同。</p>
-<p><strong>直接初始化</strong>是指采用<strong>小括号</strong>的方式进行变量初始化（小括号里一定要有初始值，如果没提供初始值，那就是值初始化了！）。</p>
-<p><strong><em>e.g</em></strong>:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">string <span class="title">s1</span><span class="params">(<span class="string">&quot;test&quot;</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">a</span><span class="params">(<span class="number">12</span>)</span></span>;</span><br><span class="line"><span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">ivec</span><span class="params">(ivec2)</span></span>;</span><br></pre></td></tr></table></figure>
-<p><strong>拷贝初始化</strong>主要是使用等号<code>=</code>进行初始化的方式</p>
-<p>基本语法如下：</p>
-<hr />
-<p>1)<em>Type object = other</em>;</p>
-<hr />
-<p>2)<em>function(other)</em>;</p>
-<hr />
-<p>3)<strong>return</strong> <em>other</em>;</p>
-<hr />
-<p>4)<strong>throw</strong> <em>object</em>;</p>
-<p>​ <strong>catch</strong> (<em>T object</em>)</p>
-<hr />
-<p>5)<em>T array</em>[<em>N</em>] = {<em>other-sequence</em>};</p>
-<hr />
-<p>拷贝初始化看起来像是给变量赋值，实际上是执行了初始化操作，与先定义再赋值本质不同。</p>
-<ol type="1">
-<li>对于内置类型变量（如
-<code>int</code>，<code>double</code>，<code>bool</code>
-等），直接初始化与拷贝初始化差别可以忽略不计。</li>
-<li>对于类类型的变量（如<code>string</code>或其他自定义类型），直接初始化调用类的<strong>构造函数</strong>（调用参数类型最佳匹配的那个），拷贝初始化调用类的拷贝构造函数。</li>
-</ol>
-<p>特别的，当对类类型变量进行初始化时，如果类的构造函数采用了
-<code>explicit</code>
-修饰而且需要隐式类型转换时，则只能通过直接初始化而不能通过拷贝初始化进行操作。</p>
-<h4 id="拷贝构造函数与赋值运算符">拷贝构造函数与赋值运算符</h4>
-<p>在默认情况下（用户没有定义，但是也没有显式的删除），编译器会自动的隐式生成一个拷贝构造函数和赋值运算符。但用户可以使用
-<code>delete</code>
-来指定不生成拷贝构造函数和赋值运算符，这样的对象就不能通过值传递，也不能进行赋值运算。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Person</span>(<span class="keyword">const</span> Person&amp;p)=<span class="keyword">delete</span>;</span><br><span class="line">    Person&amp;<span class="keyword">operator</span>=(<span class="keyword">const</span> Person&amp;p)=<span class="keyword">delete</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    string name;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>上面的定义的类Person显式的删除了拷贝构造函数和赋值运算符，在需要调用拷贝构造函数或者赋值运算符的地方，会提示<em>无法调用该函数，它是已删除的函数</em>。
-还有一点需要注意的是，拷贝构造函数必须以引用的方式传递参数。这是因为，在值传递的方式传递给一个函数的时候，会调用拷贝构造函数生成函数的实参。如果拷贝构造函数的参数仍然是以值的方式，就会无限循环的调用下去，直到函数的栈溢出。</p>
-<ul>
-<li><strong><em>何时调用</em></strong></li>
-</ul>
-<p>拷贝构造函数和赋值运算符的行为比较相似，都是将一个对象的值复制给另一个对象；但是其结果却有些不同:
-<strong>拷贝构造函数使用传入对象的值生成一个新的对象的实例</strong>，<strong>而赋值运算符是将对象的值复制给一个已经存在的实例</strong>。</p>
-<p>这种区别从两者的名字也可以很轻易的分辨出来，拷贝构造函数也是一种构造函数，那么它的功能就是创建一个新的对象实例；赋值运算符是执行某种运算，将一个对象的值复制给另一个对象（已经存在的）。</p>
-<p>调用的是拷贝构造函数还是赋值运算符，主要是看是否有新的对象实例产生。如果产生了新的对象实例，那调用的就是拷贝构造函数；如果没有，那就是对已有的对象赋值，调用的是赋值运算符。</p>
-<p>调用拷贝构造函数主要有以下场景：</p>
-<ul>
-<li>对象作为函数的参数，以值传递的方式传给函数。　</li>
-<li>对象作为函数的返回值，以值的方式从函数返回</li>
-<li>使用一个对象给另一个对象初始化</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Person</span>()&#123;&#125;</span><br><span class="line">    <span class="built_in">Person</span>(<span class="keyword">const</span> Person&amp; p)</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Copy Constructor&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Person&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Person&amp; p)</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Assign&quot;</span> &lt;&lt; endl;</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    string name;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(Person p)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">Person <span class="title">f1</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Person p;</span><br><span class="line">    <span class="keyword">return</span> p;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Person p;</span><br><span class="line">    Person p1 = p;    <span class="comment">// 1</span></span><br><span class="line">    Person p2;</span><br><span class="line">    p2 = p;           <span class="comment">// 2</span></span><br><span class="line">    <span class="built_in">f</span>(p2);            <span class="comment">// 3</span></span><br><span class="line"></span><br><span class="line">    p2 = <span class="built_in">f1</span>();        <span class="comment">// 4</span></span><br><span class="line"></span><br><span class="line">    Person p3 = <span class="built_in">f1</span>(); <span class="comment">// 5</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">getchar</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong><em>Analysis</em></strong>:</p>
-<ol type="1">
-<li>这是虽然使用了<code>=</code>，但是实际上使用对象p来创建一个新的对象p1。也就是产生了新的对象，所以调用的是拷贝构造函数。</li>
-<li>首先声明一个对象p2，然后使用赋值运算符<code>=</code>，将p的值复制给p2，显然是调用赋值运算符，为一个已经存在的对象赋值
-。</li>
-<li>以值传递的方式将对象p2传入函数f内，调用拷贝构造函数构建一个函数f可用的实参。</li>
-<li>这条语句拷贝构造函数和赋值运算符都调用了。函数f1以值的方式返回一个Person对象，在返回时会调用拷贝构造函数创建一个临时对象<strong>temp</strong>作为返回值；返回后调用赋值运算符将临时对象<strong>temp</strong>赋值给p2。</li>
-<li>按照4的解释，应该是首先调用拷贝构造函数创建临时对象；然后再调用拷贝构造函数使用刚才创建的临时对象创建新的对象p3，也就是会调用两次拷贝构造函数。不过，编译器也没有那么傻，应该是直接调用拷贝构造函数使用返回值创建了对象p3。</li>
-</ol>
-<hr />
-<h3 id="列表初始化">列表初始化</h3>
-<p>列表初始化为<strong>C++
-11</strong>引入的初始化方式，它采用一对花括号<code>&#123;&#125;</code>进行初始化操作。基本能使用<strong>直接初始化</strong>和<strong>拷贝初始化</strong>的地方都能用列表初始化，而且列表初始化能对容器进行方便的初始化。</p>
-<p>尽管<strong>C++11</strong>将列表初始化应用于所有对象的初始化，但是内置类型习惯于用等号初始化，类类型习惯用构造函数圆括号显式初始化，<code>vector</code>、<code>map</code>和<code>set</code>等容器类习惯用列表初始化。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    vector&lt;string&gt; v1&#123;<span class="string">&quot;tomo&quot;</span>,<span class="string">&quot;cat&quot;</span>,<span class="string">&quot;tomocat&quot;</span>&#125;;		<span class="comment">//列表初始化</span></span><br><span class="line">    <span class="function">vector&lt;string&gt; <span class="title">v2</span><span class="params">(<span class="string">&quot;a&quot;</span>,<span class="string">&quot;b&quot;</span>,<span class="string">&quot;c&quot;</span>)</span></span>;			<span class="comment">//错误，找不到合适的构造函数</span></span><br><span class="line">    </span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">v3</span><span class="params">(<span class="number">10</span>)</span></span>;		<span class="comment">//10个int元素，每个均初始化为0</span></span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; v4&#123;<span class="number">10</span>&#125;;		<span class="comment">//1个int元素，该元素值为0</span></span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">v5</span><span class="params">(<span class="number">10</span>,<span class="number">1</span>)</span></span>;	<span class="comment">//10个int元素，每个均初始化为1</span></span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; v6&#123;<span class="number">10</span>,<span class="number">1</span>&#125;;	<span class="comment">//2个int元素，值分别为10和1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong><em>列表初始化返回值</em></strong></li>
-</ul>
-<p><strong>C++
-11</strong>规定，函数可以通过列表初始化来对函数返回的临时量进行初始化</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line">vector&lt;string&gt;<span class="built_in">foo</span>(<span class="keyword">int</span> i)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">        <span class="keyword">return</span> &#123;&#125;;				<span class="comment">//返回一个空vector对象</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> &#123;<span class="string">&quot;tomo&quot;</span>,<span class="string">&quot;cat&quot;</span>,<span class="string">&quot;tomocat&quot;</span>&#125;;	<span class="comment">//返回列表初始化的vector对象</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong><em>initializer_list形参</em></strong></li>
-</ul>
-<p><strong>C++
-11</strong>支持所有类型的初始化，对于类类型而言，虽然我们使用列表初始化它会自动调用匹配的构造函数，但是我们也能显式指定接受初始化列表的构造函数。C++11引入了<code>std::initializer_list</code>，允许构造函数或其他函数像参数一样使用初始化列表</p>
-<p>Tips:</p>
-<ul>
-<li>类对象在被列表初始化时会优先调用列表初始化构造函数，如果没有列表初始化构造函数则会根据提供的花括号值调用匹配的构造函数</li>
-<li>C++11新标准提供了两种方法用于处理可变数量形参，
-第一种是我们这里提到的<code>initializer_list</code>形参（所有的形参类型必须相同），另一种是可变参数模板（可以处理不同类型的形参）</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;initializer_list&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cat</span> &#123;</span></span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">    std::vector&lt;<span class="keyword">int</span>&gt; data;</span><br><span class="line">    <span class="built_in">Cat</span>() = <span class="keyword">default</span>;</span><br><span class="line">    <span class="comment">// 接受初始化列表的构造函数</span></span><br><span class="line">    <span class="built_in">Cat</span>(std::initializer_list&lt;<span class="keyword">int</span>&gt; list) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> it = list.<span class="built_in">begin</span>(); it != list.<span class="built_in">end</span>(); ++it) </span><br><span class="line">        &#123;</span><br><span class="line">            data.<span class="built_in">push_back</span>(*it);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Cat cat1 = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</span><br><span class="line">    Cat cat2&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>初始化列表除了用于对象构造函数上，还可以作为普通参数形参：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;initializer_list&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">(std::initializer_list&lt;std::string&gt; list)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> it = list.<span class="built_in">begin</span>(); it != list.<span class="built_in">end</span>(); ++it) </span><br><span class="line">    &#123;</span><br><span class="line">        std::cout &lt;&lt; *it &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">print</span>(&#123;<span class="string">&quot;tomo&quot;</span>, <span class="string">&quot;cat&quot;</span>, <span class="string">&quot;tomocat&quot;</span>&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr />
-<h2 id="reference">Reference</h2>
-<ul>
-<li><p><a
-href="https://segmentfault.com/a/1190000039844285">五花八门的C++初始化规则</a></p></li>
-<li><p><a
-href="https://aiden-dong.gitee.io/2020/01/08/cpp%E7%B1%BB%E5%88%9D%E5%A7%8B%E5%8C%96/">C++初始化过程那些事</a></p></li>
-<li><p><a
-href="https://www.cnblogs.com/pluse/p/7088880.html">C++的各种初始化方式</a></p></li>
-<li><p><a
-href="https://zh.cppreference.com/w/cpp/language/initialization">C++的初始化</a></p></li>
-<li><p><a
-href="https://en.cppreference.com/w/cpp/language/list_initialization">List-initialization</a></p></li>
+<li><a href="https://www.luogu.com.cn/problem/P3367">洛谷P3367</a></li>
+<li><a href="https://www.luogu.com.cn/problem/P1551">洛谷P1551</a></li>
+<li><a href="https://www.luogu.com.cn/problem/P1621">洛谷P1621</a></li>
+<li><a href="https://www.luogu.com.cn/problem/P2024">洛谷P2024</a></li>
+<li><a href="https://www.luogu.com.cn/problem/P1196">洛谷P1196</a></li>
+<li><a
+href="https://www.acwing.com/problem/content/147/">AcwingP145</a></li>
 </ul>
 <hr />
 <p>Author: AsukaMilet</p>
-<p>Data: 2022-03-02</p>
+<p>Date: 2022-1-26</p>
 ]]></content>
       <categories>
-        <category>C++</category>
+        <category>Data Structrue</category>
       </categories>
       <tags>
-        <tag>C++</tag>
-        <tag>语法知识</tag>
+        <tag>数据结构</tag>
+        <tag>不相交集</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>二叉树</title>
+    <url>/2022/02/02/%E4%BA%8C%E5%8F%89%E6%A0%91/</url>
+    <content><![CDATA[<h1 id="二叉树">二叉树</h1>
+<p><strong>二叉树(binary
+tree)</strong>是一颗树，其中每个节点都不能有多于两个的儿子。一颗二叉树由一个根和两颗子树<em><span
+class="math inline">\(T_L\)</span></em>和<em><span
+class="math inline">\(T_R\)</span></em>组成，<em><span
+class="math inline">\(T_L\)</span></em>和<em><span
+class="math inline">\(T_R\)</span></em>均可能为空。</p>
+<p>二叉树的第<em><span
+class="math inline">\(i\)</span></em>层最多拥有<em><span
+class="math inline">\(2^{i-1}\)</span></em>个节点，深度为<em><span
+class="math inline">\(k\)</span></em>的二叉树最多总共有<em><span
+class="math inline">\(2^{k+1}-1\)</span></em>个节点。</p>
+<p>二叉树可分为：<strong>完整二叉树</strong>、<strong>完全二叉树</strong>、<strong>完美二叉树</strong>。</p>
+<p><a
+href="https://asukamilet.github.io/2022/02/02/%E6%A0%91%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">二叉树的分类</a></p>
+<hr />
+<h2 id="二叉树的构造">1.二叉树的构造</h2>
+<h3 id="数组存储">数组存储</h3>
+<p>二叉树可以用数组或链表来存储，若为满二叉树就可紧凑排列。若某个节点的索引为<em><span
+class="math inline">\(i\)</span></em>(假设根节点的索引为0)则它左子节点的索引为<em><span
+class="math inline">\(2i+1\)</span></em>，右子节点的索引为<em><span
+class="math inline">\(2i+2\)</span></em>，父节点(若有)的索引为<em><span
+class="math inline">\(\lfloor {i-1}/2 \rfloor\)</span></em></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> parent;</span><br><span class="line">    <span class="keyword">int</span> left;</span><br><span class="line">    <span class="keyword">int</span> right;</span><br><span class="line">&#125;Node;</span><br><span class="line">Node BinaryTree[MAX];</span><br></pre></td></tr></table></figure>
+<h3 id="链表存储">链表存储</h3>
+<p>如果一个节点的子节点个数小于2，一些子节点指针可能为空值。使用链表能避免顺序存储浪费空间的问题，算法与结构相对简单，但使用链表，由于缺乏父链的指引，在找回父节点时需要重新扫描树得知父节点的节点地址。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">BinaryNode</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    Object element;			<span class="comment">//节点上的数据</span></span><br><span class="line">    BinaryNode *left;		<span class="comment">//左儿子</span></span><br><span class="line">    BinaryNode *right;		<span class="comment">//右儿子</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">BinaryNode</span> *<span class="title">BinaryTree</span>;</span></span><br></pre></td></tr></table></figure>
+<h2 id="二叉树的遍历">2.二叉树的遍历</h2>
+<h3 id="深度优先搜索dfs">2.1深度优先搜索(DFS)</h3>
+<p>在深度优先搜索中，我们希望从根节点访问最远的节点。和图的深度优先搜索不同的是，不需记住访问过的每一个节点，因为树中不会有环。前序，中序和后序遍历都是深度优先遍搜索的特例。</p>
+<h4 id="前序遍历">2.1.1前序遍历</h4>
+<p>按照<strong>根、左、右</strong>的顺序遍历二叉树</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PreTrav</span><span class="params">(BinaryTree*root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//相关操作</span></span><br><span class="line">        <span class="built_in">PreTrav</span>(root-&gt;left);</span><br><span class="line">        <span class="built_in">PreTrav</span>(root-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="中序遍历">2.1.2中序遍历</h4>
+<p>按照<strong>左、根、右</strong>的顺序遍历二叉树</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MidTrav</span><span class="params">(BinaryTree*root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">MidTrav</span>(root-&gt;left);</span><br><span class="line">        <span class="comment">//相关操作</span></span><br><span class="line">        <span class="built_in">MidTrav</span>(root-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="后序遍历">2.1.2后序遍历</h4>
+<p>按照<strong>左、右、根</strong>的顺序遍历二叉树</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LastTrav</span><span class="params">(BinaryTree*root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">LastTrav</span>(root-&gt;left);</span><br><span class="line">        <span class="built_in">LastTrav</span>(root-&gt;right);</span><br><span class="line">        <span class="comment">//相关操作</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="广度优先搜索bfs">2.2广度优先搜索(BFS)</h3>
+<p>从树根开始，严格按照层次来访问节点，BFS过程中也可顺便求出各个节点的深度以及父亲节点。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//本质还是BFS</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LevelTrav</span><span class="params">(BinaryTree*root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    queue&lt;BinaryNode*&gt; q;	<span class="comment">//树节点指针的队列</span></span><br><span class="line">    q.<span class="built_in">push</span>(root);</span><br><span class="line">    <span class="keyword">while</span>(！q.<span class="built_in">empty</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        BinaryNode*now=q.<span class="built_in">front</span>();</span><br><span class="line">        <span class="comment">//相关操作，如输出存储数据</span></span><br><span class="line">        q.<span class="built_in">pop</span>();</span><br><span class="line">        <span class="keyword">if</span>(now-&gt;left!=<span class="literal">nullptr</span>)	<span class="comment">//q.front()得到左儿子</span></span><br><span class="line">            q.<span class="built_in">push</span>(now-&gt;left);</span><br><span class="line">        <span class="keyword">if</span>(now-&gt;right!=<span class="literal">nullptr</span>)	<span class="comment">//q.front()得到右儿子</span></span><br><span class="line">            q.<span class="built_in">push</span>(now-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>二叉树遍历会对树的每个节点进行一次访问，算法复杂度为<strong><em>O(N)</em></strong>，使用递归实现遍历时，一旦树的节点数量庞大且分布不均，可能导致递归深度过深。</p>
+<h2 id="二叉树的应用">3.二叉树的应用</h2>
+<p>二叉树的一个重要应用即它在搜索中的使用，赋予二叉树相关性质即可使二叉树成为二叉查找树</p>
+<p>使二叉树成为二叉查找树的性质是，对于树中每个节点<strong><em>X</em></strong>，它的左子树中所有项的值均小于<strong><em>X</em></strong>中的项，而它右子树中所有项的值均大于<strong><em>X</em></strong>中的项。这意味着该树所有的元素可以用某种一致的方式排序。</p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-03%20155815.png" /></p>
+<center>
+<p>
+两颗二叉树(只有左边的树为查找树)
+</p>
+</center>
+<h3 id="二叉查找树的相关操作">3.1二叉查找树的相关操作</h3>
+<h4 id="数组实现">3.1.1数组实现</h4>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">TreeNode</span>					//构建<span class="title">BST</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> value;</span><br><span class="line">    <span class="keyword">int</span> left;					<span class="comment">//当left与right的值为-1时，表示无子节点</span></span><br><span class="line">    <span class="keyword">int</span> right;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">TreeNode</span> <span class="title">TreeNode</span>;</span></span><br><span class="line">TreeNode BStree[MAX];</span><br><span class="line"><span class="comment">//BStree[0]即为根节点</span></span><br></pre></td></tr></table></figure>
+<h5 id="遍历二叉搜索树">遍历二叉搜索树</h5>
+<p>BST的中序遍历是其所有节点值从小到大排列，时间复杂度为<strong><em>O(N)</em></strong></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Traverse</span><span class="params">(<span class="keyword">int</span> root)</span>			<span class="comment">//遍历以root为根节点的BST</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(BStree[root].left!=<span class="number">-1</span>)	<span class="comment">//当左子树不为空时，遍历左子树</span></span><br><span class="line">        <span class="built_in">Traverse</span>(BStree[root].left);</span><br><span class="line">    cout&lt;&lt;BStree[root].value;	<span class="comment">//输出根节点的值</span></span><br><span class="line">    <span class="keyword">if</span>(BStree[root].right!=<span class="number">-1</span>)	<span class="comment">//当右子树不为空时，遍历右子树</span></span><br><span class="line">        <span class="built_in">Traverse</span>(BStree[root].right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="查找最小最大值">查找最小/最大值</h5>
+<p>由BST的性质可知，BST上最小值位于BST最左端顶点，最大值位于BST最右端顶点。时间复杂度为<strong><em>O(<span
+class="math inline">\(h\)</span>)</em></strong></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">FindMin</span><span class="params">(<span class="keyword">int</span> root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(BStree[root].left!=<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">FindMin</span>(BStree[root].left);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> BStree[root].value;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">FindMax</span><span class="params">(<span class="keyword">int</span> root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(BStree[root].right!=<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">FindMax</span>(BStree[root].right);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> BStree[root].value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="指针实现">3.1.2 指针实现</h4>
+<p>由于BST的平均深度为<strong><em>O(<span
+class="math inline">\(\log{N}\)</span>)</em></strong>，所以一般不必担心栈空间会被用尽</p>
+<h5 id="bst接口">BST接口</h5>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BinarySearchTree</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">BinarySearchTree</span>();</span><br><span class="line">    <span class="built_in">BinarySearchTree</span>(<span class="keyword">const</span> BinarySearchTree&amp;rhs);</span><br><span class="line">    <span class="built_in">BinarySearchTree</span>(BinarySearchTree&amp;&amp;rhs);</span><br><span class="line">    ~<span class="built_in">BinarySearchTree</span>();</span><br><span class="line">    <span class="comment">//构造函数</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">const</span> T&amp;<span class="title">findMin</span><span class="params">()</span> <span class="keyword">const</span></span>;		 <span class="comment">//查找最小值</span></span><br><span class="line">    <span class="function"><span class="keyword">const</span> T&amp;<span class="title">findMax</span><span class="params">()</span> <span class="keyword">const</span></span>;		 <span class="comment">//查找最大值</span></span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">contains</span><span class="params">(<span class="keyword">const</span> T&amp;x)</span> <span class="keyword">const</span></span>;  <span class="comment">//判断是否含有项X的节点</span></span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">empty</span><span class="params">()</span> <span class="keyword">const</span></span>;						 <span class="comment">//判断是否为空树</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">printTree</span><span class="params">(ostream&amp;out=cout)</span> <span class="keyword">const</span></span>;	 <span class="comment">//输出树</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">makeEmpty</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(<span class="keyword">const</span> T&amp;x)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(T&amp;&amp;x)</span></span>;</span><br><span class="line">    <span class="comment">//插入元素</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">(<span class="keyword">const</span> T&amp;x)</span></span>;			 <span class="comment">//删除元素，delete为关键字，用remove</span></span><br><span class="line">    </span><br><span class="line">    BinarySearchTree&amp;<span class="keyword">operator</span>=(<span class="keyword">const</span> BinarySearchTree&amp;rhs);</span><br><span class="line">    BinarySearchTree&amp;<span class="keyword">operator</span>=(BinarySearchTree&amp;&amp;rhs);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">BinaryNode</span></span></span><br><span class="line"><span class="class">    &#123;</span></span><br><span class="line">        T element;</span><br><span class="line">        BinaryNode*left;</span><br><span class="line">        BinaryNode*right;</span><br><span class="line">        <span class="comment">//BinaryNode*parent;		 父节点可加可不加</span></span><br><span class="line">        </span><br><span class="line">        <span class="built_in">BinaryNode</span>(<span class="keyword">const</span> T&amp;value,BinaryNode*lc,BinaryNode*rc)</span><br><span class="line">            :element&#123;value&#125;,left&#123;lc&#125;,right&#123;rc&#125; &#123;&#125;</span><br><span class="line">        <span class="built_in">BinaryNode</span>(T&amp;&amp;value,BinaryNode*lc,BinaryNode*rc)</span><br><span class="line">            :element&#123;std::<span class="built_in">move</span>(value)&#125;,left&#123;lc&#125;,right&#123;rc&#125; &#123;&#125;</span><br><span class="line">        <span class="comment">//节点的构造函数</span></span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    BinaryNode*root;				 <span class="comment">//定义根节点</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">//内部重载函数</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(BinaryNode*&amp;t,<span class="keyword">const</span> T&amp;x)</span></span>;	</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(BinaryNode*&amp;t,T&amp;&amp;x)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">(BinaryNode*&amp;t,<span class="keyword">const</span> T&amp;x)</span></span>;</span><br><span class="line">    <span class="function">BinaryNode*<span class="title">findMax</span><span class="params">(BinaryNode*t)</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function">BinaryNode*<span class="title">findMin</span><span class="params">(BinaryNode*t)</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">contains</span><span class="params">(BinaryNode*t,<span class="keyword">const</span> T&amp;x)</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">makeEmpty</span><span class="params">(BinaryNode*&amp;t)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">printTree</span><span class="params">(BinaryNode*t,ostream&amp;out)</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function">BinaryNode*<span class="title">clone</span><span class="params">(BinaryNode*t)</span> <span class="keyword">const</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<center>
+<p>
+二叉查找树接口
+</p>
+</center>
+<p><em>private</em>成员函数通过<strong>传引用调用</strong>的使用传递指针变量，使得public型成员函数能够把指向根节点的指针传递给<em>private</em>型的递归成员函数，这些递归函数此时可以改变根的值，使<em>root</em>指向另外的节点。</p>
+<h5 id="private与public关系">private与public关系</h5>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">bool</span> BinarySearchTree&lt;T&gt;::<span class="built_in">contains</span>(<span class="keyword">const</span> T&amp;x) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">contains</span>(x,root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> BinarySearchTree&lt;T&gt;::<span class="built_in">insert</span>(<span class="keyword">const</span> T&amp;x)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">insert</span>(x,root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> BinarySearchTree&lt;T&gt;::<span class="built_in">remove</span>(<span class="keyword">const</span> T&amp;x)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">remove</span>(x,root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> T&amp;BinarySearchTree&lt;T&gt;::<span class="built_in">findMin</span>() <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">findMin</span>(root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> T&amp;BinarySearchTree&lt;T&gt;::<span class="built_in">findMax</span>() <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">findMax</span>(root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> BinarySearchTree&lt;T&gt;::<span class="built_in">makeEmpty</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">makeEmpty</span>(root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> BinarySearchTree&lt;T&gt;::<span class="built_in">printTree</span>(ostream&amp;out=cout) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printTree</span>(root,cout);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="contains">contains</h5>
+<p>如果在树<span class="math inline">\(T\)</span>中含有项<span
+class="math inline">\(X\)</span>的节点，则该此操作返回<em>true</em>，若该节点不存在，则返回<em>false</em>。若<span
+class="math inline">\(T\)</span>为空集，则直接返回<em>false</em>，否则，若存储在<span
+class="math inline">\(T\)</span>的项为<span
+class="math inline">\(X\)</span>，则返回<em>true</em>；不然对树<span
+class="math inline">\(T\)</span>的左子树和右子树进行递归调用。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*判断某项是否在子树上方法</span></span><br><span class="line"><span class="comment">*x为待查找项</span></span><br><span class="line"><span class="comment">*t为作为该子树的根节点</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">contains</span><span class="params">(<span class="keyword">const</span> T&amp;x,BinaryNode*t)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t==<span class="literal">nullptr</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(x&lt;t-&gt;element)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">contains</span>(x,t-&gt;left);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(x&gt;t-&gt;element)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">contains</span>(x,t-&gt;right);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<center>
+<p>
+二叉查找树的contains操作
+</p>
+</center>
+<h5 id="findmax和findmin">findMax和findMin</h5>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">BinaryNode*<span class="title">findMin</span><span class="params">(BinaryNode*t)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span>(t-&gt;left!=<span class="literal">nullptr</span>)</span><br><span class="line">            t=t-&gt;left;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//private成员函数</span></span><br><span class="line"><span class="function">BinaryNode*<span class="title">findMax</span><span class="params">(BinaryNode*t)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span>(t-&gt;right!=<span class="literal">nullptr</span>)</span><br><span class="line">            t=t-right;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="insert">insert</h5>
+<p>为了将<span class="math inline">\(X\)</span>插入到树<span
+class="math inline">\(T\)</span>中，可以沿着树进行查找，如果找到<span
+class="math inline">\(X\)</span>,则什么也不用做。否则将<span
+class="math inline">\(X\)</span>插入至所遍历路径的最后一点上。</p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-09%20230457.png" /></p>
+<center>
+<p>
+插入5之前和之后的BST
+</p>
+</center>
+<p>重复元的插入可以通过在节点中保留一个<code>count</code>计数器来记录该值在树中出现的次数。也可把具有相同关键字的所有结构保留在一个辅助数据结构中，例如表或者另一颗BST。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//x为待插入的项，t为该子树根节点</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(<span class="keyword">const</span> T&amp;x,BinaryNode*&amp;t)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t==<span class="literal">nullptr</span>)</span><br><span class="line">        t=<span class="keyword">new</span> BinaryNode&#123;x,<span class="literal">nullptr</span>,<span class="literal">nullptr</span>&#125;;	<span class="comment">//列表初始化</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(x&lt;t-&gt;element)</span><br><span class="line">        <span class="built_in">insert</span>(x,t-&gt;left);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(x&gt;t-&gt;element)</span><br><span class="line">        <span class="built_in">insert</span>(x,t-&gt;right);</span><br><span class="line">    <span class="keyword">else</span> </span><br><span class="line">        (t-&gt;count)++;							<span class="comment">//重复元，计数器+1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="remove">remove</h5>
+<ul>
+<li>若待删除节点为树叶，则立即被删除</li>
+<li>若待删除节点有一个儿子，则该节点在其父节点调整其链绕过该节点后被删除<img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-10%20145457.png" /></li>
+</ul>
+<center>
+<p>
+有一个儿子的节点被删除情况
+</p>
+</center>
+<ul>
+<li>若待删除节点有两个儿子，一般用其右子树的最小数据代替该节点数据并递归删除那个节点<img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-10%20145733.png" /></li>
+</ul>
+<center>
+<p>
+有两个儿子节点前后情况
+</p>
+</center>
+<ul>
+<li>若预计删除次数不多，则可以使用<strong>懒惰删除(lazy
+deletion)</strong>：当一个元素要被删除时，它仍留在树中，只是做了一个被删除的标记。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">(BinaryNode*&amp;t,<span class="keyword">const</span> T&amp;x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(t==<span class="literal">nullptr</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">if</span>(x&lt;t-&gt;element)</span><br><span class="line">        <span class="built_in">remove</span>(t-&gt;left,x);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(x&gt;t-&gt;element)</span><br><span class="line">        <span class="built_in">remove</span>(t-&gt;right,x);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(t-&gt;left!=<span class="literal">nullptr</span>&amp;&amp;t-&gt;right!=<span class="literal">nullptr</span>)	<span class="comment">//待删除节点有两个儿子</span></span><br><span class="line">    &#123;</span><br><span class="line">        t-&gt;element=<span class="built_in">findMin</span>(t-&gt;right)-&gt;element;		<span class="comment">//右子树最小值</span></span><br><span class="line">        <span class="built_in">remove</span>(t-&gt;element,t-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>		<span class="comment">//待删除节点只有一个儿子</span></span><br><span class="line">    &#123;</span><br><span class="line">        BinaryNode*oldNode=t;</span><br><span class="line">        <span class="keyword">if</span>(t-&gt;left!=<span class="literal">nullptr</span>)</span><br><span class="line">            t=t-&gt;left;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            t=t-&gt;right;		<span class="comment">//待删除节点被其儿子代替</span></span><br><span class="line">        <span class="keyword">delete</span> oldNode;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="析构函数与构造拷贝函数">析构函数与构造拷贝函数</h5>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="comment">//析构函数与makeEmpty</span></span><br><span class="line">BinarySearchTree&lt;T&gt;::~<span class="built_in">BinarySearchTree</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">makeEmpty</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">void</span> BinarySearchTree&lt;T&gt;::<span class="built_in">makeEmpty</span>(BinaryNode*&amp;t)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(t!=<span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">makeEmpty</span>(t-&gt;left);</span><br><span class="line">        <span class="built_in">makeEmpty</span>(t-&gt;right);</span><br><span class="line">        <span class="keyword">delete</span> t;</span><br><span class="line">    &#125;</span><br><span class="line">    t=<span class="literal">nullptr</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//构造函数</span></span><br><span class="line">BinarySearchTree&lt;T&gt;::<span class="built_in">BinarySearchTree</span>(<span class="keyword">const</span> BinarySearchTree&amp;rhs): root&#123;<span class="literal">nullptr</span>&#125;</span><br><span class="line">&#123;</span><br><span class="line">    root=<span class="built_in">clone</span>(rhs.root);</span><br><span class="line">&#125;</span><br><span class="line">BinaryNode*BinarySearchTree&lt;T&gt;::<span class="built_in">clone</span>(BinaryNode*t) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(t==<span class="literal">nullptr</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> BinaryNode&#123;t-&gt;element,<span class="built_in">clone</span>(t-&gt;left),<span class="built_in">clone</span>(t-&gt;right)&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<p>Author: AsukaMilet</p>
+<p>Date: F2022-2-02 L2022-2-10</p>
+]]></content>
+      <categories>
+        <category>Data Structrue</category>
+      </categories>
+      <tags>
+        <tag>数据结构</tag>
+        <tag>树</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>栈和队列</title>
+    <url>/2022/01/28/%E6%A0%88%E5%92%8C%E9%98%9F%E5%88%97/</url>
+    <content><![CDATA[<h1 id="栈和队列">栈和队列</h1>
+<h2 id="栈">1.栈</h2>
+<p><strong>栈</strong>(stack)是一个带有限制的表，它的插入和删除只能在一个位置上进行，即只能在表的末端进行，表的末端称为<strong>栈顶</strong>(top)</p>
+<hr />
+<h3 id="栈模型">1.1栈模型</h3>
+<p>对栈的基本操作就是push(进栈)和pop(出栈)，前者等价于一次插入，后者则是删除最新插入的元素。最近插入的元素在执行pop之前可以通过使用top操作进行使用。在栈ADT中，对空栈执行top或pop一般均被认为是一个错误。另一方面，执行push时空间用尽是一个实现限制，但不是ADT错误。</p>
+<hr />
+<p>栈有时又叫作<strong>LIFO(后进先出)表</strong>，普通的清空栈操作和判断是否空栈的测试都是栈的操作指令系统的一部分，但是对栈所能够做的基本就是push和pop操作。</p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-01-28%20203951.png" /></p>
+<center>
+<p>
+栈模型:通过push输入，通过pop和top输出
+</p>
+</center>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-01-28%20205109.png" /></p>
+<center>
+<p>
+栈模型：只有栈顶元素可访问
+</p>
+</center>
+<hr />
+<h3 id="栈的实现">1.2栈的实现</h3>
+<h4 id="栈的stl实现">栈的STL实现</h4>
+<p><a
+href="https://www.cplusplus.com/reference/stack/stack/">STL中的Stack</a></p>
+<h4 id="栈的数组实现">栈的数组实现</h4>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//C++ Version</span></span><br><span class="line"><span class="keyword">int</span> Stack[MAX];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Initialization</span><span class="params">(<span class="keyword">int</span> top)</span>		<span class="comment">//清空栈</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    top=<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">IsEmpty</span><span class="params">(<span class="keyword">int</span> top)</span>				<span class="comment">//判断是否为空栈</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(top==<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">IsFull</span><span class="params">(<span class="keyword">int</span> top)</span>				<span class="comment">//判断是否满栈</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(top==MAX<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Push</span><span class="params">(<span class="keyword">int</span> num,<span class="keyword">int</span>*Stack)</span>		<span class="comment">//入栈</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">IsFull</span>(top))</span><br><span class="line">        <span class="comment">//报错</span></span><br><span class="line">    top++;</span><br><span class="line">    Stack[top]=num;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Pop</span><span class="params">(<span class="keyword">int</span> top)</span>					<span class="comment">//弹栈</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">IsEmpty</span>(top))</span><br><span class="line">        <span class="comment">//报错</span></span><br><span class="line">    top--;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Top</span><span class="params">(<span class="keyword">int</span>*Stack)</span>					<span class="comment">//返回栈顶元素</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Stack[top];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<h3 id="栈的应用">1.3栈的应用</h3>
+<ul>
+<li><p>平衡符号<strong>(联机算法)</strong>：做一个空栈。读入字符直到文件尾。如果字符是一个开放符号('['、'{'等)，则将其推入栈中。如果一个字符是一个封闭符号，则当栈空时报错。否则，将栈元素弹出。如果弹出的符号不是对应的开放符号，则报错。在文件尾，如果栈非空则报错。</p>
+<p><a
+href="https://www.luogu.com.cn/problem/P1739">洛谷P1739</a></p></li>
+<li><p>后缀表达式</p>
+<p><a
+href="https://www.luogu.com.cn/problem/P1449">洛谷P1449</a></p></li>
+<li><p>中缀到后缀的转换</p></li>
+</ul>
+<hr />
+<h3 id="单调栈">1.4单调栈</h3>
+<p>单调栈即满足单调性的一种特殊栈结构</p>
+<h4 id="插入">插入</h4>
+<p>将一个元素插入单调栈时，为了维护栈的单调性，需要在保证将该元素插入到栈顶后整个栈满足单调性的前提下弹出最少的元素。</p>
+<p>实现如下:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//插入X</span></span><br><span class="line"><span class="keyword">while</span>(!sta.<span class="built_in">empty</span>()&amp;&amp;sta.<span class="built_in">top</span>()&lt;X)</span><br><span class="line">    sta.<span class="built_in">pop</span>();</span><br><span class="line">sta.<span class="built_in">push</span>(X);</span><br></pre></td></tr></table></figure>
+<h4 id="使用">使用</h4>
+<p>从栈顶读取元素，读取元素为栈中最大值或最小值</p>
+<h4 id="应用">应用</h4>
+<ul>
+<li><p><a
+href="https://www.luogu.com.cn/problem/P5788">洛谷P5788</a></p></li>
+<li><p><a
+href="https://www.luogu.com.cn/problem/P6198">洛谷P6198</a></p></li>
+<li><p><a
+href="https://www.luogu.com.cn/problem/P6510">洛谷P6510</a></p></li>
+</ul>
+<hr />
+<h2 id="队列">2.队列</h2>
+<p><strong>队列</strong>(queue)也是一种表。使用队列时插入在一端进行而删除则在另一端进行。</p>
+<h3 id="队列模型">2.1队列模型</h3>
+<p>队列的基本操作是enqueue(入队)，它是在表的末端(称为<strong>队尾</strong>(rear))插入一个元素，一个dequeue(出队)，它是删除(并返回)在表的开头(叫作<strong>队头</strong>(front))的元素。队列也被称为<strong>FIFO(先进先出)表</strong>。</p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-01-28%20215110.png" /></p>
+<center>
+<p>
+队列模型
+</p>
+</center>
+<hr />
+<h3 id="队列的实现">2.2队列的实现</h3>
+<h4 id="队列的stl实现">队列的STL实现</h4>
+<p><a
+href="https://www.cplusplus.com/reference/queue/queue/">STL中的队列</a></p>
+<h4 id="队列的数组实现">队列的数组实现</h4>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// C++ Version</span></span><br><span class="line"><span class="keyword">int</span> Queue[MAX];</span><br><span class="line"><span class="keyword">int</span> head,tail;						<span class="comment">//head表示队首，tail表示队尾</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Initialization</span><span class="params">(<span class="keyword">int</span> head,<span class="keyword">int</span> tail)</span>	<span class="comment">//清空队列</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    head=tail=<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">IsEmpty</span><span class="params">(<span class="keyword">int</span> head,<span class="keyword">int</span> tail)</span>			<span class="comment">//判断是否为空队列</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(head==tail)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">IsFull</span><span class="params">(<span class="keyword">int</span> head,<span class="keyword">int</span> tail)</span>			<span class="comment">//判断队列是否已满</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(head==(tail+<span class="number">1</span>)%MAX)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Enqueue</span><span class="params">(<span class="keyword">int</span> num,<span class="keyword">int</span>*Queue)</span>			<span class="comment">//入队</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">IsFull</span>(head,tail))</span><br><span class="line">        <span class="comment">//报错</span></span><br><span class="line">    Queue[tail]=num;</span><br><span class="line">    <span class="keyword">if</span>(tail+<span class="number">1</span>==MAX)</span><br><span class="line">        tail=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        tail++;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Dequeue</span><span class="params">(<span class="keyword">int</span> num,<span class="keyword">int</span>*Queue)</span>			<span class="comment">//出队</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">IsEmpty</span>(<span class="keyword">int</span> head,<span class="keyword">int</span> tail))</span><br><span class="line">        <span class="comment">//报错</span></span><br><span class="line">    <span class="keyword">if</span>(head+<span class="number">1</span>==MAX)</span><br><span class="line">        head=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        head++;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Front</span><span class="params">(<span class="keyword">int</span> head,<span class="keyword">int</span>*Queue)</span>			<span class="comment">//取得队首元素</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Queue[head];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//若要实现双端队列操作，只需传入tail即可</span></span><br></pre></td></tr></table></figure>
+<hr />
+<h3 id="队列的应用">2.3队列的应用</h3>
+<ul>
+<li><p><a
+href="https://www.acwing.com/problem/content/134/">AcwingP132</a></p></li>
+<li><p><a
+href="https://www.acwing.com/problem/content/831/">AcwingP829</a></p></li>
+<li><p><a
+href="https://www.acwing.com/problem/content/3551/">AcwingP3548</a></p></li>
+</ul>
+<h3 id="单调队列">2.4单调队列</h3>
+<p>单调队列中的元素应满足单调性<strong>递增</strong>或<strong>递减</strong>，且元素只能从队头与队尾进行操作。</p>
+<h4 id="插入-1">插入</h4>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//插入X</span></span><br><span class="line"><span class="keyword">while</span>(!que.<span class="built_in">empty</span>()&amp;&amp;que.<span class="built_in">back</span>()&gt;X)			<span class="comment">//若队尾元素比待插入值大，循环弹出</span></span><br><span class="line">    que.<span class="built_in">pop_back</span>();</span><br><span class="line">que.<span class="built_in">push_back</span>(X);							</span><br></pre></td></tr></table></figure>
+<h4 id="使用-1">使用</h4>
+<p>队首元素为最大值或最小值</p>
+<ul>
+<li><p><a
+href="https://www.acwing.com/problem/content/156/">AcwingP154</a></p></li>
+<li><p><a
+href="https://www.luogu.com.cn/problem/P2032">洛谷P2032</a></p></li>
+<li><p><a
+href="https://www.luogu.com.cn/problem/P1638">洛谷P1638</a></p></li>
+</ul>
+<hr />
+<p>Author: AsukaMilet</p>
+<p>Date: 2022-1-28</p>
+]]></content>
+      <categories>
+        <category>Data Structrue</category>
+      </categories>
+      <tags>
+        <tag>数据结构</tag>
+        <tag>线性表</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>树的基础知识</title>
+    <url>/2022/02/02/%E6%A0%91%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/</url>
+    <content><![CDATA[<h1 id="树">树</h1>
+<h2 id="树的定义">1.1树的定义</h2>
+<ul>
+<li><p>一棵树是一些<strong>节点(node)</strong>的集合。这个集合可以是空集：若不是空集，则树由称作<strong>根(root)</strong>的节点<strong><em>r</em></strong>以及0个或多个非空的(子)树<strong><em><span
+class="math inline">\(T_1,T_2,...,T_K\)</span></em></strong>组成，这些子树中每一颗的根都被来自根<strong><em>r</em></strong>的一条有向的<strong>边(edge)</strong>所连接。</p></li>
+<li><p>每一颗子树的根叫作根<strong><em>r</em></strong>的<strong>儿子(child)</strong>,而<strong><em>r</em></strong>是每一颗子树的根的<strong>父亲(parent)</strong>。一棵树是<em>N</em>个节点和<em>N-</em>1条边的集合，其中的一个节点叫作根：每条边都将某个节点连接到它的父亲，而除去根节点外每一个节点都有一个父亲。</p>
+<ul>
+<li><p>每一个节点可以有任意多个儿子，也可以是零个儿子。没有儿子的节点称为<strong>树叶(leaf)</strong>。</p></li>
+<li><p>具有相同父亲的节点称为<strong>兄弟(siblings)</strong>，类似方法可以定义<strong>祖父(grandparent)</strong>和<strong>孙子(granchild)</strong>。</p></li>
+</ul></li>
+<li><p>从节点<strong><em><span
+class="math inline">\(n_1\)</span></em></strong>到<strong><em><span
+class="math inline">\(n_k\)</span></em></strong>的路径定义为节点<em><span
+class="math inline">\(n_1,n_2,...,n_k\)</span></em>的一个序列，使得对于<em><span
+class="math inline">\(1\)</span></em><span
+class="math inline">\(\leq\)</span><em><span
+class="math inline">\(i\)</span></em><span
+class="math inline">\(&lt;\)</span><em><span
+class="math inline">\(k\)</span></em>的节点<em><span
+class="math inline">\(n_i\)</span></em>是<em><span
+class="math inline">\(n_{i+1}\)</span></em>的父亲。这条路径的长是该路径上的边的条数，即<em>k</em>-1。从每一个节点到它自己有一条长为0的路径，在一棵树中从根到每个节点恰好存在一条路径。</p></li>
+<li><p>对于任意节点<em><span
+class="math inline">\(n_i\)</span></em>，<em><span
+class="math inline">\(n_i\)</span></em>的<strong>深度(depth)</strong>为根到<em><span
+class="math inline">\(n_i\)</span></em>的唯一路径的长，因此，根的深度为0。</p></li>
+<li><p>节点<em><span
+class="math inline">\(n_i\)</span></em>的<strong>高(height)</strong>是从<em><span
+class="math inline">\(n_i\)</span></em>到一片树叶的最长路径的长。因此所有树叶的高都是0。一颗树的<strong>树高(height
+of a tree)</strong>等于它的根的高。</p>
+<ul>
+<li>一棵树的<strong>树深(depth of a
+tree)</strong>等于其最深的树叶的深度，该深度总是等于这棵树的高。</li>
+</ul></li>
+<li><p>如果存在从<em><span
+class="math inline">\(n_1\)</span></em>到<em><span
+class="math inline">\(n_2\)</span></em>的一条路径，那么<em><span
+class="math inline">\(n_1\)</span></em>是<em><span
+class="math inline">\(n_2\)</span></em>的一位<strong>祖先(ancestor)</strong>，而<em><span
+class="math inline">\(n_2\)</span></em>是<em><span
+class="math inline">\(n_1\)</span></em>的一个<strong>后裔(descendant)</strong>。如果<em><span
+class="math inline">\(n_1 \neq n_2\)</span></em>，那么<em><span
+class="math inline">\(n_1\)</span></em>是<em><span
+class="math inline">\(n_2\)</span></em>的<strong>真祖先(proper
+ancestor)</strong>，而<em><span
+class="math inline">\(n_2\)</span></em>是<em><span
+class="math inline">\(n_1\)</span></em>的<strong>真后裔(proper
+descendant)</strong>。</p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-02%20162632.png" /></p>
+<center>
+<p>
+<p>树的基本关系</p>
+</p>
+<center>
+<hr />
+<p><strong>P.S</strong> 树与图论的相关联系</p></li>
+<li><p>一个没有固定根节点的树称为<strong>无根树(unrooted
+tree)</strong>，在无根树基础上，指定一个节点为<strong>根</strong>，则形成一颗<strong>有根树(rooted
+tree)</strong>，无根树有几种等价形式化定义：</p>
+<ul>
+<li>有<em><span class="math inline">\(n\)</span></em>个节点，<em><span
+class="math inline">\(n-1\)</span></em>条边的连通无向图</li>
+<li>无向无环的连通图</li>
+<li>任意两个节点之间有且仅有一条简单路径的无向图</li>
+<li>任何边均为桥的连通图</li>
+<li>没有圈，且在任意不同两点间添加一条边之后所得图含唯一的一个圈的图</li>
+</ul></li>
+<li><p><strong>森林(forest)</strong>：每个连通分量(连通块)都是树的图，按照定义，一棵树也是森林。</p></li>
+<li><p><strong>生成树(spanning
+tree)</strong>：一个连通无向图的生成子图，同时要求是图。也即在图的边集中选择<em><span
+class="math inline">\(n-1\)</span></em>条，将所有顶点连通。</p></li>
+<li><p><strong>无根树的叶节点(leaf node)</strong>：度数不超过<em><span
+class="math inline">\(1\)</span>​​</em>的节点。</p></li>
+</ul>
+<h2 id="树的实现">1.2树的实现</h2>
+<h3 id="只记录父节点">只记录父节点</h3>
+<p>用一个数组<strong>parent[N]</strong>记录每个节点的父亲节点。</p>
+<p>缺陷：这种方式可以获得的信息较少，不便于进行自顶向下的遍历。常用于自底向上的递推问题中。</p>
+<h3 id="邻接表">邻接表</h3>
+<ul>
+<li><p>对于无根树：为每个节点开辟一个线性列表，记录所有与之相连的节点。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">vector&lt;<span class="keyword">int</span>&gt; Tree[N];		<span class="comment">//N为所有节点个数</span></span><br></pre></td></tr></table></figure></li>
+<li><p>对于有根树：</p>
+<ul>
+<li><p>若输入数据可确定节点的关系，则为每个节点开辟一个线性列表，记录所有子节点；若有需要，则在另一个数组中记录父节点。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">vector&lt;<span class="keyword">int</span>&gt;child[N];</span><br><span class="line"><span class="keyword">int</span> parent[N];</span><br></pre></td></tr></table></figure></li>
+</ul></li>
+</ul>
+<h3 id="双亲表示法">双亲表示法</h3>
+<p>给每个节点的所有子节点任意确定一个顺序。此后为每个节点记录两个值：其<strong>第一个子节点</strong>和<strong>下一个兄弟节点</strong>。若没有子节点，则子节点为空；若该节点为父节点的最后一个子节点，则下一个兄弟节点为空。</p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-02-02%20172002.png" /></p>
+<center>
+<p>
+树的双亲表示法
+</p>
+</center>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">TreeNode</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    Object element;			<span class="comment">//存储的数据</span></span><br><span class="line">    TreeNode*firstchild;	<span class="comment">//第一个子节点</span></span><br><span class="line">    TreeNode*nextSibling;	<span class="comment">//下一个兄弟节点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>数组实现:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Node</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> parent;				<span class="comment">//存储父节点</span></span><br><span class="line">    <span class="keyword">int</span> child;				<span class="comment">//存储首个子节点</span></span><br><span class="line">    <span class="keyword">int</span> sibling;			<span class="comment">//存储下一个兄弟节点</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Node</span> <span class="title">Tree</span>[<span class="title">MAX</span>];</span></span><br><span class="line"><span class="comment">//或者</span></span><br><span class="line"><span class="keyword">int</span> parent[MAX];</span><br><span class="line"><span class="keyword">int</span> child[MAX];</span><br><span class="line"><span class="keyword">int</span> sibling[MAX];</span><br></pre></td></tr></table></figure>
+<hr />
+<h2 id="树的遍历">1.3树的遍历</h2>
+<h3 id="树的dfs">树的DFS</h3>
+<p>在树上 DFS
+是这样的一个过程：先访问根节点，然后分别访问根节点每个儿子的子树。</p>
+<p>可以用来求出每个节点的深度、父亲等信息。</p>
+<h3 id="树的bfs">树的BFS</h3>
+<p>从树根开始，严格按照层次来访问节点。</p>
+<p>BFS 过程中也可以顺便求出各个节点的深度和父亲节点。</p>
+<h3 id="无根树的遍历">无根树的遍历</h3>
+<p>无根树的遍历一般为深度优先遍历，这个过程中最需要注意的是避免重复访问节点。</p>
+<p>由于树是无环图，因此只需记录当前节点是由哪个节点访问而来，此后进入除该节点外的所有相邻节点，即可避免重复访问。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">bool</span> visited[MAX];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Dfs</span><span class="params">(<span class="keyword">int</span> start)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    visited[start]=<span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;Tree[start].<span class="built_in">size</span>();i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> next=Tree[start][i];</span><br><span class="line">        <span class="keyword">if</span>(visited[next]==<span class="literal">false</span>)</span><br><span class="line">            <span class="built_in">Dfs</span>(next);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="有根树的遍历">有根树的遍历</h3>
+<p>有根树的遍历与无根树的遍历相同，只是注意区分节点的上下关系。</p>
+<h2 id="特殊的树">1.4特殊的树</h2>
+<ul>
+<li><p><strong>链(chain/path
+graph)</strong>：满足与任一节点相连的边不超过<em><span
+class="math inline">\(2\)</span></em>条的树称为链。</p></li>
+<li><p><strong>菊花/星星(star)</strong>：满足存在<em><span
+class="math inline">\(u\)</span></em>使得所有除<em><span
+class="math inline">\(u\)</span></em>以外节点均与<em><span
+class="math inline">\(u\)</span></em>相连的树称为菊花。</p></li>
+<li><p><strong>有根二叉树（rooted binary
+tree）</strong>：每个节点最多只有两个儿子（子节点）的有根树称为二叉树。常常对两个子节点的顺序加以区分，分别称之为左子节点和右子节点。大多数情况下，<strong>二叉树</strong>
+一词均指有根二叉树。</p>
+<ul>
+<li><p><strong>完整二叉树（full/proper binary
+tree）</strong>：除叶子节点外每个节点都有两个孩子。</p></li>
+<li><p><strong>完美二叉树（perfect binary
+tree）</strong>：所有内部节点都有两个子节点，且所有叶子节点位于同一层。</p>
+<p><img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/perfect-binary-tree_0.png" style="zoom: 67%;" /></p>
+<center>
+<p>
+<p>完美二叉树</p>
+</p>
+</center></li>
+<li><p><strong>完全二叉树（complete binary
+tree）</strong>：若设二叉树的深度为<em><span
+class="math inline">\(h\)</span></em>，除第 <em><span
+class="math inline">\(h\)</span></em> 层外，其它各层 (1～<em><span
+class="math inline">\(h-1\)</span></em>) 的节点数都达到最大个数，第
+<em><span class="math inline">\(h\)</span></em>
+层所有的节点都连续集中在最左边，这就是完全二叉树。</p>
+<p>特点：</p>
+<ol type="1">
+<li>所有叶子节点必须向左倾斜</li>
+<li>最后一个叶子节点可能没有右兄弟(<strong>P.S</strong>
+完全二叉树(complete binary tree)不一定是完整二叉树(full binary tree))
+<figure class="half">
+<img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/comparison-1_0.png">
+<img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/comparison-4.png">
+</figure></li>
+</ol></li>
+</ul></li>
+</ul>
+<hr />
+<p>Author: AsukaMilet</p>
+<p>Date: 2022-2-02</p>
+]]></content>
+      <categories>
+        <category>Data Structrue</category>
+      </categories>
+      <tags>
+        <tag>数据结构</tag>
+        <tag>图论</tag>
+        <tag>树</tag>
       </tags>
   </entry>
 </search>
