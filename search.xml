@@ -1124,9 +1124,116 @@ class="math inline">\(h-1\)</span></em>) 的节点数都达到最大个数，第
       </tags>
   </entry>
   <entry>
-    <title>C++指针与引用区别</title>
-    <url>/2022/03/03/C-%E6%8C%87%E9%92%88%E4%B8%8E%E5%BC%95%E7%94%A8%E5%8C%BA%E5%88%AB/</url>
-    <content><![CDATA[<h1 id="c指针与引用区别">C++指针与引用区别</h1>
+    <title>C++指针与引用的区别</title>
+    <url>/2022/03/03/C++%E6%8C%87%E9%92%88%E4%B8%8E%E5%BC%95%E7%94%A8%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
+    <content><![CDATA[<h1 id="引用与指针的定义">1.引用与指针的定义</h1>
+<p><strong>引用(reference)</strong>为对象起了另外一个名字，引用类型引用(refers
+to)另外一种类型。在定义引用时，程序把引用和它的初始值<strong>绑定(bind)</strong>在一起，而不是将初始值拷贝给引用。</p>
+<p>一旦初始化完成，引用将和它的初始值对象一直绑定在一起。因为无法令引用重新绑定到另外一个对象，因此引用必须初始化。引用必须被初始化为指代一个有效的对象或函数(不存在<code>void</code>的引用)。</p>
+<blockquote>
+<p>引用即别名</p>
+</blockquote>
+<p><strong>引用并非对象，相反的，它只是为一个已经存在的对象所起的另外一个名字</strong>。定义了一个引用之后，对其进行的所有操作都是在与之绑定的对象上进行的。</p>
+<hr />
+<p><strong>指针(pointer)</strong>是“指向(point
+to)”另外一种类型的复合类型。指针存放某个对象的地址。<strong>因为引用不是对象，没有实际地址，所以不能定义指向引用的指针</strong>。</p>
+<p>指针的值(即地址)应属下列4种状态之一：</p>
+<ol type="1">
+<li>指向一个对象</li>
+<li>指向紧邻对象所占空间的下一个位置</li>
+<li>空指针，意味着指针没有指向任何对象</li>
+<li>无效指针，即上述情况之外的其他值</li>
+</ol>
+<hr />
+<h1 id="指针与引用的区别">2.指针与引用的区别</h1>
+<p><strong>指针与引用主要有以下区别</strong>:</p>
+<ul>
+<li>引用必须被初始化，但是不分配存储空间。指针声明时不必初始化，在初始化的时候需要分配存储空间。</li>
+<li>引用初始化后不能被改变，指针可以改变所指的对象。</li>
+<li><strong>不存在指向空值的引用，但是存在指向空值的指针</strong>。</li>
+</ul>
+<h2 id="概念区别">概念区别</h2>
+<ul>
+<li>指针从本质上讲就是存放变量地址的一个变量，在逻辑上是独立的，它可以被改变，包括其所指向的地址的改变和其指向的地址中所存放的数据的改变。</li>
+<li>引用是一个别名，它在逻辑上不是独立的，它的存在具有依附性，所以引用必须在一开始就被初始化，而且其被绑定引用在其整个生命周期中是不能被改变的（自始至终只能依附于同一个变量）。给引用赋值修改的是该引用所关联的对象的值，而并不是使引用与另一个对象关联。</li>
+</ul>
+<h2 id="语法区别">语法区别</h2>
+<ol type="1">
+<li>存在<em>const</em>指针，但是不存在<em>const</em>引用</li>
+<li>指针可以有多级，但是引用只能有一级(<code>int**p</code>合法而<code>int&amp;&amp;var</code>不合法)
+<ul>
+<li>因为引用不是对象，所以不存在引用的数组，不存在指向引用的指针，不存在引用的引用</li>
+</ul></li>
+</ol>
+<blockquote>
+<p>引用折叠</p>
+</blockquote>
+<p>通过模板或<code>typedef</code>中的类型操作可以构成引用的引用，此时适用<strong>引用折叠(reference
+collapsing)</strong>规则：右值引用的右值引用折叠成右值引用，所有其他组合均折叠为左值引用</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span>&amp; lref;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span>&amp;&amp; rref;</span><br><span class="line">lref&amp; r1=n;		<span class="comment">//r1的类型为int&amp;</span></span><br><span class="line">lref&amp;&amp;r2=n;		<span class="comment">//r2的类型为int&amp;</span></span><br><span class="line">rref&amp; r3=n;		<span class="comment">//r3的类型为int&amp;</span></span><br><span class="line">rref&amp;&amp;r4=<span class="number">1</span>;		<span class="comment">//r4的类型为int&amp;&amp;</span></span><br></pre></td></tr></table></figure>
+<ol start="3" type="1">
+<li><code>sizeof(o_reference)</code>得到的是所指向的变量(对象)的大小，而<code>sizeof(o_pointer)</code>得到的是指针本身的大小</li>
+<li>指针和引用的自增、自减运算符的运算意义不同，例如:</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> array[<span class="number">10</span>]=&#123;...&#125;;</span><br><span class="line"><span class="keyword">int</span>&amp;ref=array[<span class="number">0</span>];</span><br><span class="line"><span class="keyword">int</span>*pt=array[<span class="number">0</span>];</span><br><span class="line">ref++;		<span class="comment">//array[0]的值增加1</span></span><br><span class="line">pt++;		<span class="comment">//pt本身的值增加1，指向array[1];</span></span><br></pre></td></tr></table></figure>
+<ol start="5" type="1">
+<li>如果返回动态内存分配的对象或者内存，<strong>必须使用指针，引用可能引起内存泄漏</strong></li>
+</ol>
+<h2 id="编译区别">编译区别</h2>
+<p>从编译角度来说，程序在编译时分别将指针和引用添加到符号表上，符号表上记录的是变量名和变量所对应的地址。<strong>指针变量在符号表上对应的地址值为指针变量的地址值，而引用在符号表上对应的地址值为引用对象的地址值。</strong>符号表生成后就不会再改，因此指针可以改变指向的对象（指针变量中的值可以改），而引用对象不能改。这是使用指针不安全而使用引用安全的主要原因。从某种意义上来说引用可以被认为是不能改变的指针。</p>
+<h2 id="效率区别">效率区别</h2>
+<p>不存在指向空值的引用这个事实，意味着使用引用的代码效率比使用指针的要高。因为在使用引用之前不需要测试它的合法性。相反，指针则应该总是被测试，防止其为空。</p>
+<hr />
+<h1 id="指针传递与引用传递">3.指针传递与引用传递</h1>
+<ul>
+<li><p><strong>指针传递</strong>参数本质上是<strong>值传递</strong>的方式，它所传递的是一个地址值。值传递过程中，被调函数的形式参数作为被调函数的局部变量处理，即在<strong>栈</strong>中开辟了内存空间以存放由主调函数放进来的实参的值，从而成为了实参的一个副本。<strong>值传递的特点是被调函数对形式参数的任何操作都是作为局部变量进行，不会影响主调函数的实参变量的值</strong>。</p></li>
+<li><p><strong>引用传递</strong>过程中，
+被调函数的形式参数虽然也作为局部变量在栈中开辟了内存空间，但是这时存放的是由主调函数放进来的实参变量的地址。被调函数对形参的任何操作都被处理成间接寻址，即通过栈中存放的地址访问主调函数中的实参变量。正因为如此，被调函数对形参做的任何操作都影响了主调函数中的实参变量。</p></li>
+</ul>
+<p>引用传递和指针传递是不同的，虽然它们都是在被调函数栈空间上的一个局部变量，但是任何对于引用参数的处理都会通过一个间接寻址的方式操作到主调函数中的相关变量。而对于指针传递的参数，如果改变被调函数中的指针地址，不会影响主调函数的实参变量的值(<strong>实参指针本身的地址值不会改变</strong>)。如果想通过指针参数传递来改变主调函数中的相关变量，那就得使用指向指针的指针，或者指针引用。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//指针实现两整数变量值交换</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">swapnum</span><span class="params">(<span class="keyword">int</span>*a,<span class="keyword">int</span>*b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> temp;</span><br><span class="line">    temp=*a;</span><br><span class="line">    *a=*b;</span><br><span class="line">    *b=temp;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//引用实现两整数变量值交换</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">swapnum</span><span class="params">(<span class="keyword">int</span>&amp;a,<span class="keyword">int</span>&amp;b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> temp;</span><br><span class="line">    temp=a;</span><br><span class="line">    a=b;</span><br><span class="line">    b=temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="返回引用与返回指针">4.返回引用与返回指针</h1>
+<h2 id="返回引用">4.1返回引用</h2>
+<p>C++
+函数可以返回一个引用，方式与返回一个指针类似。当函数返回一个引用时，则返回一个指向返回值的隐式指针。用引用作函数的返回值的<strong>最大的好处是在内存中不产生返回值的副本</strong>。</p>
+<blockquote>
+<p>语法: T&amp;functionName(parameters) {block}</p>
+</blockquote>
+<p>引用作为返回值，须遵守以下规则：</p>
+<ul>
+<li>不能返回局部变量的引用。主要原因是局部变量会在函数返回后被销毁，因此被返回的引用就成为了”无所指”的引用，类似于野指针，程序会进入未知状态。</li>
+<li>不能返回函数内部<code>new</code>分配的内存的引用。虽然不存在局部变量的被动销毁问题，可对于这种情况又面临其它尴尬局面。例如，被函数返回的引用只是作为一
+个临时变量出现，而没有被赋予一个实际的变量，那么这个引用所指向的空间（由<code>new</code>分配）就无法释放，造成<em>memory
+leak</em>。</li>
+<li>可以返回类成员的引用，但最好是<code>const</code>，这样可以避免在无意的情况下破坏该类的成员。</li>
+</ul>
+<h2 id="返回指针">4.2返回指针</h2>
+<blockquote>
+<p>语法:T*functionName(parameters) {block}</p>
+</blockquote>
+<p>C++函数返回指针可以为空值，但返回指针时会生成一个临时变量，并将临时变量返回，相比返回引用多了一步操作。全局变量，局部静态变量，局部动态分配变量
+都可以作为函数返回值。</p>
+<p>函数内部的局部变量，存储在栈中的变量(<strong>局部自动变量</strong>)是不能作为返回值的，虽然可以读取正确的值，但是这是一块未分配的内存，当别的进程用到时就会出错，该指针相当于野指针。返回值可以是局部动态分配的内存空间，这一部分分配在堆上，在主动释放之前别的进程是无法使用的内存区域。</p>
+<h1 id="reference">Reference</h1>
+<ol type="1">
+<li><p><a
+href="https://blog.csdn.net/weikangc/article/details/49762929">C++中指针和引用的区别-CSDN</a></p></li>
+<li><p><a
+href="https://mesywang.github.io/2019/09/10/C++%E4%B8%AD%E5%BC%95%E7%94%A8%E4%BD%9C%E4%B8%BA%E5%87%BD%E6%95%B0%E7%9A%84%E8%BF%94%E5%9B%9E%E5%80%BC/">C++中引用作为函数的返回值</a></p></li>
+<li><p><a
+href="https://en.cppreference.com/w/cpp/language/reference">Reference
+declaration</a></p></li>
+</ol>
+<hr />
+<p>Author: AsukaMilet</p>
+<p>Data: 2022-03-04</p>
 ]]></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+        <tag>语法知识</tag>
+      </tags>
   </entry>
 </search>
