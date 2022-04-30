@@ -162,6 +162,17 @@ constructor)</strong>。例如：</p>
 <h2 id="summary">Summary</h2>
 <p>C++实在是要命，发展到现在各种语法复杂的不成样子，无语😅</p>
 <p><img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/20220423_041313.jpg" style="zoom:65%"></p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a
+href="https://docs.microsoft.com/zh-cn/cpp/cpp/constructors-cpp?view=msvc-170">Microsoft-C++构造函数</a></li>
+<li><a
+href="https://www.cnblogs.com/downey-blog/p/10470782.html">C++构造函数的理解</a></li>
+<li>Essential C++中文版/(美)
+Lippman,S.B著；侯捷译.——北京：电子工业出版社，2013.8</li>
+<li>C++ Primer中文版：第5版/(美) Lippman,S.B，(美) Lajoie,J.，(美)
+Moo,B.E.著：王刚，杨巨峰译.——北京：电子工业出版社，2013.9</li>
+</ul>
 <hr />
 <p>Author: AsukaMilet</p>
 <p>Data: 2022-04-30</p>
