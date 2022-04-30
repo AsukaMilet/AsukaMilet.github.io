@@ -1220,7 +1220,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #b92016;
+  background: #852aff;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -1619,6 +1619,7 @@ pre .javascript .function {
   }
 }
 .posts-collapse .collection-title {
+  display: none;
   font-size: 1.125em;
   position: relative;
 }
@@ -2457,7 +2458,7 @@ body {
   background-size: cover;
 }
 .content-wrap {
-  opacity: 0.93;
+  opacity: 0.95;
 }
 .sidebar {
   background: rgba(255,255,255,0.8) none repeat scroll !important;
@@ -2469,5 +2470,12 @@ body {
   opacity: 0.8;
 }
 .post-block {
-  background: rgba(255,255,255,0.7) none repeat scroll !important;
+  background: rgba(255,255,255,0.8) none repeat scroll !important;
+}
+blockquote {
+  padding: 0 15px;
+  color: #424949;
+  font-family: Noto Serif SC;
+  background-color: #fdfefe;
+  border-left-color: #4d5656;
 }
