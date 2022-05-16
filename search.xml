@@ -1421,4 +1421,204 @@ href="https://www.luogu.com.cn/problem/P1638">洛谷P1638</a></p></li>
         <tag>线性表</tag>
       </tags>
   </entry>
+  <entry>
+    <title>什么是OOP</title>
+    <url>/2022/05/10/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%B8%8E%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B/</url>
+    <content><![CDATA[<h1 id="oop的定义">OOP的定义</h1>
+<p><strong>面向对象(Object
+Oriented)</strong>是“以对象为中心”的一套程序开发技术。</p>
+<p>面向对象技术的目的是使程序的维护和重用变得更容易，其基本思想是重点关注各个构件，提高构件的独立性，将构件组合起来，实现系统整体的功能。通过提高构件的独立性，当发生修改时，能够使影响范围最小，在其他系统中也可以重用。</p>
+<p><strong>面向对象编程(Object-oriented
+Programming)</strong>，是“以对象为中心”的编程风格，同时也是一种程序设计方法。</p>
+<p>面向对象编程将对象作为程序的基本单元，将程序和数据封装其中，对象里的程序可以访问及经常修改对象相关联的数据。</p>
+<p>如果用一句话来概括面向对象，那就是“能够轻松地进行较难的软件开发的综合技术”。</p>
+<blockquote>
+<p>面向对象不等于面向对象编程，面向对象技术还包括面向对象系统分析和面向对象设计等技术</p>
+</blockquote>
+<h1 id="oop的特征">OOP的特征</h1>
+<h2 id="类与对象">类与对象</h2>
+<p><strong>类(class)</strong>是面向对象最基本的结构，与之相对的概念是<strong>实例(instance)</strong>。类指类型，实例则指具体的物，二者的关系就相当于数学集合论中的集合和元素。</p>
+<p><strong>对象(object)</strong>即类的实例。</p>
+<p>在面向对象中，我们通过定义类来编写程序。当程序运行时，从定义的类中创建实例，它们之间相互作用，从而实现程序的功能。例如：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//狗类的定义</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    string _name;	<span class="comment">//名称</span></span><br><span class="line">    <span class="built_in">Dog</span>(string name)	<span class="comment">//构造函数，创建实例时执行</span></span><br><span class="line">    &#123;</span><br><span class="line">        _name=name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">string <span class="title">cry</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;汪&quot;</span>;	<span class="comment">//被命令时发出“汪”的叫声</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建实例</span></span><br><span class="line"><span class="function">Dog <span class="title">pochi</span><span class="params">(<span class="string">&quot;斑点狗&quot;</span>)</span></span>;</span><br><span class="line"><span class="function">Dog <span class="title">taro</span><span class="params">(<span class="string">&quot;柴犬&quot;</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">cout&lt;&lt;pochi.<span class="built_in">cry</span>();</span><br><span class="line">cout&lt;&lt;taro.<span class="built_in">cry</span>();</span><br></pre></td></tr></table></figure>
+<p>其中<code>cry()</code>称为<strong>方法</strong>，调用该方法与给对方发消息分配工作的情形相似，因此称为<strong>消息传递(message
+passing)</strong>。</p>
+<h3 id="类具有汇总的功能">类具有汇总的功能</h3>
+<p>类能汇总变量和子程序。OOP中将由类汇总的子程序称为<strong>成员方法(成员函数)</strong>，将变量称为<strong>实例变量(数据成员)</strong>。</p>
+<p>在大规模的应用程序中，其代码往往有几十万到几百万行，如果使用C语言平均为每个子程序编写50到100行代码，那么子程序就有几千到几万个。如果使用OOP平均在每个类中汇总10个子程序，那么类的总数就比子程序的总数减少1位，为几百到几千个。虽然构件的数目依然庞大，但所有构件的数量削减1位的效果仍不容小觑。</p>
+<p>不仅如此，在没有类的结构化语言中，所有子程序都必须命名为不同的名称，而类中存储的元素名称只要在类中不重复就可以了。</p>
+<h3 id="类具有创建很多个的功能">类具有“创建很多个”的功能</h3>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//从TextFileReader类创建两个实例</span></span><br><span class="line">TextFileReader reader1=<span class="keyword">new</span> <span class="built_in">TextFileReader</span>();</span><br><span class="line">TextFileReader reader2=<span class="keyword">new</span> <span class="built_in">TextFileReader</span>();</span><br><span class="line"></span><br><span class="line">reader1.<span class="built_in">open</span>(<span class="string">&quot;C:\\aaa.txt&quot;</span>);	<span class="comment">//打开第一个文件</span></span><br><span class="line">reader2.<span class="built_in">open</span>(<span class="string">&quot;C:\\bbb.txt&quot;</span>);	<span class="comment">//打开第二个文件</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> ch;		<span class="comment">//声明读取字符的变量</span></span><br><span class="line"></span><br><span class="line">ch=reader1.<span class="built_in">read</span>();	<span class="comment">//从第一个文件读取一个字符</span></span><br><span class="line">ch=reader2.<span class="built_in">read</span>();	<span class="comment">//从第二个文件读取一个字符</span></span><br><span class="line">ch=reader1.<span class="built_in">read</span>();	<span class="comment">//从第一个文件读取一个字符</span></span><br><span class="line"></span><br><span class="line">reader1.<span class="built_in">close</span>();	<span class="comment">//关闭第一个文件</span></span><br><span class="line">reader2.<span class="built_in">close</span>();	<span class="comment">//关闭第二个文件</span></span><br></pre></td></tr></table></figure>
+<p>根据“创建很多个”结构，定义类的一端完全无须关心多个实例同时运行的情形。传统的编程语言中没有这种结构，所以要实现同样的功能，就需要使用数组等结构来准备所需数量的内存区域，因此执行处理的子程序的逻辑也会变得复杂(<strong><em>e.g</em></strong>
+在<em>C</em>语言中实现上述读取过程需要对<code>read()</code>函数反复调用，无法同时创建多个<code>read()</code>函数来执行)。</p>
+<hr />
+<h2 id="封装性">封装性</h2>
+<p>具备<strong>封装性(Encapsulation)</strong>的面向对象程序设计隐藏了某一方法的具体执行步骤，取而代之的是通过消息传递机制发送消息给它。封装是通过限制只有特定类的对象可以访问这一特定类的成员，而它们通常利用接口实现消息的传入传出。通常来说，成员会依据它们的访问权限被分为三种：<strong>公有成员</strong>、<strong>保护成员</strong>、<strong>私有成员</strong>。例如：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TextFileReader</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    ....</span><br><span class="line">    <span class="comment">//省略逻辑处理</span></span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> fileNo;		<span class="comment">//存储正在访问的文件编号</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>当<code>fileNo</code>变量中的值异常而导致程序运行错误时，我们只需要调查<code>TextFileReader</code>类中相关的方法就可以了。另外，以后在需要将<code>fileNo</code>变量的类型由<code>int</code>改为<code>long</code>等时，还可以缩小修改造成的影响范围。</p>
+<h2 id="继承">继承</h2>
+<p><strong>继承性(Inheritance)</strong>是指，在某种情况下，一个类会有“子类”。子类比原本的类(称为基类、父类或超类)要更加具体化。继承是“整理相似事物的类的共同点和不同点的结构”，相当于集合论中的全集和子集。通过利用该结构，我们可以创建一个公用类来汇总变量和方法，其他类则可以完全借用其定义。</p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E7%BB%98%E5%9B%BE1.png" /></p>
+<center>
+子类只声明“继承”就可以定义超类中所有的变量和方法
+</center>
+<p>概括来说：<strong>继承是将类定义的共同部分汇总到另外一个类中，并去除重复代码的结构</strong>。例如：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;Animal is running.&quot;</span>&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>此时，我们编写了一个名为<code>Animal</code>的<em>class</em>，有一个<code>run()</code>方法可以被调用。当我们需要编写<code>Dog</code>和<code>Cat</code>类时，可以直接从<code>Animal</code>类继承：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span>:</span><span class="keyword">public</span> Animal		<span class="comment">//继承Animal类</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">//省略构造函数</span></span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">    string species;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cat</span>:</span><span class="keyword">public</span> Animal		<span class="comment">//继承Animal类</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">//省略构造函数</span></span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">    string colour;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>对于<code>Dog</code>来说，<code>Animal</code>就是它的超类，对于<code>Animal</code>来说，<code>Dog</code>就是它的子类。<code>Cat</code>与<code>Dog</code>类似。</p>
+<p>通过继承，子类获得了超类的全部功能。由于<code>Animal</code>实现了<code>Run()</code>方法，因此<code>Dog</code>和<code>Cat</code>作为它的子类，自动获得了<code>Run()</code>方法，可以直接调用：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">Dog <span class="title">d1</span><span class="params">(Eskimo)</span></span>;</span><br><span class="line"><span class="function">Cat <span class="title">c1</span><span class="params">(Turkish Van)</span></span>;	<span class="comment">//Turkish Van真的很漂亮</span></span><br><span class="line">d1.<span class="built_in">run</span>();	<span class="comment">//调用Run()</span></span><br><span class="line">c1.<span class="built_in">run</span>();	<span class="comment">//调用Run()</span></span><br></pre></td></tr></table></figure>
+<p>输出结果为：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">Animal is running.</span><br><span class="line">Animal is running.</span><br></pre></td></tr></table></figure>
+<p>不仅如此，我们可以为子类增加一些方法，也可以对代码做出一定的改进，以<code>Dog</code>类为例：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span>	<span class="comment">//声明为虚函数，允许子类进行覆写</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="comment">//省略逻辑处理</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span>:</span><span class="keyword">public</span> Animal</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">//省略构造函数和其他操作</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">display</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cout&lt;&lt;species&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> <span class="keyword">override</span>		<span class="comment">//覆写Animal中的Run()方法</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;Dog is running.&quot;</span>&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function">Dog <span class="title">d1</span><span class="params">(Eskimo)</span></span>;</span><br><span class="line"><span class="comment">//调用display()和run()</span></span><br><span class="line">d1.<span class="built_in">display</span>();</span><br><span class="line">d1.<span class="built_in">run</span>();</span><br></pre></td></tr></table></figure>
+<p>输出结果为：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">Eskimo</span><br><span class="line">Dog is running.</span><br></pre></td></tr></table></figure>
+<p>当一个类从多个超类继承时，称之为<strong>多重继承</strong>。但多重继承由于有时难以理解，且难以保证好好使用，应该明智且谨慎地使用多重继承。</p>
+<hr />
+<h2 id="多态">多态</h2>
+<p><strong>多态(Polymorphism)</strong>是指由继承而产生的相关的不同的类，其对象对同一调用会做出不同的相应。多态是统一调用子程序端的逻辑的结构，即创建公用主程序的结构。在OOP出现之前，公用子程序就已经存在了，但公用主程序并没有出现。框架和类库等大型可重用构建群也正是因为多态的存在成为可能。</p>
+<p><img
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/polymorphism-oop.png" /></p>
+<center>
+多态的结构
+</center>
+<p>具体案例如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//定义子类与超类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Shape</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Shape</span>(<span class="keyword">int</span> a=<span class="number">0</span>,<span class="keyword">int</span> b=<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        width=a;</span><br><span class="line">        height=b;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">int</span> <span class="title">area</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;Parent class area:&quot;</span>&lt;&lt;endl;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">protected</span>:</span><br><span class="line">    <span class="keyword">int</span> width,height;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rectangle</span>:</span><span class="keyword">public</span> Shape</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Rectangle</span>(<span class="keyword">int</span> a=<span class="number">0</span>,<span class="keyword">int</span> b=<span class="number">0</span>):<span class="built_in">Shape</span>(a,b)&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">area</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;Triangle class area:&quot;</span>&lt;&lt;endl;</span><br><span class="line">        <span class="keyword">return</span> (width*height/<span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Triangle</span>:</span><span class="keyword">public</span> Shape</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Triangle</span>(<span class="keyword">int</span> a=<span class="number">0</span>,<span class="keyword">int</span> b=<span class="number">0</span>):<span class="built_in">Shape</span>(a,b)&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">area</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">     	cout&lt;&lt;<span class="string">&quot;Triangle class area:&quot;</span>&lt;&lt;endl;</span><br><span class="line">        <span class="keyword">return</span> (width*height/<span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>调用如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Shape*shape;</span><br><span class="line">    <span class="function">Rectangle <span class="title">rec</span><span class="params">(<span class="number">10</span>,<span class="number">7</span>)</span></span>;</span><br><span class="line">    <span class="function">Triangle <span class="title">tri</span><span class="params">(<span class="number">10</span>,<span class="number">5</span>)</span></span>;</span><br><span class="line">    </span><br><span class="line">    shape=&amp;rec;		<span class="comment">//shape指向rec的超类部分</span></span><br><span class="line">    shape-&gt;<span class="built_in">area</span>();</span><br><span class="line">    </span><br><span class="line">    shape=&amp;tri;		<span class="comment">//shape指向tri的超类部分</span></span><br><span class="line">    shape-&gt;<span class="built_in">area</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译并执行上方代码后，结果如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">Rectangle <span class="class"><span class="keyword">class</span> <span class="title">area</span>:</span></span><br><span class="line">Triangle <span class="class"><span class="keyword">class</span> <span class="title">area</span>:</span></span><br></pre></td></tr></table></figure>
+<p>此时，编译器查看指针的具体内容，而不是指针的类型。因此，调用<code>shape-&gt;area()</code>时，会调用各自的<code>area()</code>函数。</p>
+<blockquote>
+<p>关于<em>C++</em>多态的表现形式，可以参考：<a
+href="https://www.cnblogs.com/cxq0017/p/6074247.html">C++多态的实现原理</a></p>
+</blockquote>
+<hr />
+<h1 id="pop与oop的区别">POP与OOP的区别</h1>
+<p><strong>面向过程编程(Procedural Oriented
+Programming)</strong>是从结构化编程衍生出的编程模型。它遵循调用<strong>过程</strong>的概念。这些过程，也称为<strong>函数</strong>、<strong>例程</strong>或<strong>子程序</strong>，只是由一系列要执行的计算步骤组成。在程序的执行期间，任何给定的程序都可能在任何时候被调用，包括被其他程序或自身调用。典型的面向过程编程语言有：</p>
+<blockquote>
+<p>FORTRAN,BASIC,COBOL,Pascal and C(都什么时候了，该更新换代了!)</p>
+</blockquote>
+<p><strong>面向对象编程(Object Oriented
+Programming)</strong>可以定义为基于对象概念的编程模型。对象包含属性形式的数据和方法形式的代码。典型的面向对象编程语言有：</p>
+<blockquote>
+<p>Java,Python,C++,C#,Javascript...</p>
+</blockquote>
+<center>
+POP与OOP的具体区别
+</center>
+<table>
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 44%" />
+<col style="width: 44%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">范围</th>
+<th style="text-align: center;">面向过程编程</th>
+<th style="text-align: center;">面向对象编程</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">安全</td>
+<td
+style="text-align: center;">面向过程编程不提供任何隐藏数据的方法。因此，与面向对象编程相比，它的安全性较低</td>
+<td
+style="text-align: center;">由于抽象性，面向对象编程可以隐藏数据。因此，它比面向过程编程更安全</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">方法</td>
+<td
+style="text-align: center;">主程序在功能的基础上被划分为细小的部分。然后，它将它们分别当作更小的独立程序处理</td>
+<td
+style="text-align: center;">它涉及类和对象的概念。因此，它将程序划分为被称为对象的小块。这些实际上是类的实例</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">程序的分割</td>
+<td
+style="text-align: center;">面向过程编程将程序分为子程序，并将它们称为函数</td>
+<td
+style="text-align: center;">面向对象编程将程序划分为小部分，并将它们称为对象</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">数据移动</td>
+<td
+style="text-align: center;">可用的数据能够在系统内自由地从一个函数转移到另一个函数</td>
+<td
+style="text-align: center;">这些对象能够移动并通过成员函数相互交流</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">设计方法</td>
+<td style="text-align: center;">面向过程编程遵循自顶向下的设计方法</td>
+<td style="text-align: center;">面向对象编程遵循自底向上的设计方法</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">重要性</td>
+<td style="text-align: center;">函数比数据更重要</td>
+<td style="text-align: center;">数据比函数更重要</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">重载</td>
+<td style="text-align: center;">重载是不可能的</td>
+<td
+style="text-align: center;">可以运算符重载和函数重载的形式进行重载</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">继承</td>
+<td style="text-align: center;">不提供任何继承</td>
+<td
+style="text-align: center;">以受保护、私有和公有三种模式实现继承</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">访问模式</td>
+<td
+style="text-align: center;">没有提供特定的访问模式来访问程序中的函数或变量</td>
+<td style="text-align: center;">提供受保护、私有和公有三种访问模式</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">添加新功能和数据</td>
+<td style="text-align: center;">添加新功能和数据并不容易</td>
+<td style="text-align: center;">添加新功能和数据非常容易</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">可解决问题的大小</td>
+<td style="text-align: center;">不太适合解决大型或复杂的问题</td>
+<td style="text-align: center;">适合解决大型或复杂的问题</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">数据共享</td>
+<td style="text-align: center;">在程序中的函数间能共享全局变量</td>
+<td style="text-align: center;">通过成员函数在对象之间共享数据</td>
+</tr>
+</tbody>
+</table>
+<h1 id="reference">Reference</h1>
+<ul>
+<li><a
+href="https://www.geeksforgeeks.org/differences-between-procedural-and-object-oriented-programming/">GeeksforGeeks-Differences
+between Procedural and Object Oriented Programming</a></li>
+<li><a
+href="https://byjus.com/gate/difference-between-procedural-and-object-oriented-programming/">BYJU'S-Difference
+Between Procedural and Object Oriented Programming</a></li>
+<li><a
+href="https://www.liaoxuefeng.com/wiki/1016959663602400/1017495723838528">面向对象编程——廖雪峰</a></li>
+<li>面向对象是怎样工作的：第2版/(日)平泽章著：侯振龙译.--北京：人民邮电出版社，2020.7</li>
+</ul>
+<hr />
+<p>Author: AsukaMilet</p>
+<p>Date: 2022-05-16</p>
+]]></content>
+      <categories>
+        <category>Miscellaneous</category>
+      </categories>
+      <tags>
+        <tag>Programming ideas</tag>
+      </tags>
+  </entry>
 </search>
