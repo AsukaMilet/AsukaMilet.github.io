@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 6.0.0">
+<meta name="generator" content="Hexo 6.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
@@ -31,7 +31,7 @@
 <meta property="og:description" content="引用与指针到底有什么区别呢╰(￣ω￣ｏ)">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-03-02T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-03-04T06:58:35.503Z">
+<meta property="article:modified_time" content="2022-06-17T13:32:28.659Z">
 <meta property="article:author" content="AsukaMilet">
 <meta property="article:tag" content="C++">
 <meta property="article:tag" content="语法知识">
@@ -227,7 +227,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-03-04 14:58:35" itemprop="dateModified" datetime="2022-03-04T14:58:35+08:00">2022-03-04</time>
+                <time title="Modified: 2022-06-17 21:32:28" itemprop="dateModified" datetime="2022-06-17T21:32:28+08:00">2022-06-17</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -295,12 +295,12 @@ to)”另外一种类型的复合类型。指针存放某个对象的地址。<s
 </blockquote>
 <p>通过模板或<code>typedef</code>中的类型操作可以构成引用的引用，此时适用<strong>引用折叠(reference
 collapsing)</strong>规则：右值引用的右值引用折叠成右值引用，所有其他组合均折叠为左值引用</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span>&amp; lref;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span>&amp;&amp; rref;</span><br><span class="line">lref&amp; r1=n;		<span class="comment">//r1的类型为int&amp;</span></span><br><span class="line">lref&amp;&amp;r2=n;		<span class="comment">//r2的类型为int&amp;</span></span><br><span class="line">rref&amp; r3=n;		<span class="comment">//r3的类型为int&amp;</span></span><br><span class="line">rref&amp;&amp;r4=<span class="number">1</span>;		<span class="comment">//r4的类型为int&amp;&amp;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">int</span>&amp; lref;</span><br><span class="line"><span class="keyword">typedef</span> <span class="type">int</span>&amp;&amp; rref;</span><br><span class="line">lref&amp; r1=n;		<span class="comment">//r1的类型为int&amp;</span></span><br><span class="line">lref&amp;&amp;r2=n;		<span class="comment">//r2的类型为int&amp;</span></span><br><span class="line">rref&amp; r3=n;		<span class="comment">//r3的类型为int&amp;</span></span><br><span class="line">rref&amp;&amp;r4=<span class="number">1</span>;		<span class="comment">//r4的类型为int&amp;&amp;</span></span><br></pre></td></tr></table></figure>
 <ol start="3" type="1">
 <li><code>sizeof(o_reference)</code>得到的是所指向的变量(对象)的大小，而<code>sizeof(o_pointer)</code>得到的是指针本身的大小</li>
 <li>指针和引用的自增、自减运算符的运算意义不同，例如:</li>
 </ol>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> array[<span class="number">10</span>]=&#123;...&#125;;</span><br><span class="line"><span class="keyword">int</span>&amp;ref=array[<span class="number">0</span>];</span><br><span class="line"><span class="keyword">int</span>*pt=array[<span class="number">0</span>];</span><br><span class="line">ref++;		<span class="comment">//array[0]的值增加1</span></span><br><span class="line">pt++;		<span class="comment">//pt本身的值增加1，指向array[1];</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> array[<span class="number">10</span>]=&#123;...&#125;;</span><br><span class="line"><span class="type">int</span>&amp;ref=array[<span class="number">0</span>];</span><br><span class="line"><span class="type">int</span>*pt=array[<span class="number">0</span>];</span><br><span class="line">ref++;		<span class="comment">//array[0]的值增加1</span></span><br><span class="line">pt++;		<span class="comment">//pt本身的值增加1，指向array[1];</span></span><br></pre></td></tr></table></figure>
 <ol start="5" type="1">
 <li>如果返回动态内存分配的对象或者内存，<strong>必须使用指针，引用可能引起内存泄漏</strong></li>
 </ol>
@@ -316,7 +316,7 @@ collapsing)</strong>规则：右值引用的右值引用折叠成右值引用，
 被调函数的形式参数虽然也作为局部变量在栈中开辟了内存空间，但是这时存放的是由主调函数放进来的实参变量的地址。被调函数对形参的任何操作都被处理成间接寻址，即通过栈中存放的地址访问主调函数中的实参变量。正因为如此，被调函数对形参做的任何操作都影响了主调函数中的实参变量。</p></li>
 </ul>
 <p>引用传递和指针传递是不同的，虽然它们都是在被调函数栈空间上的一个局部变量，但是任何对于引用参数的处理都会通过一个间接寻址的方式操作到主调函数中的相关变量。而对于指针传递的参数，如果改变被调函数中的指针地址，不会影响主调函数的实参变量的值(<strong>实参指针本身的地址值不会改变</strong>)。如果想通过指针参数传递来改变主调函数中的相关变量，那就得使用指向指针的指针，或者指针引用。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//指针实现两整数变量值交换</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">swapnum</span><span class="params">(<span class="keyword">int</span>*a,<span class="keyword">int</span>*b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> temp;</span><br><span class="line">    temp=*a;</span><br><span class="line">    *a=*b;</span><br><span class="line">    *b=temp;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//引用实现两整数变量值交换</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">swapnum</span><span class="params">(<span class="keyword">int</span>&amp;a,<span class="keyword">int</span>&amp;b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> temp;</span><br><span class="line">    temp=a;</span><br><span class="line">    a=b;</span><br><span class="line">    b=temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//指针实现两整数变量值交换</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swapnum</span><span class="params">(<span class="type">int</span>*a,<span class="type">int</span>*b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> temp;</span><br><span class="line">    temp=*a;</span><br><span class="line">    *a=*b;</span><br><span class="line">    *b=temp;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//引用实现两整数变量值交换</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swapnum</span><span class="params">(<span class="type">int</span>&amp;a,<span class="type">int</span>&amp;b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> temp;</span><br><span class="line">    temp=a;</span><br><span class="line">    a=b;</span><br><span class="line">    b=temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h1 id="返回引用与返回指针">4.返回引用与返回指针</h1>
 <h2 id="返回引用">4.1返回引用</h2>
 <p>C++
@@ -452,7 +452,7 @@ declaration</a></p></li>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -465,7 +465,7 @@ declaration</a></p></li>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
