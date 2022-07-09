@@ -923,7 +923,7 @@ href="https://www.luogu.com.cn/problem/P6510">洛谷P6510</a></p></li>
 <h3 id="队列模型">2.1队列模型</h3>
 <p>队列的基本操作是enqueue(入队)，它是在表的末端(称为<strong>队尾</strong>(rear))插入一个元素，一个dequeue(出队)，它是删除(并返回)在表的开头(叫作<strong>队头</strong>(front))的元素。队列也被称为<strong>FIFO(先进先出)表</strong>。</p>
 <p><img
-src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202022-01-28%20215110.png" /></p>
+src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/queue_model.png" /></p>
 <center>
 <p>
 队列模型
