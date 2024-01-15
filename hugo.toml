@@ -1,0 +1,45 @@
+baseURL = 'https://example.org/'
+languageCode = 'en-us'
+title = 'AsukaMilet'
+theme = 'mini'
+
+# Default content language, support en / zh / nl(Dutch) / fr / es
+defaultContentLanguage = 'en'
+
+# enableEmoji
+enableEmoji = true
+
+# Auto-detect Chinese/Japanese/Korean Languages in the content.
+hasCJKLanguage = true
+
+# Default number of elements per page in pagination.
+paginate = 4 
+
+disableKinds = ["taxonomy"]
+ignoreErrors = ["error-disable-taxonomy"]
+
+# PermaLinks
+[permalinks]
+  [permalinks.page]
+    posts = "/articles/:title"
+
+[markup]
+  [markup.highlight]
+    guessSyntax = false
+    style = "base16-snazzy"
+    lineNos = true
+    lineNumbersInTable = false
+    tabWidth = 4
+  [markup.goldmark.renderer]
+    unsafe = true 
+
+# Site parameters
+[params]
+  author = "AsukaMilet" 
+  description = "My Blog"
+  
+  # page settings
+  showToc = true
+  enableComments = false
+  # To hidden post summary in home page, you could set `hiddenPostSummaryInHomePage: true`, default is `false`
+  hiddenPostSummaryInHomePage = true
