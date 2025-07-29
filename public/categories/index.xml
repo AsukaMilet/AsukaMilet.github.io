@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on AsukaMilet&#39;s Blog</title>
+    <link>http://localhost:1313/categories/</link>
+    <description>Recent content in Categories on AsukaMilet&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <managingEditor>asukananase810@gmail.com (AsukaMilet)</managingEditor>
+    <webMaster>asukananase810@gmail.com (AsukaMilet)</webMaster>
+    <copyright>© 2025 AsukaMilet</copyright>
+    <lastBuildDate>Fri, 03 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Database</title>
+      <link>http://localhost:1313/categories/database/</link>
+      <pubDate>Fri, 03 Jan 2025 00:00:00 +0000</pubDate>
+      <author>asukananase810@gmail.com (AsukaMilet)</author>
+      <guid>http://localhost:1313/categories/database/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Paper</title>
+      <link>http://localhost:1313/categories/paper/</link>
+      <pubDate>Tue, 14 Nov 2023 00:00:00 +0000</pubDate>
+      <author>asukananase810@gmail.com (AsukaMilet)</author>
+      <guid>http://localhost:1313/categories/paper/</guid>
+      <description></description>
+      
+    </item>
+    
+  </channel>
+</rss>

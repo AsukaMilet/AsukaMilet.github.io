@@ -1,0 +1,1236 @@
+<!doctype html>
+<html
+  lang="en"
+  dir="ltr"
+  class="scroll-smooth"
+  data-default-appearance="light"
+  data-auto-appearance="true"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8">
+  
+    <meta http-equiv="content-language" content="en">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color">
+
+  
+  <title>Are You Sure You Want to Use MMAP in Your Database &middot; AsukaMilet&#39;s Blog</title>
+    <meta name="title" content="Are You Sure You Want to Use MMAP in Your Database &middot; AsukaMilet&#39;s Blog">
+
+  
+  <meta name="description" content="Andy他们花费了大量努力让你相信在DBMS中使用mmap是一个坏主意，为什么要继续坚持呢">
+  <meta name="keywords" content="Database,Paper,">
+  
+  
+  <link rel="canonical" href="http://localhost:1313/posts/mmap_is_shit/">
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+    
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/css/main.bundle.min.5c1f183abbd81c1e3325f920a27cbb9ba254b48fb31ea3618517bff4770f91f0ae423c9e8292ba4cf2bd80c63fd0d2da86c482956da99c3c0e48b5a3911df364.css"
+    integrity="sha512-XB8YOrvYHB4zJfkgony7m6JUtI&#43;zHqNhhRe/9HcPkfCuQjyegpK6TPK9gMY/0NLahsSClW2pnDwOSLWjkR3zZA==">
+
+  
+  
+  <script
+    type="text/javascript"
+    src="/js/appearance.min.516a16745bea5a9bd011138d254cc0fd3973cd55ce6e15f3dec763e7c7c2c7448f8fe7b54cca811cb821b0c7e12cd161caace1dd794ac3d34d40937cbcc9ee12.js"
+    integrity="sha512-UWoWdFvqWpvQERONJUzA/TlzzVXObhXz3sdj58fCx0SPj&#43;e1TMqBHLghsMfhLNFhyqzh3XlKw9NNQJN8vMnuEg=="></script>
+  
+    
+    
+    
+  
+  
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+    <script
+      defer
+      type="text/javascript"
+      id="script-bundle"
+      src="/js/main.bundle.min.98bb8ce8f123e03c4d2171eeec151dd404b5c476beb5ef1068d0e8b1a2afb923065e6552fc14b2d867c85ee4bd8529a43193f729f874d3908517ba03b5d1cc57.js"
+      integrity="sha512-mLuM6PEj4DxNIXHu7BUd1AS1xHa&#43;te8QaNDosaKvuSMGXmVS/BSy2GfIXuS9hSmkMZP3Kfh005CFF7oDtdHMVw=="
+      data-copy="Copy"
+      data-copied="Copied"></script>
+  
+  
+    
+    <script src="/lib/zoom/zoom.min.umd.a527109b68c082a70f3697716dd72a9d5aa8b545cf800cecbbc7399f2ca6f6e0ce3e431f2062b48bbfa47c9ea42822714060bef309be073f49b9c0e30d318d7b.js" integrity="sha512-pScQm2jAgqcPNpdxbdcqnVqotUXPgAzsu8c5nyym9uDOPkMfIGK0i7&#43;kfJ6kKCJxQGC&#43;8wm&#43;Bz9JucDjDTGNew=="></script>
+  
+
+  
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+  <meta property="og:url" content="http://localhost:1313/posts/mmap_is_shit/">
+  <meta property="og:site_name" content="AsukaMilet&#39;s Blog">
+  <meta property="og:title" content="Are You Sure You Want to Use MMAP in Your Database">
+  <meta property="og:description" content="Andy他们花费了大量努力让你相信在DBMS中使用mmap是一个坏主意，为什么要继续坚持呢">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-11-14T00:00:00+00:00">
+    <meta property="article:modified_time" content="2023-11-14T00:00:00+00:00">
+    <meta property="article:tag" content="Database">
+    <meta property="article:tag" content="Paper">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Are You Sure You Want to Use MMAP in Your Database">
+  <meta name="twitter:description" content="Andy他们花费了大量努力让你相信在DBMS中使用mmap是一个坏主意，为什么要继续坚持呢">
+
+  <script type="application/ld+json">
+  [{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "articleSection": "Posts",
+    "name": "Are You Sure You Want to Use MMAP in Your Database",
+    "headline": "Are You Sure You Want to Use MMAP in Your Database",
+    "description": "Andy他们花费了大量努力让你相信在DBMS中使用mmap是一个坏主意，为什么要继续坚持呢",
+    
+    "inLanguage": "en",
+    "url" : "http:\/\/localhost:1313\/posts\/mmap_is_shit\/",
+    "author" : {
+      "@type": "Person",
+      "name": "AsukaMilet"
+    },
+    "copyrightYear": "2023",
+    "dateCreated": "2023-11-14T00:00:00\u002b00:00",
+    "datePublished": "2023-11-14T00:00:00\u002b00:00",
+    
+    "dateModified": "2023-11-14T00:00:00\u002b00:00",
+    
+    "keywords": ["Database","Paper"],
+    
+    "mainEntityOfPage": "true",
+    "wordCount": "5271"
+  }]
+  </script>
+
+
+
+  
+  
+    <meta name="author" content="AsukaMilet">
+  
+  
+    
+      
+        
+          <link href="https://github.com/KarinaMilet" rel="me">
+        
+      
+    
+  
+
+  
+  
+
+<script src="/lib/jquery/jquery.slim.min.b0dca576e87d7eaa5850ae4e61759c065786cdb6489d68fcc82240539eebd5da522bdb4fda085ffd245808c8fe2acb2516408eb774ef26b5f6015fc6737c0ea8.js" integrity="sha512-sNylduh9fqpYUK5OYXWcBleGzbZInWj8yCJAU57r1dpSK9tP2ghf/SRYCMj&#43;KsslFkCOt3TvJrX2AV/Gc3wOqA=="></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+</head>
+<body
+    class="flex flex-col h-screen px-6 m-auto text-lg leading-7 max-w-7xl bg-neutral text-neutral-900 dark:bg-neutral-800 dark:text-neutral sm:px-14 md:px-24 lg:px-32 scrollbar-thin scrollbar-track-neutral-200 scrollbar-thumb-neutral-400 dark:scrollbar-track-neutral-800 dark:scrollbar-thumb-neutral-600">
+    <div id="the-top" class="absolute flex self-center">
+      <a
+        class="px-3 py-1 text-sm -translate-y-8 rounded-b-lg bg-primary-200 focus:translate-y-0 dark:bg-neutral-600"
+        href="#main-content"
+        ><span class="font-bold text-primary-600 ltr:pr-2 rtl:pl-2 dark:text-primary-400">&darr;</span>Skip to main content</a
+      >
+    </div>
+    
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+<div
+  class="main-menu flex items-center justify-between px-4 py-6 sm:px-6 md:justify-start gap-x-3 pt-[2px] pr-0 pb-[3px] pl-0">
+  
+  
+
+  <div class="flex flex-1 items-center justify-between">
+    <nav class="flex space-x-3">
+      
+        <a href="/" class="text-base font-medium text-gray-500 hover:text-gray-900">
+          AsukaMilet&rsquo;s Blog
+        </a>
+      
+    </nav>
+    
+  <nav class="hidden md:flex items-center gap-x-5 md:ml-12 h-12">
+    
+      
+        
+  <a
+  href="/posts/"
+  
+  class="flex items-center text-gray-500 hover:text-primary-600 dark:hover:text-primary-400">
+  
+  <p class="text-base font-medium" title="Posts">
+    Archives
+  </p>
+</a>
+
+
+
+      
+    
+
+    
+
+
+    
+      <button
+        id="search-button"
+        aria-label="Search"
+        class="text-base hover:text-primary-600 dark:hover:text-primary-400"
+        title="Search (/)">
+        
+
+  <span class="relative block icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+
+  </span>
+
+
+      </button>
+    
+
+    
+      <div class=" flex items-center">
+        <button
+          id="appearance-switcher"
+          aria-label="Dark mode switcher"
+          type="button"
+          class="text-base hover:text-primary-600 dark:hover:text-primary-400">
+          <div class="flex items-center justify-center dark:hidden">
+            
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+
+  </span>
+
+
+          </div>
+          <div class="items-center justify-center hidden dark:flex">
+            
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+
+  </span>
+
+
+          </div>
+        </button>
+      </div>
+    
+  </nav>
+
+    
+  <div class="flex md:hidden items-center gap-x-5 md:ml-12 h-12">
+    <span></span>
+
+    
+
+    
+      <button
+        id="search-button-mobile"
+        aria-label="Search"
+        class="text-base hover:text-primary-600 dark:hover:text-primary-400"
+        title="Search (/)">
+        
+
+  <span class="relative block icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+
+  </span>
+
+
+      </button>
+    
+
+    
+      <button
+        id="appearance-switcher-mobile"
+        aria-label="Dark mode switcher"
+        type="button"
+        class="text-base hover:text-primary-600 dark:hover:text-primary-400 ltr:mr-1 rtl:ml-1">
+        <div class="flex items-center justify-center dark:hidden">
+          
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+
+  </span>
+
+
+        </div>
+        <div class="items-center justify-center hidden dark:flex">
+          
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+
+  </span>
+
+
+        </div>
+      </button>
+    
+  </div>
+
+  </div>
+  
+  <div class="-my-2 md:hidden">
+    <div id="menu-button" class="block">
+      
+        <div class="cursor-pointer hover:text-primary-600 dark:hover:text-primary-400">
+          
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M0 96C0 78.33 14.33 64 32 64H416C433.7 64 448 78.33 448 96C448 113.7 433.7 128 416 128H32C14.33 128 0 113.7 0 96zM0 256C0 238.3 14.33 224 32 224H416C433.7 224 448 238.3 448 256C448 273.7 433.7 288 416 288H32C14.33 288 0 273.7 0 256zM416 448H32C14.33 448 0 433.7 0 416C0 398.3 14.33 384 32 384H416C433.7 384 448 398.3 448 416C448 433.7 433.7 448 416 448z"/></svg>
+
+  </span>
+
+
+        </div>
+        <div
+          id="menu-wrapper"
+          class="fixed inset-0 z-30 invisible w-screen h-screen m-0 overflow-auto transition-opacity opacity-0 cursor-default bg-neutral-100/50 backdrop-blur-sm dark:bg-neutral-900/50 pt-[5px]">
+          <ul
+            class="flex space-y-2 mt-3 flex-col items-end w-full px-6 py-6 mx-auto overflow-visible list-none ltr:text-right rtl:text-left max-w-7xl">
+            <li id="menu-close-button">
+              <span
+                class="cursor-pointer inline-block align-text-bottom hover:text-primary-600 dark:hover:text-primary-400">
+                
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+
+  </span>
+
+
+              </span>
+            </li>
+
+            
+              
+  <li class="mt-1">
+  <a
+    href="/posts/"
+    
+    class="flex items-center text-gray-500 hover:text-primary-600 dark:hover:text-primary-400">
+    
+    <p class="text-bg font-bg" title="Posts">
+      Archives
+    </p>
+  </a>
+</li>
+
+
+
+            
+
+          </ul>
+          
+        </div>
+      
+    </div>
+  </div>
+
+</div>
+
+
+
+
+
+    
+    <div class="relative flex flex-col grow">
+      <main id="main-content" class="grow">
+        
+  
+
+
+  <article>
+    
+
+
+    <header id="single_header" class="mt-5 max-w-prose">
+      
+      <h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+        Are You Sure You Want to Use MMAP in Your Database
+      </h1>
+      <div class="mt-1 mb-6 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
+        
+
+
+
+
+
+  
+  
+
+
+
+  
+
+  
+  
+  
+
+  
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2023-11-14T00:00:00&#43;00:00">14 November 2023</time><span class="px-2 text-primary-500">&middot;</span><span>5271 words</span><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">11 mins</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+
+  
+  
+
+
+
+      </div>
+
+      
+      
+      
+      
+      
+
+      
+
+      
+
+        
+
+        
+
+        
+
+      
+
+    </header>
+
+    <section class="flex flex-col max-w-full mt-0 prose dark:prose-invert lg:flex-row">
+      
+        <div class="order-first lg:ml-auto px-0 lg:order-last ltr:lg:pl-8 rtl:lg:pr-8">
+          <div
+            class="toc ltr:pl-5 rtl:pr-5 print:hidden lg:sticky 
+              lg:top-10
+            
+            ">
+            
+              <details
+  open
+  id="TOCView"
+  class="toc-right mt-0 overflow-y-auto overscroll-contain scrollbar-thin scrollbar-track-neutral-200 scrollbar-thumb-neutral-400 dark:scrollbar-track-neutral-800 dark:scrollbar-thumb-neutral-600 rounded-lg ltr:-ml-5 ltr:pl-5 rtl:-mr-5 rtl:pr-5 hidden lg:block">
+  <summary
+    class="block py-1 text-lg font-semibold cursor-pointer bg-neutral-100 text-neutral-800 ltr:-ml-5 ltr:pl-5 rtl:-mr-5 rtl:pr-5 dark:bg-neutral-700 dark:text-neutral-100 lg:hidden">
+    Table of Contents
+  </summary>
+  <div
+    class="min-w-[220px] py-2 border-dotted ltr:-ml-5 ltr:border-l ltr:pl-5 rtl:-mr-5 rtl:border-r rtl:pr-5 dark:border-neutral-600">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#background">Background</a></li>
+    <li><a href="#从拥抱mmap到走向毁灭">从拥抱MMAP到走向毁灭</a>
+      <ul>
+        <li><a href="#mmap基本原理">MMAP基本原理</a></li>
+        <li><a href="#走向毁灭">走向毁灭</a></li>
+      </ul>
+    </li>
+    <li><a href="#隐藏在mmap背后的问题">隐藏在MMAP背后的问题</a>
+      <ul>
+        <li><a href="#transactional-safety">Transactional Safety</a></li>
+        <li><a href="#io阻塞">I/O阻塞</a></li>
+        <li><a href="#错误处理">错误处理</a></li>
+        <li><a href="#性能问题">性能问题</a>
+          <ul>
+            <li><a href="#理想情况">理想情况</a></li>
+            <li><a href="#实际情况">实际情况</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#实验分析">实验分析</a>
+      <ul>
+        <li><a href="#实验环境">实验环境</a></li>
+        <li><a href="#random-reads">Random Reads</a></li>
+        <li><a href="#sequential-reads">Sequential Reads</a></li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+  </div>
+</details>
+<details class="toc-inside mt-0 overflow-hidden rounded-lg ltr:-ml-5 ltr:pl-5 rtl:-mr-5 rtl:pr-5 lg:hidden">
+  <summary
+    class="py-1 text-lg font-semibold cursor-pointer bg-neutral-100 text-neutral-800 ltr:-ml-5 ltr:pl-5 rtl:-mr-5 rtl:pr-5 dark:bg-neutral-700 dark:text-neutral-100 lg:hidden">
+    Table of Contents
+  </summary>
+  <div
+    class="py-2 border-dotted border-neutral-300 ltr:-ml-5 ltr:border-l ltr:pl-5 rtl:-mr-5 rtl:border-r rtl:pr-5 dark:border-neutral-600">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#background">Background</a></li>
+    <li><a href="#从拥抱mmap到走向毁灭">从拥抱MMAP到走向毁灭</a>
+      <ul>
+        <li><a href="#mmap基本原理">MMAP基本原理</a></li>
+        <li><a href="#走向毁灭">走向毁灭</a></li>
+      </ul>
+    </li>
+    <li><a href="#隐藏在mmap背后的问题">隐藏在MMAP背后的问题</a>
+      <ul>
+        <li><a href="#transactional-safety">Transactional Safety</a></li>
+        <li><a href="#io阻塞">I/O阻塞</a></li>
+        <li><a href="#错误处理">错误处理</a></li>
+        <li><a href="#性能问题">性能问题</a>
+          <ul>
+            <li><a href="#理想情况">理想情况</a></li>
+            <li><a href="#实际情况">实际情况</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#实验分析">实验分析</a>
+      <ul>
+        <li><a href="#实验环境">实验环境</a></li>
+        <li><a href="#random-reads">Random Reads</a></li>
+        <li><a href="#sequential-reads">Sequential Reads</a></li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+  </div>
+</details>
+
+
+<script>
+  (function () {
+    'use strict'
+
+    const SCROLL_OFFSET_RATIO = 0.33
+    const TOC_SELECTOR = '#TableOfContents'
+    const ANCHOR_SELECTOR = '.anchor'
+    const TOC_LINK_SELECTOR = 'a[href^="#"]'
+    const NESTED_LIST_SELECTOR = 'li ul'
+    const ACTIVE_CLASS = 'active'
+
+    function getActiveAnchorId(anchors, offsetRatio) {
+      const threshold = window.scrollY + window.innerHeight * offsetRatio
+      const tocLinks = [...document.querySelectorAll('#TableOfContents a[href^="#"]')]
+      const tocIds = new Set(tocLinks.map(link => link.getAttribute('href').substring(1)))
+
+      for (let i = anchors.length - 1; i >= 0; i--) {
+        const top = anchors[i].getBoundingClientRect().top + window.scrollY
+        if (top <= threshold && tocIds.has(anchors[i].id)) {
+          return anchors[i].id
+        }
+      }
+      return anchors.find(anchor => tocIds.has(anchor.id))?.id || ''
+    }
+
+    function updateTOC({ toc, anchors, links, scrollOffset, collapseInactive }) {
+      const activeId = getActiveAnchorId(anchors, scrollOffset)
+      if (!activeId) return
+
+      links.forEach(link => {
+        const isActive = link.getAttribute('href') === `#${activeId}`
+        link.classList.toggle(ACTIVE_CLASS, isActive)
+
+        if (collapseInactive) {
+          const ul = link.closest('li')?.querySelector('ul')
+          if (ul) ul.style.display = isActive ? '' : 'none'
+        }
+      })
+
+      if (collapseInactive) {
+        const activeLink = toc.querySelector(`a[href="#${CSS.escape(activeId)}"]`)
+        let el = activeLink
+        while (el && el !== toc) {
+          if (el.tagName === 'UL') el.style.display = ''
+          if (el.tagName === 'LI') el.querySelector('ul')?.style.setProperty('display', '')
+          el = el.parentElement
+        }
+      }
+    }
+
+    function initTOC() {
+      const toc = document.querySelector(TOC_SELECTOR)
+      if (!toc) return
+
+      const collapseInactive = true
+      const anchors = [...document.querySelectorAll(ANCHOR_SELECTOR)]
+      const links = [...toc.querySelectorAll(TOC_LINK_SELECTOR)]
+
+      if (collapseInactive) {
+        toc.querySelectorAll(NESTED_LIST_SELECTOR).forEach(ul => ul.style.display = 'none')
+      }
+
+      const config = {
+        toc,
+        anchors,
+        links,
+        scrollOffset: SCROLL_OFFSET_RATIO,
+        collapseInactive
+      }
+
+      window.addEventListener('scroll', () => updateTOC(config), { passive: true })
+      window.addEventListener('hashchange', () => updateTOC(config), { passive: true })
+
+      updateTOC(config)
+    }
+
+    document.readyState === 'loading'
+      ? document.addEventListener('DOMContentLoaded', initTOC)
+      : initTOC()
+  })()
+</script>
+
+
+            
+            
+          </div>
+        </div>
+      
+
+
+      <div class="min-w-0 min-h-0 max-w-fit">
+        
+
+
+
+        <div class="article-content max-w-prose mb-20">
+          <p>Memory-mapped(mmap) I/O允许OS直接将位于non-volatile设备上的文件内容映射至用户的地址空间，进程可以通过指针来访问其文件，就好像文件本身驻留在内存中一样，而在幕后，OS默默地将page加载至内存，并在给定的mmap buffer已满时，进行换页(demand paging)。</p>
+<p>由于mmap的上述特性，为DBMS开发人员提供了一个传统的buffer pool实现的替代选项，因此相当一部分的DBMS使用mmap来支持disk-based DBMS，然而mmap存在它潜在的风险。Andy他们发表在CIDR的这篇兼备娱乐与科普性质的文章就是为了告诫DBMS开发者不要图一时之快，mmap并不是传统buffer pool的完美替代品。</p>
+<p>总之，一句话来总结：MMAP = 💩</p>
+<hr>
+
+<h2 class="relative group">Background 
+    <div id="background" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#background" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+<p>对于disk-based DBMS，传统的buffer pool提供了数据库完全驻留在物理内存中的假象，DBMS通过<code>read</code>/<code>write</code>这样的system calls来与I/O设备(主要是HDD/SSD等non-volatile存储设备。为简短起见，后面统称硬盘)进行交互。通过文件I/O机制，数据在user space中的buffer与I/O设备之间进行来回的拷贝，DBMS拥有对何时以及如何进行page转移的完整控制权。</p>
+<p>作为替代，DBMS也可以将数据的移动控制权给予OS，OS来负责文件映射以及它自身的page cache。POSIX <code>mmap</code> system call就提供了这一实现。对于<code>mmap</code>的详述，由于这不是关于OS的文章，恰恰相反，这是一篇讲OS坏话的文章，因此建议寻找一本OS相关的书籍来详细了解。</p>
+<p>从表面上看，<code>mmap</code>为DBMS管理文件I/O提供了一个充满吸引力的选项，通过<code>mmap</code>:</p>
+<ol>
+<li>易于使用并且降低了开发成本, DBMS可以直接通过指针访问驻留在硬盘上的数据，就好像它们直接驻留在内存一样</li>
+<li>从性能角度，<code>mmap</code>减少了syscall的开销(i.e., <code>read</code>/<code>write</code>)</li>
+</ol>
+<p>由于这些&quot;显而易见&quot;的好处，许多DBMS都选择了使用<code>mmap</code>来作为传统buffer pool的实现，然而实际上<code>mmap</code>存在巨大的缺陷，既包括数据安全性的缺陷，也包括性能上的缺陷，原始论文的目的就是告诫DBMS kernel开发人员<code>mmap</code>并不如想象中的那般美好。</p>
+<img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/mmap_based_DBMSs.png" style="zoom:50%;margin: 0 auto" class="center"/>
+
+<h2 class="relative group">从拥抱MMAP到走向毁灭 
+    <div id="从拥抱mmap到走向毁灭" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#%e4%bb%8e%e6%8b%a5%e6%8a%b1mmap%e5%88%b0%e8%b5%b0%e5%90%91%e6%af%81%e7%81%ad" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+
+<h3 class="relative group">MMAP基本原理 
+    <div id="mmap基本原理" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#mmap%e5%9f%ba%e6%9c%ac%e5%8e%9f%e7%90%86" aria-label="Anchor">#</a>
+    </span>        
+    
+</h3>
+<img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/how_using_mmap.png" style="zoom: 50%;" class="center" >
+<p>为了明白为什么<code>mmap</code>可以作为buffer pool的替代选项，以及为什么<code>mmap</code>会让生活变得不幸，我们首先需要对<code>mmap</code>的基本工作机制有一个认知，以上图为例：</p>
+<ol>
+<li>DBMS调用<code>mmap</code>并获取一个指向对应文件内容的指针</li>
+<li>OS在进程的虚拟地址空间中为该memory-mapped file分配空间，但并不将实际数据加载至物理内存中(demand paging)</li>
+<li>DBMS通过指针尝试访问文件</li>
+<li>OS检索TLB和page table</li>
+<li>由于物理内存中没有与virtual address space对应的映射，因此OS触发缺页异常，将DBMS所引用到的page加载至物理内存中</li>
+<li>OS设置page table</li>
+<li>TLB缓存对应的address translation</li>
+</ol>
+<p>通过上述的基本流程我们可以发现，OS维护它自己的page cache，当page cache已满，又有新页需要载入物理内存时，OS会自动地为我们选择不需要的页进行替换，并将对应的地址转换映射从页表和TLB中进行清除。不仅如此，OS还要保证不同processors的TLB也会得到相应的刷新，这意味潜在的处理器之间的同步开销</p>
+<blockquote>
+<p>关于TLB flush时的处理器之间的同步开销，可以参见<a
+  href="../../articles/what-every-programmer-should-know-about-memory-cache%e7%af%87/">以前的文章</a></p></blockquote>
+<p>在介绍完<code>mmap</code>的工作原理后，POSIX为<code>mmap</code>提供了一组基本的API，参见<a
+  href="https://man7.org/linux/man-pages/man2/mmap.2.html"
+    target="_blank"
+  >mmap-Linux manual page</a>，应重点关注<code>madvise</code>, <code>mlock</code>, <code>msync</code>这几个API</p>
+
+<h3 class="relative group">走向毁灭 
+    <div id="走向毁灭" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#%e8%b5%b0%e5%90%91%e6%af%81%e7%81%ad" aria-label="Anchor">#</a>
+    </span>        
+    
+</h3>
+<p>如上面的图表所展示的，许多DBMS都选择了<code>mmap</code>作为buffer pool的替代。但随着时间的推移，越来越多的DBMS发现<code>mmap</code>带来了不幸，最终还是抛弃了<code>mmap</code>，在这里仅简单列举部分抛弃了<code>mmap</code>的DBMS</p>
+<ol>
+<li>MongoDB</li>
+<li><a
+  href="https://www.influxdata.com/blog/announcing-influxdb-iox/"
+    target="_blank"
+  >InfluxDB</a></li>
+<li><a
+  href="https://www.singlestore.com/blog/linux-off-cpu-investigation/"
+    target="_blank"
+  >SingleStore</a></li>
+<li><a
+  href="https://rocksdb.org/docs/support/faq.html"
+    target="_blank"
+  >RocksDB</a></li>
+</ol>
+<hr>
+
+<h2 class="relative group">隐藏在MMAP背后的问题 
+    <div id="隐藏在mmap背后的问题" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#%e9%9a%90%e8%97%8f%e5%9c%a8mmap%e8%83%8c%e5%90%8e%e7%9a%84%e9%97%ae%e9%a2%98" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+<p>在介绍完基础的背景知识之后，现在我们可以详细阐述为什么<code>mmap</code>并不是buffer pool的一个优良替代选项</p>
+
+<h3 class="relative group">Transactional Safety 
+    <div id="transactional-safety" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#transactional-safety" aria-label="Anchor">#</a>
+    </span>        
+    
+</h3>
+<p><code>mmap</code>最大的问题就是OS能够随时将某个脏页flush至硬盘而不管该txn是否commit，当flush发生时，DBMS无能为力。因此mmap-based DBMS必须实现复杂的机制确保OS的flush不会破坏transactional safety，原文将不同的实现主要分为了三大类：</p>
+<ol>
+<li>
+<p>OS Copy-On-Write(貌似只有MongoDB MMAPv1)</p>
+<p>DBMS在virtual memory space中通过<code>mmap</code>创建同一个文件的两个copies，指向同一个physical memory page。第一个作为主要的copy, 第二个作为private space用于暂存txn的写操作。DBMS通过<code>MAP_PRIVATE</code> flag来创建private space</p>
+<p>如何工作：DBMS将txn牵涉到的page在private space中进行修改，OS隐式地将修改的内容拷贝至新的physical memory，并将page table指向新的physical memory。primary copy不会看到这些修改，因此OS也不会将其同步至硬盘。为了持久化，当WAL同步至硬盘后使用一个daemon thread来将修改应用于primary copy</p>
+<p>缺陷：</p>
+<ul>
+<li>存在冲突的txns时(e.g 两个txn需要修改同一个页面)，DBMS必须确保commited txn的修改同步至primary copy，意味着需要额外追踪不同的txns待更新的页面</li>
+<li>随着修改的增多，private workspace可能会逐渐增长，此时virtual memory address space中可能存在两份database的copy</li>
+</ul>
+</li>
+<li>
+<p>User-Space Copy-On-Write(SQLite, MonetDB, RavenDB)</p>
+<p>DBMS手动的将<strong>被修改的页面</strong>(建议仔细琢磨，与上面的OS COW进行对比)拷贝至一个自身维护的buffer(in virtual memory address space)</p>
+<p>如何工作：DBMS只需要对WAL执行写操作，并对buffer中的拷贝执行修改。在txn commit, WAL持久化之后可以安全地将修改应用至<code>mmap</code>维护的区域，由于将entire pages拷贝至对应区域开销太大，某些DBMS支持直接将WAL应用于<code>mmap</code>维护的区域</p>
+</li>
+<li>
+<p>Shadow paging(LMDB)</p>
+<p><del>这个原理就不必多说了吧</del></p>
+<p>缺陷：LMDB只允许一个写者(txn级别)，等价于锁DB</p>
+</li>
+</ol>
+
+<h3 class="relative group">I/O阻塞 
+    <div id="io阻塞" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#io%e9%98%bb%e5%a1%9e" aria-label="Anchor">#</a>
+    </span>        
+    
+</h3>
+<p>传统的buffer pool支持异步I/O避免query执行时阻塞threads。例如：B+ tree leaf nodes的顺序扫描允许异步的发起read requests来减小延迟，但<code>mmap</code>不支持异步读写，如果<code>mmap</code>访问未命中时，当前thread会因为触发缺页异常而被阻塞。</p>
+<p>不仅如此，由于DBMS不知道哪些页面位于物理内存中，访问任意页面都有可能触发意料之外的I/O阻塞。</p>
+<p>对于该问题，DBMS开发人员可以使用OS提供的接口来减轻这一问题：</p>
+<ol>
+<li>
+<p>使用<code>mlock</code>来pin住页面</p>
+<p>缺陷：OS对于单个进程能够pin住的页面数量有限制。并且DBMS还要仔细地追踪并unpin页面使OS能够剔除不需要的页面</p>
+</li>
+<li>
+<p>使用<code>madvise</code>来提示OS查询可能的访问模式，例如使用<code>MADV_SEQUENTIAL</code>来告诉OS要执行sequential scan</p>
+<p>缺陷：OS可能不听你的指示(<del>真是一个悲伤的故事</del>)，并且一旦提示出现错误，例如实际存在大量random I/O结果提示了sequential I/O那就完蛋了</p>
+</li>
+<li>
+<p>创建额外的线程来prefetch</p>
+</li>
+</ol>
+<p>尽管这些方法减缓/部分减缓上述问题，但仍另外引入了显著的复杂性，这与使用<code>mmap</code>的初衷相违背(别忘了，你使用<code>mmap</code>就是为了避免实施buffer pool带来的痛苦)</p>
+
+<h3 class="relative group">错误处理 
+    <div id="错误处理" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#%e9%94%99%e8%af%af%e5%a4%84%e7%90%86" aria-label="Anchor">#</a>
+    </span>        
+    
+</h3>
+<p>DBMS的一个核心职责就是保障数据的完整性，因此当数据出现错误时进行处理至关重要。当DBMS使用<code>mmap</code>时，可能存在以下问题:</p>
+<ol>
+<li>一些DBMSs在page-level维护一份checksum来检查I/O期间数据是否被污染。当从硬盘中读取某个page时，DBMS会使用存储在page metadata中的checksum来验证page中的内容。如果使用<code>mmap</code>，DBMS每次访问某个page时都需要验证其校验和，因为自上次访问以来，OS可能默默地将该page剔除出物理内存，导致发生了I/O(如果使用buffer pool, DBMS就能手动控制哪些页面维持在物理内存中，不会被剔除)</li>
+<li>许多DBMSs都是用内存不安全的语言实现的(<del>说的就是C/C++</del>), 意味着指针出现错误时可能会污染内存中pages的内容，手动实现buffer pool时DBMS会在将这些pages写回硬盘前进行检查，但使用<code>mmap</code>时OS可能会默默地将受到污染的数据写回硬盘</li>
+<li>基于<code>mmap</code>的数据库实现中，任何与<code>mmap</code>进行交互的模块都有可能产生<code>SIGBUS</code>信号，DBMS开发人员只能通过复杂的signal handler来进行处理</li>
+</ol>
+
+<h3 class="relative group">性能问题 
+    <div id="性能问题" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#%e6%80%a7%e8%83%bd%e9%97%ae%e9%a2%98" aria-label="Anchor">#</a>
+    </span>        
+    
+</h3>
+<p>最后，<code>mmap</code>带来的最大也是最显著的问题就是性能瓶颈，尽管Andy他们认为上述如错误处理等问题可以通过DBMS开发小心翼翼的实现来克服，但是<code>mmap</code>带来的性能瓶颈在不修改OS kernel的情况下无法避免。</p>
+
+<h4 class="relative group">理想情况 
+    <div id="理想情况" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#%e7%90%86%e6%83%b3%e6%83%85%e5%86%b5" aria-label="Anchor">#</a>
+    </span>        
+    
+</h4>
+<p>理论上使用<code>mmap</code>代替buffer pool会有更优越的性能，因为<code>mmap</code>主要避免了两方面的开销：</p>
+<ol>
+<li><code>mmap</code>规避了显式调用<code>read/write</code> syscall的开销，因为通过一次<code>mmap</code> syscall，OS在背后默默地处理缺页和文件映射</li>
+<li><code>mmap</code>可以返回存储在OS page cache中的指针，避免了额外的拷贝至user space buffer的开销。作为附加的好处，还能减少内存的花费，因为data无需在user space中重复存在</li>
+</ol>
+
+<h4 class="relative group">实际情况 
+    <div id="实际情况" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#%e5%ae%9e%e9%99%85%e6%83%85%e5%86%b5" aria-label="Anchor">#</a>
+    </span>        
+    
+</h4>
+<p>由于理论上使用<code>mmap</code>的好处这么大，那么随着SSD的发展(e.g PCIe 5.0 NVMe)，使用<code>mmap</code>与传统buffer pool之间的性能差距应该越来越大，但实际上OS的page evict机制在高带宽的硬盘设备上针对超过大于内存的DBMS工作负载时，无法很好的扩展到多个线程 (原文: cannot scale beyond a few threads for larger-than-memory DBMS workloads)。由于以前I/O带宽的限制，Andy等人相信这个问题没有很好地被注意到</p>
+<p>主要存在三个瓶颈：</p>
+<ol>
+<li>
+<p>页表征用</p>
+</li>
+<li>
+<p>OS单线程的页面回收</p>
+</li>
+<li>
+<p>TLB shootdowns</p>
+</li>
+</ol>
+<p>前两个问题可以通过调整OS来缓解，然而TLB的问题更加棘手。前文提到，TLB shootdowns发生在一个core需要向其他cores广播其TLB条目无效时，由于不同核心之间TLB需要进行同步，带来了昂贵的开销。解决这一问题既需要对处理器微架构的修改，也需要对OS kernel进行调整(这不是你我能实现的🙈)</p>
+
+<h2 class="relative group">实验分析 
+    <div id="实验分析" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#%e5%ae%9e%e9%aa%8c%e5%88%86%e6%9e%90" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+<p>论文的最后一部分，是通过实验来验证使用<code>mmap</code>的系统中存在性能问题</p>
+
+<h3 class="relative group">实验环境 
+    <div id="实验环境" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#%e5%ae%9e%e9%aa%8c%e7%8e%af%e5%a2%83" aria-label="Anchor">#</a>
+    </span>        
+    
+</h3>
+<ul>
+<li>
+<p>AMD EPYC 7713 processor(64 cores, 128 hardware threads)</p>
+</li>
+<li>
+<p>RAM: 512 GB (100GB用于OS kernel page cache)</p>
+</li>
+<li>
+<p>Persistent storage: 10 * 3.8 TB Samsung PM1733 SSDs(7000 MB/s的读吞吐量, 3800MB/s的写吞吐量)</p>
+</li>
+<li>
+<p>作为对比，使用<code>fio</code>并通过直接I/O(<code>O_DIRECT</code>)来绕过OS的page cache</p>
+</li>
+</ul>
+<p>实验主要集中在只读工作负载，由于写操作需要额外的保证，因此会引入新的开销，无法准确控制变量。</p>
+<hr>
+
+<h3 class="relative group">Random Reads 
+    <div id="random-reads" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#random-reads" aria-label="Anchor">#</a>
+    </span>        
+    
+</h3>
+<img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/random_reads.png" style="zoom: 67%;" />
+<p>working set size: 2TB(由于OS的cache大小只有100GB，因此95%的访问都会引起缺页异常)</p>
+<p>由上图可以发现，使用<code>fio</code>时，带宽大约900K每秒。换句话说，使用<code>fio</code>几乎能使NVMe SSD的性能达到最大化</p>
+<p>对于<code>mmap</code>，即使使用<code>MADV_RND</code>提示工作负载为random时，在大约27秒后带宽突然下降至0，然后缓慢恢复至大约<code>fio</code>的一般。突然下降是因为此时OS 的page cache已满，强行迫使OS从内存中剔除page所致。</p>
+<p>最后，在上文提到，TLB的刷新与同步以及系统只有一个单线程进行页面回收会带来严重的开销。因此TLB shootdowns, 页表同步等将会严重降低性能。由上图可知，使用<code>fio</code>的TLB shootdowns十分稳定，而所有的使用<code>mmap</code>的系统TLB Shootdowns次数远高于使用file I/O的次数。</p>
+
+<h3 class="relative group">Sequential Reads 
+    <div id="sequential-reads" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#sequential-reads" aria-label="Anchor">#</a>
+    </span>        
+    
+</h3>
+<img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/sequential_reads.png" style="zoom: 67%;" />
+<p>对于sequential scan，可以看到使用file I/O与<code>mmap</code>也存在巨大的性能差异，特别是当使用到多个SSD时。通过实验可以发现，<code>mmap</code>只在单SSD，强制未命中阶段工作良好; 一旦页面回收开始或多个SSD时，<code>mmap</code>的性能相比<code>fio</code>要差2-20倍! 而随着SSD的性能的发展，<code>mmap</code>的表现将无法匹配传统的文件I/O性能。</p>
+
+<h2 class="relative group">Conclusion 
+    <div id="conclusion" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#conclusion" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+<p>总而言之，当你考虑以下因素时，你不应该选择<code>mmap</code>来作为buffer pool的替代品：</p>
+<ol>
+<li>当你需要保证transaction的ACID属性时(上文的transactional safety)</li>
+<li>当你在触发缺页异常时，不希望被I/O阻塞(换言之，async I/O)或你希望手动控制哪些内容位于内存中</li>
+<li>当你需要关心错误处理时</li>
+<li>当你拥有SSD时，希望充分利用其吞吐量</li>
+</ol>
+<p>如果你的工作集或者整个数据库可以完整地载入内存，并且工作负载为只读时，也许你可以考虑一下<code>mmap</code>。当然，如果现在正处于Database的风口，而你无需关心什么isolation level, consistency, 日后的维护，急需一款产品上市去吸引投资(<del>骗钱</del>)，那么这个时候你也可以考虑一下<code>mmap</code></p>
+
+          
+          
+          
+        </div>
+
+        
+
+        
+
+        
+
+        
+
+      </div>
+
+      
+      
+        
+        
+          
+          
+        
+        
+        
+        <script
+          type="text/javascript"
+          src="/js/page.min.54b6f4371722649edbe871e431d8670d670878c22be8f36e229fe53cc9b786fe25a834def5e6de621f7a3e37b72bc8cd73839aa5ed907ed6cbd45cd3e1b0fa20.js"
+          integrity="sha512-VLb0NxciZJ7b6HHkMdhnDWcIeMIr6PNuIp/lPMm3hv4lqDTe9ebeYh96Pje3K8jNc4Oape2QftbL1FzT4bD6IA=="
+          data-oid="views_posts/mmap_is_shit.md"
+          data-oid-likes="likes_posts/mmap_is_shit.md"></script>
+      
+
+    </section>
+    <footer class="pt-8 max-w-prose print:hidden">
+      
+  
+    
+    
+    
+    <div class="pt-8">
+      <hr class="border-dotted border-neutral-300 dark:border-neutral-600">
+      <div class="flex justify-between pt-3">
+        <span>
+          
+            <a class="flex group mr-3" href="/posts/cache/">
+              <span
+                class="mr-3 text-neutral-700 group-hover:text-primary-600 ltr:inline rtl:hidden dark:text-neutral dark:group-hover:text-primary-400"
+                >&larr;</span
+              >
+              <span
+                class="ml-3 text-neutral-700 group-hover:text-primary-600 ltr:hidden rtl:inline dark:text-neutral dark:group-hover:text-primary-400"
+                >&rarr;</span
+              >
+              <span class="flex flex-col">
+                <span class="mt-[0.1rem] leading-6 group-hover:underline group-hover:decoration-primary-500"
+                  >What Every Programmer Should Know About Memory: Cache篇</span
+                >
+                <span class="mt-[0.1rem] text-xs text-neutral-500 dark:text-neutral-400">
+                  
+                    <time datetime="2023-09-27T00:00:00&#43;00:00">27 September 2023</time>
+                  
+                </span>
+              </span>
+            </a>
+          
+        </span>
+        <span>
+          
+            <a class="flex text-right group ml-3" href="/posts/split_block_bloom_filter/">
+              <span class="flex flex-col">
+                <span class="mt-[0.1rem] leading-6 group-hover:underline group-hover:decoration-primary-500"
+                  >Filter rules everything around me: Parquet中的Bloom Filter</span
+                >
+                <span class="mt-[0.1rem] text-xs text-neutral-500 dark:text-neutral-400">
+                  
+                    <time datetime="2024-09-27T00:00:00&#43;00:00">27 September 2024</time>
+                  
+                </span>
+              </span>
+              <span
+                class="ml-3 text-neutral-700 group-hover:text-primary-600 ltr:inline rtl:hidden dark:text-neutral dark:group-hover:text-primary-400"
+                >&rarr;</span
+              >
+              <span
+                class="mr-3 text-neutral-700 group-hover:text-primary-600 ltr:hidden rtl:inline dark:text-neutral dark:group-hover:text-primary-400"
+                >&larr;</span
+              >
+            </a>
+          
+        </span>
+      </div>
+    </div>
+  
+
+
+      
+    </footer>
+  </article>
+
+        <div id="top-scroller" class="pointer-events-none absolute top-[110vh] bottom-0 w-12 ltr:right-0 rtl:left-0">
+  <a
+    href="#the-top"
+    class="pointer-events-auto sticky top-[calc(100vh-5.5rem)] flex h-12 w-12 mb-16 items-center justify-center rounded-full bg-neutral/50 text-xl text-neutral-700 hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral dark:hover:text-primary-400"
+    aria-label="Scroll to top"
+    title="Scroll to top">
+    &uarr;
+  </a>
+</div>
+
+      </main><footer id="site-footer" class="py-10 print:hidden">
+  
+  
+    
+  
+  <div class="flex items-center justify-between">
+    
+    
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">
+          &copy;
+          2025
+          AsukaMilet
+      </p>
+    
+
+    
+    
+
+  </div>
+  <script>
+    
+    mediumZoom(document.querySelectorAll("img:not(.nozoom)"), {
+      margin: 24,
+      background: 'rgba(0,0,0,0.5)',
+      scrollOffset: 0,
+    })
+    
+  </script> 
+  
+  <script
+    type="text/javascript"
+    src="/js/process.min.ee03488f19c93c2efb199e2e3014ea5f3cb2ce7d45154adb3399a158cac27ca52831db249ede5bb602700ef87eb02434139de0858af1818ab0fb4182472204a4.js"
+    integrity="sha512-7gNIjxnJPC77GZ4uMBTqXzyyzn1FFUrbM5mhWMrCfKUoMdsknt5btgJwDvh&#43;sCQ0E53ghYrxgYqw&#43;0GCRyIEpA=="></script>
+  
+  
+</footer>
+<div
+  id="search-wrapper"
+  class="invisible fixed inset-0 flex h-screen w-screen cursor-default flex-col bg-neutral-500/50 p-4 backdrop-blur-sm dark:bg-neutral-900/50 sm:p-6 md:p-[10vh] lg:p-[12vh] z-500"
+  data-url="http://localhost:1313/">
+  <div
+    id="search-modal"
+    class="flex flex-col w-full max-w-3xl min-h-0 mx-auto border rounded-md shadow-lg top-20 border-neutral-200 bg-neutral dark:border-neutral-700 dark:bg-neutral-800">
+    <header class="relative z-10 flex items-center justify-between flex-none px-2">
+      <form class="flex items-center flex-auto min-w-0">
+        <div class="flex items-center justify-center w-8 h-8 text-neutral-400">
+          
+
+  <span class="relative block icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+
+  </span>
+
+
+        </div>
+        <input
+          type="search"
+          id="search-query"
+          class="flex flex-auto h-12 mx-1 bg-transparent appearance-none focus:outline-dotted focus:outline-2 focus:outline-transparent"
+          placeholder="Search"
+          tabindex="0">
+      </form>
+      <button
+        id="close-search-button"
+        class="flex items-center justify-center w-8 h-8 text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+        title="Close (Esc)">
+        
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+
+  </span>
+
+
+      </button>
+    </header>
+    <section class="flex-auto px-2 overflow-auto">
+      <ul id="search-results">
+        
+      </ul>
+    </section>
+  </div>
+</div>
+
+    </div>
+  </body>
+  
+</html>

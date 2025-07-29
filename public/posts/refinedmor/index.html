@@ -1,0 +1,1329 @@
+<!doctype html>
+<html
+  lang="en"
+  dir="ltr"
+  class="scroll-smooth"
+  data-default-appearance="light"
+  data-auto-appearance="true"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8">
+  
+    <meta http-equiv="content-language" content="en">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color">
+
+  
+  <title>Benchmarking, Analyzing, and Optimizing Write Amplification of Partial Compaction in RocksDB &middot; AsukaMilet&#39;s Blog</title>
+    <meta name="title" content="Benchmarking, Analyzing, and Optimizing Write Amplification of Partial Compaction in RocksDB &middot; AsukaMilet&#39;s Blog">
+
+  
+  <meta name="description" content="Analysis about leveled compaction file picking policy">
+  <meta name="keywords" content="Database,LSM,Paper,">
+  
+  
+  <link rel="canonical" href="http://localhost:1313/posts/refinedmor/">
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+    
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/css/main.bundle.min.5c1f183abbd81c1e3325f920a27cbb9ba254b48fb31ea3618517bff4770f91f0ae423c9e8292ba4cf2bd80c63fd0d2da86c482956da99c3c0e48b5a3911df364.css"
+    integrity="sha512-XB8YOrvYHB4zJfkgony7m6JUtI&#43;zHqNhhRe/9HcPkfCuQjyegpK6TPK9gMY/0NLahsSClW2pnDwOSLWjkR3zZA==">
+
+  
+  
+  <script
+    type="text/javascript"
+    src="/js/appearance.min.516a16745bea5a9bd011138d254cc0fd3973cd55ce6e15f3dec763e7c7c2c7448f8fe7b54cca811cb821b0c7e12cd161caace1dd794ac3d34d40937cbcc9ee12.js"
+    integrity="sha512-UWoWdFvqWpvQERONJUzA/TlzzVXObhXz3sdj58fCx0SPj&#43;e1TMqBHLghsMfhLNFhyqzh3XlKw9NNQJN8vMnuEg=="></script>
+  
+    
+    
+    
+  
+  
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+    <script
+      defer
+      type="text/javascript"
+      id="script-bundle"
+      src="/js/main.bundle.min.98bb8ce8f123e03c4d2171eeec151dd404b5c476beb5ef1068d0e8b1a2afb923065e6552fc14b2d867c85ee4bd8529a43193f729f874d3908517ba03b5d1cc57.js"
+      integrity="sha512-mLuM6PEj4DxNIXHu7BUd1AS1xHa&#43;te8QaNDosaKvuSMGXmVS/BSy2GfIXuS9hSmkMZP3Kfh005CFF7oDtdHMVw=="
+      data-copy="Copy"
+      data-copied="Copied"></script>
+  
+  
+    
+    <script src="/lib/zoom/zoom.min.umd.a527109b68c082a70f3697716dd72a9d5aa8b545cf800cecbbc7399f2ca6f6e0ce3e431f2062b48bbfa47c9ea42822714060bef309be073f49b9c0e30d318d7b.js" integrity="sha512-pScQm2jAgqcPNpdxbdcqnVqotUXPgAzsu8c5nyym9uDOPkMfIGK0i7&#43;kfJ6kKCJxQGC&#43;8wm&#43;Bz9JucDjDTGNew=="></script>
+  
+
+  
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+  <meta property="og:url" content="http://localhost:1313/posts/refinedmor/">
+  <meta property="og:site_name" content="AsukaMilet&#39;s Blog">
+  <meta property="og:title" content="Benchmarking, Analyzing, and Optimizing Write Amplification of Partial Compaction in RocksDB">
+  <meta property="og:description" content="Analysis about leveled compaction file picking policy">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-01-03T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-01-03T00:00:00+00:00">
+    <meta property="article:tag" content="Database">
+    <meta property="article:tag" content="LSM">
+    <meta property="article:tag" content="Paper">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Benchmarking, Analyzing, and Optimizing Write Amplification of Partial Compaction in RocksDB">
+  <meta name="twitter:description" content="Analysis about leveled compaction file picking policy">
+
+  <script type="application/ld+json">
+  [{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "articleSection": "Posts",
+    "name": "Benchmarking, Analyzing, and Optimizing Write Amplification of Partial Compaction in RocksDB",
+    "headline": "Benchmarking, Analyzing, and Optimizing Write Amplification of Partial Compaction in RocksDB",
+    "description": "Analysis about leveled compaction file picking policy",
+    
+    "inLanguage": "en",
+    "url" : "http:\/\/localhost:1313\/posts\/refinedmor\/",
+    "author" : {
+      "@type": "Person",
+      "name": "AsukaMilet"
+    },
+    "copyrightYear": "2025",
+    "dateCreated": "2025-01-03T00:00:00\u002b00:00",
+    "datePublished": "2025-01-03T00:00:00\u002b00:00",
+    
+    "dateModified": "2025-01-03T00:00:00\u002b00:00",
+    
+    "keywords": ["Database","LSM","Paper"],
+    
+    "mainEntityOfPage": "true",
+    "wordCount": "2310"
+  }]
+  </script>
+
+
+
+  
+  
+    <meta name="author" content="AsukaMilet">
+  
+  
+    
+      
+        
+          <link href="https://github.com/KarinaMilet" rel="me">
+        
+      
+    
+  
+
+  
+  
+
+<script src="/lib/jquery/jquery.slim.min.b0dca576e87d7eaa5850ae4e61759c065786cdb6489d68fcc82240539eebd5da522bdb4fda085ffd245808c8fe2acb2516408eb774ef26b5f6015fc6737c0ea8.js" integrity="sha512-sNylduh9fqpYUK5OYXWcBleGzbZInWj8yCJAU57r1dpSK9tP2ghf/SRYCMj&#43;KsslFkCOt3TvJrX2AV/Gc3wOqA=="></script>
+
+
+
+
+
+
+
+
+
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/lib/katex/katex.min.7e7e35e3ef02b7b437449a44ca3fac62ec1ed39cb8312b680a00fe8ac60badc95b063b694636b8440856f7f5e8c2cc9e6b0efb581179b2656c7e1e97558c7096.css"
+    integrity="sha512-fn414&#43;8Ct7Q3RJpEyj&#43;sYuwe05y4MStoCgD&#43;isYLrclbBjtpRja4RAhW9/Xowsyeaw77WBF5smVsfh6XVYxwlg==">
+  
+  
+  
+  <script
+    defer
+    type="text/javascript"
+    src="/js/katex.bundle.735b6f1542c0acf03d492dcdf14710c2e277474a64ae8ce49ef56563e17d142f9d3f4466e82cf12679968f50985628e08948ec341fba2df746545d0fd337d81d.js"
+    integrity="sha512-c1tvFULArPA9SS3N8UcQwuJ3R0pkrozknvVlY&#43;F9FC&#43;dP0Rm6CzxJnmWj1CYVijgiUjsNB&#43;6LfdGVF0P0zfYHQ=="
+    id="katex-render"></script>
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+</head>
+<body
+    class="flex flex-col h-screen px-6 m-auto text-lg leading-7 max-w-7xl bg-neutral text-neutral-900 dark:bg-neutral-800 dark:text-neutral sm:px-14 md:px-24 lg:px-32 scrollbar-thin scrollbar-track-neutral-200 scrollbar-thumb-neutral-400 dark:scrollbar-track-neutral-800 dark:scrollbar-thumb-neutral-600">
+    <div id="the-top" class="absolute flex self-center">
+      <a
+        class="px-3 py-1 text-sm -translate-y-8 rounded-b-lg bg-primary-200 focus:translate-y-0 dark:bg-neutral-600"
+        href="#main-content"
+        ><span class="font-bold text-primary-600 ltr:pr-2 rtl:pl-2 dark:text-primary-400">&darr;</span>Skip to main content</a
+      >
+    </div>
+    
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+<div
+  class="main-menu flex items-center justify-between px-4 py-6 sm:px-6 md:justify-start gap-x-3 pt-[2px] pr-0 pb-[3px] pl-0">
+  
+  
+
+  <div class="flex flex-1 items-center justify-between">
+    <nav class="flex space-x-3">
+      
+        <a href="/" class="text-base font-medium text-gray-500 hover:text-gray-900">
+          AsukaMilet&rsquo;s Blog
+        </a>
+      
+    </nav>
+    
+  <nav class="hidden md:flex items-center gap-x-5 md:ml-12 h-12">
+    
+      
+        
+  <a
+  href="/posts/"
+  
+  class="flex items-center text-gray-500 hover:text-primary-600 dark:hover:text-primary-400">
+  
+  <p class="text-base font-medium" title="Posts">
+    Archives
+  </p>
+</a>
+
+
+
+      
+    
+
+    
+
+
+    
+      <button
+        id="search-button"
+        aria-label="Search"
+        class="text-base hover:text-primary-600 dark:hover:text-primary-400"
+        title="Search (/)">
+        
+
+  <span class="relative block icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+
+  </span>
+
+
+      </button>
+    
+
+    
+      <div class=" flex items-center">
+        <button
+          id="appearance-switcher"
+          aria-label="Dark mode switcher"
+          type="button"
+          class="text-base hover:text-primary-600 dark:hover:text-primary-400">
+          <div class="flex items-center justify-center dark:hidden">
+            
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+
+  </span>
+
+
+          </div>
+          <div class="items-center justify-center hidden dark:flex">
+            
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+
+  </span>
+
+
+          </div>
+        </button>
+      </div>
+    
+  </nav>
+
+    
+  <div class="flex md:hidden items-center gap-x-5 md:ml-12 h-12">
+    <span></span>
+
+    
+
+    
+      <button
+        id="search-button-mobile"
+        aria-label="Search"
+        class="text-base hover:text-primary-600 dark:hover:text-primary-400"
+        title="Search (/)">
+        
+
+  <span class="relative block icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+
+  </span>
+
+
+      </button>
+    
+
+    
+      <button
+        id="appearance-switcher-mobile"
+        aria-label="Dark mode switcher"
+        type="button"
+        class="text-base hover:text-primary-600 dark:hover:text-primary-400 ltr:mr-1 rtl:ml-1">
+        <div class="flex items-center justify-center dark:hidden">
+          
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+
+  </span>
+
+
+        </div>
+        <div class="items-center justify-center hidden dark:flex">
+          
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+
+  </span>
+
+
+        </div>
+      </button>
+    
+  </div>
+
+  </div>
+  
+  <div class="-my-2 md:hidden">
+    <div id="menu-button" class="block">
+      
+        <div class="cursor-pointer hover:text-primary-600 dark:hover:text-primary-400">
+          
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M0 96C0 78.33 14.33 64 32 64H416C433.7 64 448 78.33 448 96C448 113.7 433.7 128 416 128H32C14.33 128 0 113.7 0 96zM0 256C0 238.3 14.33 224 32 224H416C433.7 224 448 238.3 448 256C448 273.7 433.7 288 416 288H32C14.33 288 0 273.7 0 256zM416 448H32C14.33 448 0 433.7 0 416C0 398.3 14.33 384 32 384H416C433.7 384 448 398.3 448 416C448 433.7 433.7 448 416 448z"/></svg>
+
+  </span>
+
+
+        </div>
+        <div
+          id="menu-wrapper"
+          class="fixed inset-0 z-30 invisible w-screen h-screen m-0 overflow-auto transition-opacity opacity-0 cursor-default bg-neutral-100/50 backdrop-blur-sm dark:bg-neutral-900/50 pt-[5px]">
+          <ul
+            class="flex space-y-2 mt-3 flex-col items-end w-full px-6 py-6 mx-auto overflow-visible list-none ltr:text-right rtl:text-left max-w-7xl">
+            <li id="menu-close-button">
+              <span
+                class="cursor-pointer inline-block align-text-bottom hover:text-primary-600 dark:hover:text-primary-400">
+                
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+
+  </span>
+
+
+              </span>
+            </li>
+
+            
+              
+  <li class="mt-1">
+  <a
+    href="/posts/"
+    
+    class="flex items-center text-gray-500 hover:text-primary-600 dark:hover:text-primary-400">
+    
+    <p class="text-bg font-bg" title="Posts">
+      Archives
+    </p>
+  </a>
+</li>
+
+
+
+            
+
+          </ul>
+          
+        </div>
+      
+    </div>
+  </div>
+
+</div>
+
+
+
+
+
+    
+    <div class="relative flex flex-col grow">
+      <main id="main-content" class="grow">
+        
+  
+
+
+  <article>
+    
+
+
+    <header id="single_header" class="mt-5 max-w-prose">
+      
+      <h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+        Benchmarking, Analyzing, and Optimizing Write Amplification of Partial Compaction in RocksDB
+      </h1>
+      <div class="mt-1 mb-6 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
+        
+
+
+
+
+
+  
+  
+
+
+
+  
+
+  
+  
+  
+
+  
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2025-01-03T00:00:00&#43;00:00">3 January 2025</time><span class="px-2 text-primary-500">&middot;</span><span>2310 words</span><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">11 mins</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+
+  
+  
+
+
+
+      </div>
+
+      
+      
+      
+      
+      
+
+      
+
+      
+
+        
+
+        
+
+        
+
+      
+
+    </header>
+
+    <section class="flex flex-col max-w-full mt-0 prose dark:prose-invert lg:flex-row">
+      
+        <div class="order-first lg:ml-auto px-0 lg:order-last ltr:lg:pl-8 rtl:lg:pr-8">
+          <div
+            class="toc ltr:pl-5 rtl:pr-5 print:hidden lg:sticky 
+              lg:top-10
+            
+            ">
+            
+              <details
+  open
+  id="TOCView"
+  class="toc-right mt-0 overflow-y-auto overscroll-contain scrollbar-thin scrollbar-track-neutral-200 scrollbar-thumb-neutral-400 dark:scrollbar-track-neutral-800 dark:scrollbar-thumb-neutral-600 rounded-lg ltr:-ml-5 ltr:pl-5 rtl:-mr-5 rtl:pr-5 hidden lg:block">
+  <summary
+    class="block py-1 text-lg font-semibold cursor-pointer bg-neutral-100 text-neutral-800 ltr:-ml-5 ltr:pl-5 rtl:-mr-5 rtl:pr-5 dark:bg-neutral-700 dark:text-neutral-100 lg:hidden">
+    Table of Contents
+  </summary>
+  <div
+    class="min-w-[220px] py-2 border-dotted ltr:-ml-5 ltr:border-l ltr:pl-5 rtl:-mr-5 rtl:border-r rtl:pr-5 dark:border-neutral-600">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#background">Background</a></li>
+    <li><a href="#file-picking-policies">File Picking Policies</a>
+      <ul>
+        <li><a href="#new-roundrobin-in-rocksdb">New RoundRobin in RocksDB</a></li>
+        <li><a href="#aligning-compaction-output-file-boundaries">Aligning Compaction Output File Boundaries</a></li>
+      </ul>
+    </li>
+    <li><a href="#benchmarking-file-picking-policies">Benchmarking file picking policies</a>
+      <ul>
+        <li><a href="#file-picking-policies-have-minor-impact-on-wa-for-update-intensive-workloads">File-picking policies have minor impact on WA for update-intensive workloads</a></li>
+        <li><a href="#rr-leads-to-a-lower-average-wa-than-mor-when-updates-exhibit-a-higher-skew">RR leads to a lower average WA than MOR when updates exhibit a higher skew</a></li>
+        <li><a href="#mor-scales-better">MOR scales better</a></li>
+      </ul>
+    </li>
+    <li><a href="#exploring-the-space-for-optimization">Exploring the space for optimization</a>
+      <ul>
+        <li><a href="#why-this-instability-exists">Why this instability exists?</a></li>
+        <li><a href="#refinedmor">RefinedMOR</a></li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+    <li><a href="#reference">Reference</a></li>
+  </ul>
+</nav>
+  </div>
+</details>
+<details class="toc-inside mt-0 overflow-hidden rounded-lg ltr:-ml-5 ltr:pl-5 rtl:-mr-5 rtl:pr-5 lg:hidden">
+  <summary
+    class="py-1 text-lg font-semibold cursor-pointer bg-neutral-100 text-neutral-800 ltr:-ml-5 ltr:pl-5 rtl:-mr-5 rtl:pr-5 dark:bg-neutral-700 dark:text-neutral-100 lg:hidden">
+    Table of Contents
+  </summary>
+  <div
+    class="py-2 border-dotted border-neutral-300 ltr:-ml-5 ltr:border-l ltr:pl-5 rtl:-mr-5 rtl:border-r rtl:pr-5 dark:border-neutral-600">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#background">Background</a></li>
+    <li><a href="#file-picking-policies">File Picking Policies</a>
+      <ul>
+        <li><a href="#new-roundrobin-in-rocksdb">New RoundRobin in RocksDB</a></li>
+        <li><a href="#aligning-compaction-output-file-boundaries">Aligning Compaction Output File Boundaries</a></li>
+      </ul>
+    </li>
+    <li><a href="#benchmarking-file-picking-policies">Benchmarking file picking policies</a>
+      <ul>
+        <li><a href="#file-picking-policies-have-minor-impact-on-wa-for-update-intensive-workloads">File-picking policies have minor impact on WA for update-intensive workloads</a></li>
+        <li><a href="#rr-leads-to-a-lower-average-wa-than-mor-when-updates-exhibit-a-higher-skew">RR leads to a lower average WA than MOR when updates exhibit a higher skew</a></li>
+        <li><a href="#mor-scales-better">MOR scales better</a></li>
+      </ul>
+    </li>
+    <li><a href="#exploring-the-space-for-optimization">Exploring the space for optimization</a>
+      <ul>
+        <li><a href="#why-this-instability-exists">Why this instability exists?</a></li>
+        <li><a href="#refinedmor">RefinedMOR</a></li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+    <li><a href="#reference">Reference</a></li>
+  </ul>
+</nav>
+  </div>
+</details>
+
+
+<script>
+  (function () {
+    'use strict'
+
+    const SCROLL_OFFSET_RATIO = 0.33
+    const TOC_SELECTOR = '#TableOfContents'
+    const ANCHOR_SELECTOR = '.anchor'
+    const TOC_LINK_SELECTOR = 'a[href^="#"]'
+    const NESTED_LIST_SELECTOR = 'li ul'
+    const ACTIVE_CLASS = 'active'
+
+    function getActiveAnchorId(anchors, offsetRatio) {
+      const threshold = window.scrollY + window.innerHeight * offsetRatio
+      const tocLinks = [...document.querySelectorAll('#TableOfContents a[href^="#"]')]
+      const tocIds = new Set(tocLinks.map(link => link.getAttribute('href').substring(1)))
+
+      for (let i = anchors.length - 1; i >= 0; i--) {
+        const top = anchors[i].getBoundingClientRect().top + window.scrollY
+        if (top <= threshold && tocIds.has(anchors[i].id)) {
+          return anchors[i].id
+        }
+      }
+      return anchors.find(anchor => tocIds.has(anchor.id))?.id || ''
+    }
+
+    function updateTOC({ toc, anchors, links, scrollOffset, collapseInactive }) {
+      const activeId = getActiveAnchorId(anchors, scrollOffset)
+      if (!activeId) return
+
+      links.forEach(link => {
+        const isActive = link.getAttribute('href') === `#${activeId}`
+        link.classList.toggle(ACTIVE_CLASS, isActive)
+
+        if (collapseInactive) {
+          const ul = link.closest('li')?.querySelector('ul')
+          if (ul) ul.style.display = isActive ? '' : 'none'
+        }
+      })
+
+      if (collapseInactive) {
+        const activeLink = toc.querySelector(`a[href="#${CSS.escape(activeId)}"]`)
+        let el = activeLink
+        while (el && el !== toc) {
+          if (el.tagName === 'UL') el.style.display = ''
+          if (el.tagName === 'LI') el.querySelector('ul')?.style.setProperty('display', '')
+          el = el.parentElement
+        }
+      }
+    }
+
+    function initTOC() {
+      const toc = document.querySelector(TOC_SELECTOR)
+      if (!toc) return
+
+      const collapseInactive = true
+      const anchors = [...document.querySelectorAll(ANCHOR_SELECTOR)]
+      const links = [...toc.querySelectorAll(TOC_LINK_SELECTOR)]
+
+      if (collapseInactive) {
+        toc.querySelectorAll(NESTED_LIST_SELECTOR).forEach(ul => ul.style.display = 'none')
+      }
+
+      const config = {
+        toc,
+        anchors,
+        links,
+        scrollOffset: SCROLL_OFFSET_RATIO,
+        collapseInactive
+      }
+
+      window.addEventListener('scroll', () => updateTOC(config), { passive: true })
+      window.addEventListener('hashchange', () => updateTOC(config), { passive: true })
+
+      updateTOC(config)
+    }
+
+    document.readyState === 'loading'
+      ? document.addEventListener('DOMContentLoaded', initTOC)
+      : initTOC()
+  })()
+</script>
+
+
+            
+            
+          </div>
+        </div>
+      
+
+
+      <div class="min-w-0 min-h-0 max-w-fit">
+        
+
+
+
+        <div class="article-content max-w-prose mb-20">
+          
+
+<p>I recently read ‘<a
+  href="https://openproceedings.org/2025/conf/edbt/paper-114.pdf"
+    target="_blank"
+  >Benchmarking, Analyzing, and Optimizing Write Amplification of Partial Compaction in RocksDB</a>’ by Boston DISC lab published at EDBT25. In this article they analysed the existing file picking policy based on RocksDB and explored the potential room for optimization, I felt rewarded after reading it so I chose to record some of the content that I thought valuable.</p>
+<p>This article can be seen as a further study of the paper which they published at <a
+  href="https://vldb.org/pvldb/vol14/p2216-sarkar.pdf"
+    target="_blank"
+  >VLDB21</a>, and if you haven&rsquo;t read that article yet, I recommend it.</p>
+<p>I&rsquo;m going to assume you have a basic understanding of LSM before reading this article, so we won&rsquo;t go into detail about what compaction is, etc.</p>
+
+<h2 class="relative group">Background 
+    <div id="background" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#background" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+<p>Classical leveling and tiering LSM employ full compaction which all data in a level has to be involved in one compaction task. When larger levels are compacted, the compaction takes longer time to complete, and there could be a temporarily high spike for storage space consumption. Besides, we also suffer from compaction latency.</p>
+<p>To alleviate the above problem, a widely used optimization in leveling LSM is to divide a sorted run into multiple smaller partitions. We use the term <em>SSTable</em> to denote such a partition later in the text. This optimization breaks large compaction into multiple smaller ones, bounding the processing time of each compaction as well as the temporary disk space needed to create new SSTables.</p>
+<p>By partition, each compaction in a leveling LSM just needs to pick one SST<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> in the level \(i\) to merge with SSTs in level \(i + 1\) that have overlapping key ranges. For sequentially created keys, essentially no merge is performed since there are no SSTables with overlapping key ranges. For skewed updates, the merge frequency of the SSTables with cold update ranges can be greatly reduced.</p>
+
+<h2 class="relative group">File Picking Policies 
+    <div id="file-picking-policies" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#file-picking-policies" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+<p>File-picking policies control which SST of a level to compact. There are currently four strategies in RocksDB:</p>
+<ol>
+<li>RoundRobin(RR) picks a file in a level in a round-robin manner in the key space.</li>
+<li>MinOverlappingRatio(MOR) picks the file that has the minimum overlapping ratio. The overlapping ratio of a file in level 𝑖 is defined as the fraction between the total bytes of files in level 𝑖 + 1 that overlap with this file and the size of that file<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</li>
+<li>OldestLargestSeqFirst(OLSF) picks the file of which the latest key-value pair is the oldest. OLSF is also termed as the coldest picking policy.</li>
+<li>OldestSmallestSeqFirst(OSSF) picks the file of which the smallest sequence number is the oldest among all other files in the same level. OSSF is also called the oldest file-picking policy.</li>
+</ol>
+<p>In addition to this, RocksDB support file picking policy based on <a
+  href="https://github.com/facebook/rocksdb/blob/d6c838f1e130d8860407bc771fa6d4ac238859ba/include/rocksdb/options.h#L85"
+    target="_blank"
+  >the number of tombstones</a>, and <a
+  href="https://dl.acm.org/doi/10.1145/3318464.3389757"
+    target="_blank"
+  >Lethe</a> has implemented a file picking policy based on lifetime of tombstones, but these policies are beyond the scope of this article, and we will focus on the four policies mentioned above.</p>
+<p align="center"><img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202025-01-02%20144400.png"></p>
+
+<h3 class="relative group">New RoundRobin in RocksDB 
+    <div id="new-roundrobin-in-rocksdb" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#new-roundrobin-in-rocksdb" aria-label="Anchor">#</a>
+    </span>        
+    
+</h3>
+<p>The above figure shows the classic RR policy. However, according to the paper, classic RR actually fail to compact the key space in a round-robin manner(unfortunately, I haven&rsquo;t actually used the RR policy myself). They claim that RocksDB re-implements RR via a splitting mechanism which enforces every compaction that outputs in level \(i\) has to split the file based on the existing cursor of level \(i\)<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
+<p>In the new implementation, after a compaction from level \(i\) completes, the cursor in level \(i\) moves to <strong>the smallest key of the successive file of the picked file in the last compaction</strong>, and the next compaction from level \(i\) will pick the first file (from left to right) that is <strong>larger than or equal to</strong> the cursor. By skipping the cursor past the gap between the last picked file and its successor, new keys arriving into that gap in level 𝑖 will not be compacted immediately.</p>
+<p align="center"><img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/roundrobin_in_rocksdb.png"></p>
+<p>For example, as shown in Figure 3, the first compaction moves the cursor to &lt;key, 6&gt;, then a compaction from L0 triggers a L1 compaction. In this L1 compaction, the sstable starting with &lt;key, 6&gt; will be chosen and thus key at L1 can be uniformly compacted in a round-robin manner.</p>
+<p>The newest version of RR allows multiple consecutive files to be selected together, as long as the overall bytes involved in this compaction do not exceed a user defined threshold. When two or more files are selected, the cursor still changes into the smallest key of the successive file of the last picked file.</p>
+
+<h3 class="relative group">Aligning Compaction Output File Boundaries 
+    <div id="aligning-compaction-output-file-boundaries" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#aligning-compaction-output-file-boundaries" aria-label="Anchor">#</a>
+    </span>        
+    
+</h3>
+<p>Since RocksDB 7.80, RocksDB has introduced a new optimization to reduce write amplification for leveled compaction. I personally thought RocksDB&rsquo;s <a
+  href="https://rocksdb.org/blog/2022/10/31/align-compaction-output-file.html"
+    target="_blank"
+  >Blog</a> on this part a bit hard to understand, this optimization is mentioned in this paper and their description is a bit more understandable to me.</p>
+<p>In RocksDB, newly generated SSTables are not restricted to be exactly as large as the user-defined target sstable size. Instead, they can vary to align new sstables with the key boundaries in a grandparent level, i.e. level \(i + 1 + 1\), for smaller WA in future compactions to the grandparent level. This optimization does not apply to files generated at the deepest level as there is no grandparent level. Thus, the file size at the deepest level should be exactly the same as the target one.</p>
+<p>The new mechanism works as follows:</p>
+<p align="center"><img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/boundary_rocksdb.png"></p>
+<p>If we have a <code>SSTableBuilder</code> in current compaction, there are three conditions when RocksDB stops appending new entries:</p>
+<ol>
+<li>
+<p>When the builder size reaches the user-defined maximum compaction bytes or <code>2 * target_sst_size</code>. In this case, newly generated ssts never cross any grandparent boundaries.</p>
+</li>
+<li>
+<p>When the next key crosses a grandparent boundary and the builder size reaches a threshold(less than the target sstable size). The threshold is calculated by:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">current_size</span> <span class="o">&gt;</span> <span class="p">((</span><span class="n">target_sst_size</span> <span class="o">+</span> <span class="mi">99</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">50</span> <span class="o">+</span> <span class="n">min</span><span class="p">(</span><span class="n">num</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">40</span><span class="p">))</span>
+</span></span></code></pre></div><p><code>num</code> is the number of accumulated crossed boundaries. And the minimum value is 1.</p>
+<p>Let&rsquo;s do some simple maths by taking the value of <code>num</code> to 1 and we&rsquo;ll round 55 to 50, so we have:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">current_size</span> <span class="o">&gt;</span> <span class="p">((</span><span class="n">target_sst_size</span> <span class="o">+</span> <span class="mi">99</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+</span></span></code></pre></div><p>If we ignore 99 then we can roughly estimate the minimum size of the sstable to be around <code>target_sst_size / 2</code>.</p>
+<p>This condition allows the newly generated sstables to overlap with fewer files in the grandparent level.</p>
+</li>
+<li>
+<p>When the next key crosses more than two grandparent boundaries and the current builder is larger than <code>target_sst_size / 8</code>. Close the builder before the next key avoids producing files that overlap a skippable file in the grandparent level.</p>
+</li>
+</ol>
+
+<h2 class="relative group">Benchmarking file picking policies 
+    <div id="benchmarking-file-picking-policies" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#benchmarking-file-picking-policies" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+<p>People from Boston have done rich benchmarking of file picking policies and have validated some of the existing observations and made some new ones, and I&rsquo;ll pick out what I think are interesting observations to discuss here.</p>
+
+<h3 class="relative group">File-picking policies have minor impact on WA for update-intensive workloads 
+    <div id="file-picking-policies-have-minor-impact-on-wa-for-update-intensive-workloads" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#file-picking-policies-have-minor-impact-on-wa-for-update-intensive-workloads" aria-label="Anchor">#</a>
+    </span>        
+    
+</h3>
+<p align="center"><img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/update__file_picking_wa.png"></p>
+<p>When update proportion is large, all four file-picking policies have lower and similar WA according to their benchmark. They analysed the relevant reason and concluded that with increasing updates, entries with duplicate keys can be updated in memtable flushes and L0 compactions.</p>
+
+<h3 class="relative group">RR leads to a lower average WA than MOR when updates exhibit a higher skew 
+    <div id="rr-leads-to-a-lower-average-wa-than-mor-when-updates-exhibit-a-higher-skew" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#rr-leads-to-a-lower-average-wa-than-mor-when-updates-exhibit-a-higher-skew" aria-label="Anchor">#</a>
+    </span>        
+    
+</h3>
+<p>They found the average WA of RR decreases faster than MOR when the update distribution becomes more skewed(consider that you have some keys that get updated frequently). They think this benefit of RR because frequently updated keys stay longer in L1. Since RR waits for the cursor to iterate over the whole key range, MOR has a higher probability of compacting the most frequently updated key to deeper levels than RR, and leads to a higher WA when updates have higher skew.</p>
+
+<h3 class="relative group">MOR scales better 
+    <div id="mor-scales-better" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#mor-scales-better" aria-label="Anchor">#</a>
+    </span>        
+    
+</h3>
+<p>They further scaled the workload to test the performance of different file picking policies under larger workloads and they found that:</p>
+<blockquote>
+<p>MOR scales better than other policies by exhibiting lower average WA and higher stability for uniform update distribution</p></blockquote>
+<p align="center"><img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/scale_file_policies.png"></p>
+<p>So when you use leveled compaction, and don&rsquo;t know what file picking policy to use, start with MOR.</p>
+
+<h2 class="relative group">Exploring the space for optimization 
+    <div id="exploring-the-space-for-optimization" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#exploring-the-space-for-optimization" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+<p>After a wealth of benchmarking, they attempted to further investigate whether they could do better than what was already in place. They used a very brute force approach: enumeration, they narrowed down the workload, and then kept enumerating to try to find the optimal choice(minimum WA), and then compared the best choice to the above four options to find the potential room for optimization.</p>
+<p>Then they found an interesting situation: the difference in WA between RR and MOR and the optimal choice is often not very large, but the optimal choice behaves more stably.</p>
+<p align="center"><img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/optimal_wa.png"></p>
+
+<h3 class="relative group">Why this instability exists? 
+    <div id="why-this-instability-exists" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#why-this-instability-exists" aria-label="Anchor">#</a>
+    </span>        
+    
+</h3>
+<p>After they noticed this phenomenon, they conducted further research on MOR, and they found that at each compaction, there may be multiple sstables where the gap in overlapping ratio is not significant, perhaps less than 1%. However, MOR strictly selects the minimum overlapping ratio, MOR can lead to unstable WA for the same workload. They summarised the following conclusion:</p>
+<blockquote>
+<p>Picking different files that have similar WA (overlapping ratio) in the current compaction can lead to substantially different final WA.</p></blockquote>
+<p>If you think about it a little bit, you&rsquo;ll see that it&rsquo;s very similar to the greedy algorithm, where we choose the current local optimal solution at each compaction(minimum overlapping ratio), yet in the long term we don&rsquo;t reach the overall optimal.</p>
+<p>They use an example to explain this issue.</p>
+<p align="center"><img src="https://raw.githubusercontent.com/AsukaMilet/BlogPhotos/master/Typora/mor_disadvantage.png"></p>
+<p>In the above figure, L1 has four sstables with the same overlapping ratio, all 1.0. RocksDB will sort the sstables by overlapping ratio, and when the <em>scores</em>(RocksDB also considers TTL to calculate scores, we don&rsquo;t consider TTL here and only care about the overlapping ratio) are the same, RocksDB will pick the sstable with the smallest key for compaction to make the algorithm more deterministic<sup id="fnref1:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<p>But what happens when we consider MVCC? For example, the upper figure becomes:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="n">L1</span>: <span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">10</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="mi">11</span><span class="n">v1</span><span class="o">..</span><span class="mi">11</span><span class="n">v_n</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="mi">11</span><span class="n">v_</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">..</span><span class="mi">30</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="mi">31</span><span class="o">..</span><span class="mi">40</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">L2</span>: <span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">10</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="mi">11</span><span class="n">v1</span><span class="o">..</span><span class="mi">11</span><span class="n">v_n</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="mi">11</span><span class="n">v_</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">..</span><span class="mi">30</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="mi">31</span><span class="o">..</span><span class="mi">40</span><span class="p">]</span><span class="w">
+</span></span></span></code></pre></div><p>[11v1..11vn], [11v_(n+1)..30] have similar probabilities of being selected.</p>
+<p>In their paper, they analyzed in detail why this randomness leads to WA instability.</p>
+
+<h3 class="relative group">RefinedMOR 
+    <div id="refinedmor" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#refinedmor" aria-label="Anchor">#</a>
+    </span>        
+    
+</h3>
+<p>Based on the above analysis, they claim that when there exist multiple sstables with similar overlapping ratios, we should not strictly choose the one with the smallest overlapping ratio, but should consider all these sstables as candidates.</p>
+<p>The subsequent process is as follows:</p>
+<ol>
+<li>Select sstable with minimum overlapping ratio</li>
+<li>Based on the minimum overlapping ratio, we use the following formula to calculate threshold</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="kt">u64</span><span class="w"> </span><span class="n">threshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">th</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">min_overlapping_ratio</span><span class="w">
+</span></span></span></code></pre></div><ol start="3">
+<li>Iterate over all sstables at the current level and collect all sstables with overlapping ratio less than threshold</li>
+<li>If there is only one sstable in the candidates, it means that this sstable is the one with minimum overlapping ratio, and we choose it directly</li>
+<li>If there is an sstable that is the last sstable of the current level, we select it directly</li>
+<li>Select the sstable whose next sstable in the level has the largest overlapping ratio</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">min_combined_ratio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">u64</span>::<span class="no">MAX</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">select_idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">// `idx` is the index of the eligible sstable in the original level
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">candidates</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">for_each</span><span class="p">(</span><span class="o">|</span><span class="n">idx</span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="kd">let</span><span class="w"> </span><span class="n">gap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">overlapping_ratios</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">f64</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.05</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">overlapping_ratios</span><span class="p">[</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">f64</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">gap</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">min_combined_ratio</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">f64</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">min_combined_ratio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gap</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">u64</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">select_idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">idx</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">});</span><span class="w">
+</span></span></span></code></pre></div><p>Next, I will give my understanding of why RefinedMOR can solve the problem of WA instability.</p>
+<ol>
+<li>
+<p>The last SSTable of the original level is preferred. This way, we will not trigger boundary alignment when generating a new SSTable (because there is no SSTable for us to use). So we can maintain the overlap ratio between the newly generated files and the lower layer in a relatively ideal state.</p>
+</li>
+<li>
+<p>Then we tend to select the file which the subsequent SSTable has the largest overlapping ratio. Based on my understanding, due to the existence of the align mechanism, we need to ingest the data of the subsequent SSTable when generating a new SSTable. Through the above selection scheme, we will have a high probability of triggering early truncation, which will help reduce the overlapping ratio of the subsequent SSTable. In this way, when this subsequent SSTable is selected, WA will be reduced.</p>
+</li>
+</ol>
+<p>There are a few notable points here</p>
+<ul>
+<li>When calculating <code>overlapping_ratio</code> and <code>threshold</code>, our type definition is <code>u64</code>. So due to truncation, according to the MOR formula previously mentioned, <code>threshold</code> may be the same as <code>minimum_overlapping_ratio</code>, e.g. both are 1. For this issue, RocksDB will multiply the numerator by 1024 when calculating the <code>overlapping_ratio</code>.</li>
+<li>For <code>th</code> in <code>threshold = (1 + th) * min_overlapping_ratio</code>, authors choose 0.05. I emailed to ask if they measured any other numbers and they didn&rsquo;t look into it further here, it&rsquo;s not an empirically optimal number. But they also think larger <code>threshold</code> should be fine.</li>
+<li>I initially thought we could start by collecting the sstables that have the smallest overlapping ratio by using something like <a
+  href="https://docs.rs/itertools/latest/itertools/trait.Itertools.html#method.min_set_by"
+    target="_blank"
+  >Itertools</a>. This idea is not correct though, if we follow this pattern we are back to the strictly select of minimum overlapping ratio and exhibits randomness described above.</li>
+</ul>
+
+<h2 class="relative group">Conclusion 
+    <div id="conclusion" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#conclusion" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+<p>There isn&rsquo;t much research on file picking policy in LSM, and this paper does a good job of filling in the gaps. Besides that, they mention RefinedMOR as a very rudimentary improvement, but I can&rsquo;t think of how to further improve file picking policy while keeping the implementation simple. Feel free to email me if you have any great ideas. I hope this article will be helpful for you.</p>
+
+<h2 class="relative group">Reference 
+    <div id="reference" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#reference" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+<p>[1] <a
+  href="https://rocksdb.org/blog/2016/01/29/compaction_pri.html"
+    target="_blank"
+  >Option of Compaction Priority</a></p>
+<p>[2] <a
+  href="https://disc.bu.edu/papers/benchmarking-analyzing-and-optimizing-wa-of-partial-compaction-in-rocksdb"
+    target="_blank"
+  >Benchmarking, Analyzing, and Optimizing Write Amplification of Partial Compaction in RocksDB</a></p>
+<p>[3] <a
+  href="https://dl.acm.org/doi/10.1007/s00778-019-00555-y"
+    target="_blank"
+  >LSM-based storage techniques: a survey</a></p>
+<p>[4] <a
+  href="https://github.com/BU-DiSC/rocksdb-for-partial-compaction-analysis"
+    target="_blank"
+  >https://github.com/BU-DiSC/rocksdb-for-partial-compaction-analysis</a></p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>To be precise, this depends on the file picking policy, details can be found in <a
+  href="https://github.com/facebook/rocksdb/blob/3570e4f5ffb29bc21b9afb388104a0a04f9af356/db/compaction/compaction_picker_level.cc#L95"
+    target="_blank"
+  >RocksDB PickFileToCompact</a>.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a
+  href="https://github.com/facebook/rocksdb/blob/3570e4f5ffb29bc21b9afb388104a0a04f9af356/db/version_set.cc#L3941"
+    target="_blank"
+  >RocksDB SortFileByOverlappingRatio</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref1:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p><a
+  href="https://github.com/facebook/rocksdb/blob/b75438f9860e3cff5e713917ed22e0ac394a758c/include/rocksdb/advanced_options.h#L61"
+    target="_blank"
+  >RoundRobin in RocksDB</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+          
+          
+          
+        </div>
+
+        
+
+        
+
+        
+
+        
+
+      </div>
+
+      
+      
+        
+        
+          
+          
+        
+        
+        
+        <script
+          type="text/javascript"
+          src="/js/page.min.54b6f4371722649edbe871e431d8670d670878c22be8f36e229fe53cc9b786fe25a834def5e6de621f7a3e37b72bc8cd73839aa5ed907ed6cbd45cd3e1b0fa20.js"
+          integrity="sha512-VLb0NxciZJ7b6HHkMdhnDWcIeMIr6PNuIp/lPMm3hv4lqDTe9ebeYh96Pje3K8jNc4Oape2QftbL1FzT4bD6IA=="
+          data-oid="views_posts/RefinedMOR.md"
+          data-oid-likes="likes_posts/RefinedMOR.md"></script>
+      
+
+    </section>
+    <footer class="pt-8 max-w-prose print:hidden">
+      
+  
+    
+    
+    
+    <div class="pt-8">
+      <hr class="border-dotted border-neutral-300 dark:border-neutral-600">
+      <div class="flex justify-between pt-3">
+        <span>
+          
+            <a class="flex group mr-3" href="/posts/split_block_bloom_filter/">
+              <span
+                class="mr-3 text-neutral-700 group-hover:text-primary-600 ltr:inline rtl:hidden dark:text-neutral dark:group-hover:text-primary-400"
+                >&larr;</span
+              >
+              <span
+                class="ml-3 text-neutral-700 group-hover:text-primary-600 ltr:hidden rtl:inline dark:text-neutral dark:group-hover:text-primary-400"
+                >&rarr;</span
+              >
+              <span class="flex flex-col">
+                <span class="mt-[0.1rem] leading-6 group-hover:underline group-hover:decoration-primary-500"
+                  >Filter rules everything around me: Parquet中的Bloom Filter</span
+                >
+                <span class="mt-[0.1rem] text-xs text-neutral-500 dark:text-neutral-400">
+                  
+                    <time datetime="2024-09-27T00:00:00&#43;00:00">27 September 2024</time>
+                  
+                </span>
+              </span>
+            </a>
+          
+        </span>
+        <span>
+          
+        </span>
+      </div>
+    </div>
+  
+
+
+      
+    </footer>
+  </article>
+
+        <div id="top-scroller" class="pointer-events-none absolute top-[110vh] bottom-0 w-12 ltr:right-0 rtl:left-0">
+  <a
+    href="#the-top"
+    class="pointer-events-auto sticky top-[calc(100vh-5.5rem)] flex h-12 w-12 mb-16 items-center justify-center rounded-full bg-neutral/50 text-xl text-neutral-700 hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral dark:hover:text-primary-400"
+    aria-label="Scroll to top"
+    title="Scroll to top">
+    &uarr;
+  </a>
+</div>
+
+      </main><footer id="site-footer" class="py-10 print:hidden">
+  
+  
+    
+  
+  <div class="flex items-center justify-between">
+    
+    
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">
+          &copy;
+          2025
+          AsukaMilet
+      </p>
+    
+
+    
+    
+
+  </div>
+  <script>
+    
+    mediumZoom(document.querySelectorAll("img:not(.nozoom)"), {
+      margin: 24,
+      background: 'rgba(0,0,0,0.5)',
+      scrollOffset: 0,
+    })
+    
+  </script> 
+  
+  <script
+    type="text/javascript"
+    src="/js/process.min.ee03488f19c93c2efb199e2e3014ea5f3cb2ce7d45154adb3399a158cac27ca52831db249ede5bb602700ef87eb02434139de0858af1818ab0fb4182472204a4.js"
+    integrity="sha512-7gNIjxnJPC77GZ4uMBTqXzyyzn1FFUrbM5mhWMrCfKUoMdsknt5btgJwDvh&#43;sCQ0E53ghYrxgYqw&#43;0GCRyIEpA=="></script>
+  
+  
+</footer>
+<div
+  id="search-wrapper"
+  class="invisible fixed inset-0 flex h-screen w-screen cursor-default flex-col bg-neutral-500/50 p-4 backdrop-blur-sm dark:bg-neutral-900/50 sm:p-6 md:p-[10vh] lg:p-[12vh] z-500"
+  data-url="http://localhost:1313/">
+  <div
+    id="search-modal"
+    class="flex flex-col w-full max-w-3xl min-h-0 mx-auto border rounded-md shadow-lg top-20 border-neutral-200 bg-neutral dark:border-neutral-700 dark:bg-neutral-800">
+    <header class="relative z-10 flex items-center justify-between flex-none px-2">
+      <form class="flex items-center flex-auto min-w-0">
+        <div class="flex items-center justify-center w-8 h-8 text-neutral-400">
+          
+
+  <span class="relative block icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+
+  </span>
+
+
+        </div>
+        <input
+          type="search"
+          id="search-query"
+          class="flex flex-auto h-12 mx-1 bg-transparent appearance-none focus:outline-dotted focus:outline-2 focus:outline-transparent"
+          placeholder="Search"
+          tabindex="0">
+      </form>
+      <button
+        id="close-search-button"
+        class="flex items-center justify-center w-8 h-8 text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+        title="Close (Esc)">
+        
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+
+  </span>
+
+
+      </button>
+    </header>
+    <section class="flex-auto px-2 overflow-auto">
+      <ul id="search-results">
+        
+      </ul>
+    </section>
+  </div>
+</div>
+
+    </div>
+  </body>
+  
+</html>
