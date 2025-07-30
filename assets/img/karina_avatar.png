@@ -1,3 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Error><Code>AuthenticationFailed</Code><Message>Server failed to authenticate the request. Make sure the value of Authorization header is formed correctly including the signature.
-RequestId:8e54c8a9-b01e-00f1-245e-0088a3000000
-Time:2025-07-29T07:54:45.2130049Z</Message><AuthenticationErrorDetail>sr is mandatory. Cannot be empty</AuthenticationErrorDetail></Error>

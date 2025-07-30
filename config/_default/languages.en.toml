@@ -17,12 +17,12 @@ title = "AsukaMilet's Blog"
 [params.author]
   name = "AsukaMilet"
   email = "asukananase810@gmail.com"
-  image = "img/blowfish_logo.png"
+  image = "img/avatar.png"
   imageQuality = 96
   headline = "Nobody"
   bio = "AsukaMilet's Blog"
   links = [
-#     { email = "mailto:hello@your_domain.com" },
+    { email = "mailto:asukananase810@gmail.com" },
 #     { link = "https://link-to-some-website.com/" },
 #     { amazon = "https://www.amazon.com/hz/wishlist/ls/wishlist-id" },
 #     { apple = "https://www.apple.com" },
